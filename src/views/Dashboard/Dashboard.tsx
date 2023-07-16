@@ -1,12 +1,12 @@
-import { Box } from "@mui/material";
-import { Body, Header } from "./components";
+import { Stack } from "@mui/material";
+import { Body, Sidebar } from "./components";
 
 const Dashboard = () => {
   return (
-    <Box>
-      <Header />
+    <Stack direction="row" sx={{ height: "100vh", width: "100vw" }}>
+      <Sidebar />
       <Body />
-    </Box>
+    </Stack>
   );
 };
 

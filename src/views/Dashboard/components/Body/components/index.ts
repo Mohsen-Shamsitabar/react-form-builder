@@ -1,2 +1,2 @@
-export { default as Sidebar } from "./Sidebar";
-export { default as FormSection } from "./FormSection";
+export { default as Header } from "./Header";
+export { default as FormDisplay } from "./FormDisplay";

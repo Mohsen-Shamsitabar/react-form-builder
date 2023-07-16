@@ -1,7 +1,8 @@
-import * as React from "react";
+import { Stack } from "@mui/material";
 import cls from "classnames";
+import * as React from "react";
 import classes from "./Body.module.scss";
-import { FormSection, Sidebar } from "./components";
+import { FormDisplay, Header } from "./components";
 
 interface OwnProps {
   className?: string;
@@ -12,11 +13,18 @@ export type Props = Omit<React.ComponentPropsWithRef<"div">, keyof OwnProps> &
 
 const BodyBase = (props: Props, ref: React.Ref<HTMLDivElement>) => {
   const { className, ...otherProps } = props;
+
   return (
-    <div {...otherProps} className={cls(className, classes.root)} ref={ref}>
-      <Sidebar />
-      <FormSection />
-    </div>
+    <Stack
+      {...otherProps}
+      component="section"
+      className={cls(className, classes.root)}
+      direction="column"
+      ref={ref}
+    >
+      <Header />
+      <FormDisplay />
+    </Stack>
   );
 };
 

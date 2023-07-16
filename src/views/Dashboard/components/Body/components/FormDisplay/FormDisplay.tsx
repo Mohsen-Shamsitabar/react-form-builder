@@ -1,6 +1,6 @@
 import * as React from "react";
 import cls from "classnames";
-import classes from "./FormSection.module.scss";
+import classes from "./FormDisplay.module.scss";
 
 interface OwnProps {
   className?: string;
@@ -9,8 +9,9 @@ interface OwnProps {
 export type Props = Omit<React.ComponentPropsWithRef<"div">, keyof OwnProps> &
   OwnProps;
 
-const FormSectionBase = (props: Props, ref: React.Ref<HTMLDivElement>) => {
+const FormDisplayBase = (props: Props, ref: React.Ref<HTMLDivElement>) => {
   const { className, ...otherProps } = props;
+
   return (
     <div
       {...otherProps}
@@ -20,6 +21,6 @@ const FormSectionBase = (props: Props, ref: React.Ref<HTMLDivElement>) => {
   );
 };
 
-const FormSection = React.forwardRef(FormSectionBase) as typeof FormSectionBase;
+const FormDisplay = React.forwardRef(FormDisplayBase) as typeof FormDisplayBase;
 
-export default FormSection;
+export default FormDisplay;

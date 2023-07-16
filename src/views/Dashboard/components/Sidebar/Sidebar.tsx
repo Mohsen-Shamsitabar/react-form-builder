@@ -1,6 +1,8 @@
-import * as React from "react";
+import { Stack } from "@mui/material";
 import cls from "classnames";
+import * as React from "react";
 import classes from "./Sidebar.module.scss";
+import { FormContainer, Header } from "./components";
 
 interface OwnProps {
   className?: string;
@@ -11,12 +13,18 @@ export type Props = Omit<React.ComponentPropsWithRef<"div">, keyof OwnProps> &
 
 const SidebarBase = (props: Props, ref: React.Ref<HTMLDivElement>) => {
   const { className, ...otherProps } = props;
+
   return (
-    <div
+    <Stack
       {...otherProps}
+      component="aside"
+      direction="column"
       className={cls(className, classes.root)}
       ref={ref}
-    ></div>
+    >
+      <Header />
+      <FormContainer />
+    </Stack>
   );
 };
 
