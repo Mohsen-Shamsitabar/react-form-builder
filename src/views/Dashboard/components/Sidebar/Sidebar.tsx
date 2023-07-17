@@ -2,7 +2,7 @@ import { Stack } from "@mui/material";
 import cls from "classnames";
 import * as React from "react";
 import classes from "./Sidebar.module.scss";
-import { FormContainer, Header } from "./components";
+import { Navbar, Header } from "./components";
 
 interface OwnProps {
   className?: string;
@@ -23,7 +23,7 @@ const SidebarBase = (props: Props, ref: React.Ref<HTMLDivElement>) => {
       ref={ref}
     >
       <Header />
-      <FormContainer />
+      <Navbar />
     </Stack>
   );
 };

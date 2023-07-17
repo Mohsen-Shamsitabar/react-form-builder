@@ -1,6 +1,8 @@
-import * as React from "react";
+import { Stack } from "@mui/material";
 import cls from "classnames";
+import * as React from "react";
 import classes from "./FormDisplay.module.scss";
+import { EmptyState, Form } from "./components";
 
 interface OwnProps {
   className?: string;
@@ -13,11 +15,24 @@ const FormDisplayBase = (props: Props, ref: React.Ref<HTMLDivElement>) => {
   const { className, ...otherProps } = props;
 
   return (
-    <div
+    <Stack
       {...otherProps}
       className={cls(className, classes.root)}
+      alignItems="center"
+      flex="1 1 0%"
+      spacing="1.5rem"
       ref={ref}
-    ></div>
+    >
+      <Form />
+      <Form />
+      <Form />
+      <Form />
+      <Form />
+      <Form />
+      <Form />
+      <Form />
+      <EmptyState />
+    </Stack>
   );
 };
 
