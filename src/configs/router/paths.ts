@@ -1,3 +1,3 @@
 export const DASHBOARD = "/";
 
-export const MY_FORMS = `forms/:formId`;
+export const MY_FORMS = `/forms`;
