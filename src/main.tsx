@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
-import "normalize-css";
+import CssBaseline from "@mui/material/CssBaseline";
 
 const rootElement = document.getElementById("root");
 
@@ -11,6 +11,7 @@ const reactRoot = ReactDOM.createRoot(rootElement);
 
 reactRoot.render(
   <React.StrictMode>
+    <CssBaseline />
     <App />
   </React.StrictMode>,
 );
