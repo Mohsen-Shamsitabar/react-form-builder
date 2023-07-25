@@ -12,6 +12,10 @@ const routes: RouteObject[] = [
         element: <DashboardView />,
         loader: DashboardLoader,
       },
+      {
+        path: paths.MY_FORMS,
+        element: <h1>Forms</h1>,
+      },
     ],
   },
   {
