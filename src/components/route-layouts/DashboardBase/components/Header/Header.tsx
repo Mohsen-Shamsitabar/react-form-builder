@@ -1,21 +1,25 @@
-import { Button, Stack } from "@mui/material";
+import { Button, Stack, type SxProps, type Theme } from "@mui/material";
+import { mergeSx } from "utils";
+import * as sx from "./styles";
 
 interface Props {
-  className?: string;
+  sx?: SxProps<Theme>;
 }
 
 const Header = (props: Props) => {
-  const { className, ...otherProps } = props;
+  const { sx: sxProp } = props;
 
   return (
     <Stack
-      {...otherProps}
       component="header"
-      className={className}
+      direction="row"
       justifyContent="space-between"
+      alignItems="center"
+      sx={mergeSx(sx.root, sxProp)}
     >
-      <Stack>
-        <span>🚀</span> ReactFormBuilder
+      <Stack direction="row" sx={sx.logo}>
+        <span>🚀</span>
+        <span>ReactFormBuilder</span>
       </Stack>
 
       <Button variant="outlined">logout</Button>
