@@ -1,5 +1,7 @@
+import { Stack } from "@mui/material";
+
 const Dashboard = () => {
-  return <div>Dashboard</div>;
+  return <Stack>Dashboard</Stack>;
 };
 
 export default Dashboard;
