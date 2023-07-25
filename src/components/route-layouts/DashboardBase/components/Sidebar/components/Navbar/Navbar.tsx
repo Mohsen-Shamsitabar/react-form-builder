@@ -1,13 +1,15 @@
-import { Box } from "@mui/material";
+import { Stack, type SxProps, type Theme } from "@mui/material";
+import { mergeSx } from "utils";
+import { rootSx } from "./styles";
 
 interface Props {
-  className?: string;
+  sx?: SxProps<Theme>;
 }
 
 const Navbar = (props: Props) => {
-  const { className, ...otherProps } = props;
+  const { sx } = props;
 
-  return <Box {...otherProps} component="nav" className={className}></Box>;
+  return <Stack component="aside" sx={mergeSx(rootSx, sx)}></Stack>;
 };
 
 export default Navbar;
