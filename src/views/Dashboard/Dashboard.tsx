@@ -1,7 +1,7 @@
 import { Stack } from "@mui/material";
 
 const Dashboard = () => {
-  return <Stack>HERE</Stack>;
+  return <Stack>Dashboard</Stack>;
 };
 
 export default Dashboard;

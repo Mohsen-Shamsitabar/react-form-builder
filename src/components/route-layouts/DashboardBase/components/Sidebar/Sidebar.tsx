@@ -1,20 +1,15 @@
-import { Stack } from "@mui/material";
+import { Stack, type SxProps, type Theme } from "@mui/material";
 import { Navbar } from "./components";
 
 interface Props {
-  className?: string;
+  sx?: SxProps<Theme>;
 }
 
 const Sidebar = (props: Props) => {
-  const { className, ...otherProps } = props;
+  const { sx: sxProps } = props;
 
   return (
-    <Stack
-      {...otherProps}
-      component="aside"
-      direction="column"
-      className={className}
-    >
+    <Stack component="aside" direction="column" sx={sxProps}>
       <Navbar />
     </Stack>
   );

@@ -1,7 +1,6 @@
 import { Box, Stack } from "@mui/material";
 import { useOutlet } from "react-router-dom";
-import { Header } from "./components";
-import { Navbar } from "./components/Sidebar/components";
+import { Header, Sidebar } from "./components";
 import * as sx from "./styles";
 
 const DashboardBase = () => {
@@ -11,7 +10,7 @@ const DashboardBase = () => {
     <Box sx={sx.root}>
       <Header sx={sx.header} />
       <Stack component="main" direction="row" sx={sx.main}>
-        <Navbar sx={sx.navbar} />
+        <Sidebar sx={sx.sidebar} />
         <Box component="section" sx={sx.content}>
           {outlet}
         </Box>
