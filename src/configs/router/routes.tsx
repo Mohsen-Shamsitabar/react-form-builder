@@ -1,30 +1,33 @@
-import { DashboardBaseRouteLayout } from "components/route-layouts";
+import { WithDashboardHeader } from "components/route-layouts";
+import WithDashboardSidebar from "components/route-layouts/WithDashboardSidebar/WithDashboardSidebar";
 import { RouteObject } from "react-router-dom";
 import {
   DashboardLoader,
   DashboardView,
+  MyForms,
   NotFoundView,
   myFormsLoader,
 } from "views";
-import MyForms from "views/MyForms/MyForms";
 import * as paths from "./paths";
 
 const routes: RouteObject[] = [
   {
-    element: <DashboardBaseRouteLayout />,
+    element: <WithDashboardHeader />,
     children: [
       {
-        path: paths.DASHBOARD,
-        element: <DashboardView />,
-        loader: DashboardLoader,
-      },
-      {
-        path: paths.MY_FORMS,
-        element: <MyForms />,
-        loader: myFormsLoader,
-      },
-      {
-        path: paths.CREATE_FORM,
+        element: <WithDashboardSidebar />,
+        children: [
+          {
+            path: paths.DASHBOARD,
+            element: <DashboardView />,
+            loader: DashboardLoader,
+          },
+          {
+            path: paths.MY_FORMS,
+            element: <MyForms />,
+            loader: myFormsLoader,
+          },
+        ],
       },
     ],
   },

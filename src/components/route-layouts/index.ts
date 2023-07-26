@@ -1,1 +1,1 @@
-export { default as DashboardBaseRouteLayout } from "./DashboardBase";
+export { default as WithDashboardHeader } from "./WithDashboardHeader";

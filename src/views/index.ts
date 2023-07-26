@@ -3,7 +3,7 @@ export {
   default as DashboardView,
 } from "./Dashboard";
 
-export { default as Myforms, loader as myFormsLoader } from "./MyForms";
+export { default as MyForms, loader as myFormsLoader } from "./MyForms";
 
 export { default as EmptyStatement } from "./EmptyStatement";
 
