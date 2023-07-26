@@ -1,7 +1,13 @@
-import { RouteObject } from "react-router-dom";
-import { DashboardLoader, DashboardView, NotFoundView } from "views";
-import * as paths from "./paths";
 import { DashboardBaseRouteLayout } from "components/route-layouts";
+import { RouteObject } from "react-router-dom";
+import {
+  DashboardLoader,
+  DashboardView,
+  NotFoundView,
+  myFormsLoader,
+} from "views";
+import MyForms from "views/MyForms/MyForms";
+import * as paths from "./paths";
 
 const routes: RouteObject[] = [
   {
@@ -14,7 +20,11 @@ const routes: RouteObject[] = [
       },
       {
         path: paths.MY_FORMS,
-        element: <h1>Forms</h1>,
+        element: <MyForms />,
+        loader: myFormsLoader,
+      },
+      {
+        path: paths.CREATE_FORM,
       },
     ],
   },
