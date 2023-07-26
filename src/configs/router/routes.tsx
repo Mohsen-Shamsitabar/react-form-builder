@@ -29,10 +29,6 @@ const routes: RouteObject[] = [
           },
         ],
       },
-      // {
-      //   path: paths.CREATE_FORM,
-      //   element: <h1>Create form</h1>,
-      // },
     ],
   },
   {
