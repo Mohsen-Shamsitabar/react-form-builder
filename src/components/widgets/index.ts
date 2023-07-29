@@ -1,3 +1,2 @@
-export { default as StringFieldWidget } from "./StringFieldWidget";
-export { default as NumberFieldWidget } from "./NumberFieldWidget";
-export { default as BooleanFieldWidget } from "./BooleanFieldWidget";
+export * from "./field-widgets";
+export * from "./ui-widgets";
