@@ -1,3 +1,5 @@
+//==========Common==========//
+
 type CommonFieldWidgetsProperties = {
   label: string;
   description?: string;
@@ -45,6 +47,37 @@ export type BooleanFieldWidget = {
   properties: BooleanFieldWidgetProps;
 };
 
+//==========TextUI==========//
+
+export type TextUIWidgetProps = {
+  text: string;
+  varient: "paragraph" | "title" | "subtitle";
+};
+
+export type TextUIWidget = {
+  type: "text";
+  properties: TextUIWidgetProps;
+};
+
+//==========LinkUI==========//
+
+export type LinkUIWidgetProps = {
+  href: string;
+  text: string;
+};
+
+export type LinkUIWidget = {
+  type: "link";
+  properties: LinkUIWidgetProps;
+};
+
+//==========DividerUI==========//
+
+export type DividerUIWidget = {
+  type: "divider";
+  properties: null;
+};
+
 //==========FieldWidgets==========//
 
 export type FieldWidgets =
@@ -58,7 +91,19 @@ export type FieldWidget = {
   properties: FieldWidgets;
 };
 
-export type Widget = FieldWidget | { type: "ui" };
+//==========UIWidgets==========//
+
+export type UIWidgets = TextUIWidget | LinkUIWidget | DividerUIWidget;
+
+export type UIWidget = {
+  type: "ui";
+  id: string;
+  properties: UIWidgets;
+};
+
+//==========Schema==========//
+
+export type Widget = FieldWidget | UIWidget;
 
 export interface Schema {
   meta: {
