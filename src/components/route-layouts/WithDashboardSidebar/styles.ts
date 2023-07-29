@@ -14,6 +14,7 @@ export const sidebar: SxProps<Theme> = theme => ({
   flexShrink: 0,
 });
 
-export const content: SxProps<Theme> = {
+export const content: SxProps<Theme> = theme => ({
   width: "100%",
-};
+  padding: theme.spacing(1),
+});
