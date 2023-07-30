@@ -17,12 +17,12 @@ const NumberFieldWidget = (props: Props) => {
   const {
     sx: sxProp,
     label,
-    defaultValue,
-    description,
-    required,
-    max: maxProp,
-    min: minProp,
-    placeholder,
+    defaultValue = 0,
+    description = "",
+    required = false,
+    max: maxProp = Infinity,
+    min: minProp = -Infinity,
+    placeholder = "",
   } = props;
 
   return (

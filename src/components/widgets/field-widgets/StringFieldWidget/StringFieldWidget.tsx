@@ -17,14 +17,14 @@ const StringFieldWidget = (props: Props) => {
   const {
     sx: sxProp,
     label,
-    defaultValue,
-    description,
-    required,
-    maxLength: maxLengthProp,
-    minLength: minLengthProp,
-    multiline,
+    defaultValue = "",
+    description = "",
+    required = false,
+    maxLength: maxLengthProp = Infinity,
+    minLength: minLengthProp = -Infinity,
+    multiline = false,
     type,
-    placeholder,
+    placeholder = "",
   } = props;
 
   return (

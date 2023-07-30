@@ -15,7 +15,13 @@ type Props = BooleanFieldWidgetProps & {
 };
 
 const BooleanFieldWidget = (props: Props) => {
-  const { label, defaultValue, description, required, sx: sxProp } = props;
+  const {
+    label,
+    defaultChecked = false,
+    description = "",
+    required = false,
+    sx: sxProp,
+  } = props;
 
   return (
     <FormGroup sx={mergeSx(sxProp, sx.fieldWidget)}>
@@ -24,7 +30,7 @@ const BooleanFieldWidget = (props: Props) => {
       </Typography>
       <FormControlLabel
         required={required}
-        control={<Switch defaultChecked={defaultValue} />}
+        control={<Switch defaultChecked={defaultChecked} />}
         label={label}
         labelPlacement="end"
       />
