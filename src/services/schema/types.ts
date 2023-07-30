@@ -39,12 +39,34 @@ export type NumberFieldWidget = {
 //==========BooleanField==========//
 
 export type BooleanFieldWidgetProps = CommonFieldWidgetsProperties & {
-  defaultValue?: boolean;
+  defaultChecked?: boolean;
 };
 
 export type BooleanFieldWidget = {
   type: "boolean";
   properties: BooleanFieldWidgetProps;
+};
+//==========ChoiceField==========//
+
+export type ChoiceOption = {
+  label: string;
+  value: string;
+};
+
+export type ChoiceFieldWidgetProps = CommonFieldWidgetsProperties & {
+  minRequired?: number;
+  maxRequired?: number;
+  shuffleOptions?: boolean;
+  multiSelect: boolean;
+  defaultValue?: string[];
+  options: ChoiceOption[];
+};
+
+//if larger then 10 options, use select
+
+export type ChoiceFieldWidget = {
+  type: "choice";
+  properties: ChoiceFieldWidgetProps;
 };
 
 //==========TextUI==========//
@@ -83,7 +105,8 @@ export type DividerUIWidget = {
 export type FieldWidgets =
   | StringFieldWidget
   | NumberFieldWidget
-  | BooleanFieldWidget;
+  | BooleanFieldWidget
+  | ChoiceFieldWidget;
 
 export type FieldWidget = {
   type: "field";

@@ -8,6 +8,7 @@ import {
 } from "components";
 import type { Schema } from "../types";
 import { isFieldWidget } from "../utils";
+import ChoiceFieldWidget from "components/widgets/field-widgets/ChoiceFieldWidget/ChoiceFieldWidget";
 
 interface Props {
   schema: Schema;
@@ -32,6 +33,9 @@ const SchemaToJSX = (props: Props): (JSX.Element | null)[] => {
         }
         case "boolean": {
           return <BooleanFieldWidget {...properties} key={id} />;
+        }
+        case "choice": {
+          return <ChoiceFieldWidget {...properties} key={id} />;
         }
         default: {
           return null;
