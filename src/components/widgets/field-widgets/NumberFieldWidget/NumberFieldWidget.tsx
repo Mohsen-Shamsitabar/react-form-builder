@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import {
   FormGroup,
   TextField,
@@ -5,9 +6,11 @@ import {
   type SxProps,
   type Theme,
 } from "@mui/material";
-import { type NumberFieldWidgetProps } from "services";
+import * as React from "react";
+import { SchemaContext, type NumberFieldWidgetProps } from "services";
 import { mergeSx } from "utils";
 import * as sx from "../commonStyles";
+import { checkValidity } from "./utils";
 
 type Props = NumberFieldWidgetProps & {
   sx?: SxProps<Theme>;
@@ -17,30 +20,87 @@ const NumberFieldWidget = (props: Props) => {
   const {
     sx: sxProp,
     label,
-    defaultValue = 0,
-    description = "",
+    max,
+    min,
+    defaultValue,
+    description,
     required = false,
-    max: maxProp = Infinity,
-    min: minProp = -Infinity,
-    placeholder = "",
+    placeholder,
   } = props;
+
+  const context = React.useContext(SchemaContext);
+  let contextField = context.find(field => field.id === label);
+  if (!contextField) {
+    contextField = {
+      id: label,
+      checkValidity: checkValidity(`${defaultValue ?? ""}`, {
+        max,
+        min,
+        required,
+      }),
+    };
+    context.push(contextField);
+  }
+
+  const validation = React.useMemo(
+    () =>
+      checkValidity(`${defaultValue ?? ""}`, {
+        max,
+        min,
+        required,
+      }),
+    [defaultValue, max, min, required],
+  );
+
+  const [hasError, setHasError] = React.useState<boolean>(!validation.isValid);
+
+  const [helperText, setHelperText] = React.useState<string | undefined>(
+    validation.errorMessage,
+  );
+
+  const handleValidity = (value: string) => {
+    const validation = checkValidity(value, {
+      max,
+      min,
+      required,
+    });
+
+    const { isValid, errorMessage } = validation;
+
+    if (contextField) contextField.checkValidity = validation;
+
+    setHasError(!isValid);
+    setHelperText(errorMessage);
+  };
+
+  const handleChange = (event: React.ChangeEvent) => {
+    const target = event.target as HTMLInputElement;
+    const value = target.value;
+
+    handleValidity(value);
+  };
 
   return (
     <FormGroup sx={mergeSx(sxProp, sx.fieldWidget)}>
-      <Typography variant="body1" color="GrayText" data-slot="description">
-        {description}
-      </Typography>
+      {description && (
+        <Typography variant="body1" color="GrayText" data-slot="description">
+          {description}
+        </Typography>
+      )}
+
       <TextField
+        id={label}
+        name={label}
         fullWidth
         label={label}
-        type="number"
+        type="text"
+        inputMode="numeric"
         required={required}
-        inputProps={{
-          min: minProp,
-          max: maxProp,
-        }}
+        onChange={handleChange}
         defaultValue={defaultValue}
         placeholder={placeholder}
+        helperText={helperText}
+        error={hasError}
       />
     </FormGroup>
   );
