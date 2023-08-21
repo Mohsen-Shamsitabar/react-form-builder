@@ -6,9 +6,9 @@ import {
   StringFieldWidget,
   TextUIWidget,
 } from "components";
+import ChoiceFieldWidget from "components/widgets/field-widgets/ChoiceFieldWidget/ChoiceFieldWidget";
 import type { Schema } from "../types";
 import { isFieldWidget } from "../utils";
-import ChoiceFieldWidget from "components/widgets/field-widgets/ChoiceFieldWidget/ChoiceFieldWidget";
 
 interface Props {
   schema: Schema;
