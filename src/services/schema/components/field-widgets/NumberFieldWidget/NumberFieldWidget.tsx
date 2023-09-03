@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import {
   FormGroup,
   TextField,
@@ -6,10 +5,11 @@ import {
   type SxProps,
   type Theme,
 } from "@mui/material";
-import { useFormContext } from "react-hook-form";
+import { useController, useFormContext } from "react-hook-form";
 import { type NumberFieldWidgetProps } from "services";
 import { mergeSx } from "utils";
 import * as sx from "../commonStyles";
+import { useErrorMessage } from "./hooks";
 
 type Props = NumberFieldWidgetProps & {
   sx?: SxProps<Theme>;
@@ -29,20 +29,22 @@ const NumberFieldWidget = (props: Props) => {
     placeholder,
   } = props;
 
-  const messages = {
-    max: `Please select a value that is no more than ${max ?? 0} bish.`,
-    min: ` Please select a value that is no less than ${min ?? 0} bish.`,
-    pattern: `Please enter a number u dumbFuck.`,
-    required: "Please fillout this field nigga",
-  };
+  const { control } = useFormContext();
 
-  const {
-    register,
-    formState: { errors },
-  } = useFormContext();
+  const { field, fieldState } = useController({
+    name: label,
+    control,
+    defaultValue,
+    shouldUnregister: true,
+    rules: {
+      required,
+      max,
+      min,
+      pattern: numberRegExp,
+    },
+  });
 
-  const errorMessage = messages[errors[label]?.type as keyof typeof messages];
-  const hasError = errors[label] ? true : false;
+  const errorMessage = useErrorMessage(fieldState, { max, min });
 
   return (
     <FormGroup sx={mergeSx(sxProp, sx.fieldWidget)}>
@@ -52,24 +54,17 @@ const NumberFieldWidget = (props: Props) => {
         </Typography>
       )}
       <TextField
-        {...register(label, {
-          required,
-          max,
-          min,
-          pattern: numberRegExp,
-          shouldUnregister: true,
-        })}
+        {...field}
+        fullWidth
         id={label}
         name={label}
-        fullWidth
         label={label}
         type="text"
         inputMode="numeric"
         required={required}
-        defaultValue={defaultValue}
         placeholder={placeholder}
         helperText={errorMessage}
-        error={hasError}
+        error={Boolean(errorMessage)}
       />
     </FormGroup>
   );

@@ -5,11 +5,11 @@ import {
   type SxProps,
   type Theme,
 } from "@mui/material";
-import { useFormContext } from "react-hook-form";
+import { useController, useFormContext } from "react-hook-form";
 import { type StringFieldWidgetProps } from "services";
 import { mergeSx } from "utils";
-import * as React from "react";
 import * as sx from "../commonStyles";
+import { useErrorMessage } from "./hooks";
 
 type Props = StringFieldWidgetProps & {
   sx?: SxProps<Theme>;
@@ -31,22 +31,25 @@ const StringFieldWidget = (props: Props) => {
     multiline = false,
   } = props;
 
-  const messages = React.useMemo(() => {
-    return {
-      maxLength: `Please use at most ${maxLength ?? 0} characters.`,
-      minLength: `Please use at least ${minLength ?? 0} characters.`,
-      required: "Please fillout this field nigga",
-      pattern: "Please enter a valid Email address bruv",
-    };
-  }, [maxLength, minLength]);
+  const { control } = useFormContext();
 
-  const {
-    register,
-    formState: { errors },
-  } = useFormContext();
+  const { field, fieldState } = useController({
+    name: label,
+    control,
+    defaultValue,
+    shouldUnregister: true,
+    rules: {
+      required,
+      minLength,
+      maxLength,
+      pattern: type === "email" ? emailRegExp : undefined,
+    },
+  });
 
-  const errorMessage = messages[errors[label]?.type as keyof typeof messages];
-  const hasError = errors[label] ? true : false;
+  const errorMessage = useErrorMessage(fieldState, {
+    maxLength,
+    minLength,
+  });
 
   return (
     <>
@@ -57,23 +60,16 @@ const StringFieldWidget = (props: Props) => {
           </Typography>
         )}
         <TextField
-          {...register(label, {
-            required,
-            minLength,
-            maxLength,
-            pattern: type === "email" ? emailRegExp : undefined,
-            shouldUnregister: true,
-          })}
+          {...field}
           fullWidth
           id={label}
           label={label}
           type={type}
           multiline={multiline}
           placeholder={placeholder}
-          defaultValue={defaultValue}
           helperText={errorMessage}
           required={required}
-          error={hasError}
+          error={Boolean(errorMessage)}
         />
       </FormGroup>
     </>

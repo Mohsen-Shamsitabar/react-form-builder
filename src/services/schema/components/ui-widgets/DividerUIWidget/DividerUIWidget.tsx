@@ -1,7 +1,7 @@
 import { Divider } from "@mui/material";
 
 const DividerUIWidget = () => {
-  return <Divider></Divider>;
+  return <Divider />;
 };
 
 export default DividerUIWidget;

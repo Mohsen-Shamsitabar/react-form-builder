@@ -10,10 +10,11 @@ import {
   type SxProps,
   type Theme,
 } from "@mui/material";
-import { useFormContext } from "react-hook-form";
+import { useController, useFormContext } from "react-hook-form";
 import { type BooleanFieldWidgetProps } from "services";
 import { mergeSx } from "utils";
 import * as sx from "../commonStyles";
+import { useErrorMessage } from "./hooks";
 
 type Props = BooleanFieldWidgetProps & {
   sx?: SxProps<Theme>;
@@ -28,21 +29,26 @@ const BooleanFieldWidget = (props: Props) => {
     sx: sxProp,
   } = props;
 
-  const messages = {
-    required: "Please check this box if you want to proceed nigga.",
-  };
+  const { control } = useFormContext();
 
-  const {
-    register,
-    formState: { errors },
-  } = useFormContext();
+  const { field, fieldState } = useController({
+    name: label,
+    control,
+    defaultValue: defaultChecked,
+    shouldUnregister: true,
+    rules: {
+      required,
+    },
+  });
 
-  const errorMessage = messages[errors[label]?.type as keyof typeof messages];
-  const hasError = errors[label] ? true : false;
+  const errorMessage = useErrorMessage(fieldState);
 
   return (
     <>
-      <FormControl error={hasError} sx={mergeSx(sxProp, sx.fieldWidget)}>
+      <FormControl
+        error={Boolean(errorMessage)}
+        sx={mergeSx(sxProp, sx.fieldWidget)}
+      >
         {description && (
           <FormLabel>
             <Typography variant="body1" color="GrayText">
@@ -56,10 +62,7 @@ const BooleanFieldWidget = (props: Props) => {
             id={label}
             control={
               <Switch
-                {...register(label, {
-                  required,
-                  shouldUnregister: true,
-                })}
+                {...field}
                 defaultChecked={defaultChecked}
                 inputProps={{ role: "switch", "aria-labelledby": label }}
               />
