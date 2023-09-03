@@ -1,46 +1,54 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import { Box, Stack, SxProps } from "@mui/material";
-import { type Schema, SchemaToJSX, SchemaContext } from "services";
-import * as React from "react";
-
-type MyFormProps = {
+import {
+  FormProvider,
+  SubmitErrorHandler,
+  SubmitHandler,
+  useForm,
+} from "react-hook-form";
+import { SchemaToJSX, type Schema } from "services";
+type FormProps = {
   schema: Schema;
   sx?: SxProps;
 };
 
-const MyForm = (props: MyFormProps) => {
+export type FormValues = Record<
+  string,
+  string | number | boolean | string[] | undefined
+>;
+
+let renders = 0;
+const Form = (props: FormProps) => {
+  renders++;
   const { schema, sx: sxProp } = props;
 
-  const context = React.useContext(SchemaContext);
+  const rhForm = useForm<FormValues>({ mode: "all" });
 
-  const handleSubmit: React.FormEventHandler = event => {
-    event.preventDefault();
-    const form = event.target as HTMLFormElement;
+  const onSubmit: SubmitHandler<FormValues> = (data, e) =>
+    console.log("submitted", data, e);
 
-    let isFormValid = true;
+  const onError: SubmitErrorHandler<FormValues> | undefined = (errors, e) =>
+    console.log(errors, e);
 
-    context.forEach(field => {
-      const validation = field.checkValidity;
-      const { isValid } = validation;
-      if (!isValid) {
-        isFormValid = false;
-      }
-    });
-
-    if (!isFormValid) return;
-
-    form.submit();
+  const handleClicked = () => {
+    console.log({ fields: rhForm.getValues(), formState: rhForm.formState });
   };
 
   return (
     <Box sx={sxProp}>
-      <form name="testForm" onSubmit={handleSubmit}>
-        <Stack spacing={2}>
-          <SchemaToJSX schema={schema} />
-          <button type="submit">submit</button>
-        </Stack>
+      <form onSubmit={rhForm.handleSubmit(onSubmit)} noValidate>
+        <p>{renders}</p>
+        <FormProvider {...rhForm}>
+          <Stack spacing={2}>
+            <SchemaToJSX schema={schema} />
+            <button type="submit" onClick={handleClicked}>
+              submit
+            </button>
+          </Stack>
+        </FormProvider>
       </form>
     </Box>
   );
 };
 
-export default MyForm;
+export default Form;
