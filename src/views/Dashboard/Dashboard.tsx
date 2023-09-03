@@ -1,5 +1,5 @@
 import { MyForm } from "components";
-import { schema } from "utils";
+import schema from "../../mock";
 
 const Dashboard = () => {
   return <MyForm schema={schema} />;
