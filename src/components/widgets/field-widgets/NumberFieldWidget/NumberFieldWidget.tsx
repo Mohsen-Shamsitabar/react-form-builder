@@ -6,15 +6,16 @@ import {
   type SxProps,
   type Theme,
 } from "@mui/material";
-import * as React from "react";
-import { SchemaContext, type NumberFieldWidgetProps } from "services";
+import { useFormContext } from "react-hook-form";
+import { type NumberFieldWidgetProps } from "services";
 import { mergeSx } from "utils";
 import * as sx from "../commonStyles";
-import { checkValidity } from "./utils";
 
 type Props = NumberFieldWidgetProps & {
   sx?: SxProps<Theme>;
 };
+
+const numberRegExp = /^-?[0-9]\d*(\.\d+)?$/;
 
 const NumberFieldWidget = (props: Props) => {
   const {
@@ -28,57 +29,20 @@ const NumberFieldWidget = (props: Props) => {
     placeholder,
   } = props;
 
-  const context = React.useContext(SchemaContext);
-  let contextField = context.find(field => field.id === label);
-  if (!contextField) {
-    contextField = {
-      id: label,
-      checkValidity: checkValidity(`${defaultValue ?? ""}`, {
-        max,
-        min,
-        required,
-      }),
-    };
-    context.push(contextField);
-  }
-
-  const validation = React.useMemo(
-    () =>
-      checkValidity(`${defaultValue ?? ""}`, {
-        max,
-        min,
-        required,
-      }),
-    [defaultValue, max, min, required],
-  );
-
-  const [hasError, setHasError] = React.useState<boolean>(!validation.isValid);
-
-  const [helperText, setHelperText] = React.useState<string | undefined>(
-    validation.errorMessage,
-  );
-
-  const handleValidity = (value: string) => {
-    const validation = checkValidity(value, {
-      max,
-      min,
-      required,
-    });
-
-    const { isValid, errorMessage } = validation;
-
-    if (contextField) contextField.checkValidity = validation;
-
-    setHasError(!isValid);
-    setHelperText(errorMessage);
+  const messages = {
+    max: `Please select a value that is no more than ${max ?? 0} bish.`,
+    min: ` Please select a value that is no less than ${min ?? 0} bish.`,
+    pattern: `Please enter a number u dumbFuck.`,
+    required: "Please fillout this field nigga",
   };
 
-  const handleChange = (event: React.ChangeEvent) => {
-    const target = event.target as HTMLInputElement;
-    const value = target.value;
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext();
 
-    handleValidity(value);
-  };
+  const errorMessage = messages[errors[label]?.type as keyof typeof messages];
+  const hasError = errors[label] ? true : false;
 
   return (
     <FormGroup sx={mergeSx(sxProp, sx.fieldWidget)}>
@@ -87,8 +51,14 @@ const NumberFieldWidget = (props: Props) => {
           {description}
         </Typography>
       )}
-
       <TextField
+        {...register(label, {
+          required,
+          max,
+          min,
+          pattern: numberRegExp,
+          shouldUnregister: true,
+        })}
         id={label}
         name={label}
         fullWidth
@@ -96,10 +66,9 @@ const NumberFieldWidget = (props: Props) => {
         type="text"
         inputMode="numeric"
         required={required}
-        onChange={handleChange}
         defaultValue={defaultValue}
         placeholder={placeholder}
-        helperText={helperText}
+        helperText={errorMessage}
         error={hasError}
       />
     </FormGroup>

@@ -5,15 +5,17 @@ import {
   type SxProps,
   type Theme,
 } from "@mui/material";
-import * as React from "react";
-import { SchemaContext, type StringFieldWidgetProps } from "services";
+import { useFormContext } from "react-hook-form";
+import { type StringFieldWidgetProps } from "services";
 import { mergeSx } from "utils";
+import * as React from "react";
 import * as sx from "../commonStyles";
-import { checkValidity } from "./utils";
 
 type Props = StringFieldWidgetProps & {
   sx?: SxProps<Theme>;
 };
+
+const emailRegExp = /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/;
 
 const StringFieldWidget = (props: Props) => {
   const {
@@ -29,87 +31,52 @@ const StringFieldWidget = (props: Props) => {
     multiline = false,
   } = props;
 
-  const context = React.useContext(SchemaContext);
-  let contextField = context.find(field => field.id === label);
-  if (!contextField) {
-    contextField = {
-      id: label,
-      checkValidity: checkValidity(defaultValue, {
-        type,
-        maxLength,
-        minLength,
-        required,
-      }),
+  const messages = React.useMemo(() => {
+    return {
+      maxLength: `Please use at most ${maxLength ?? 0} characters.`,
+      minLength: `Please use at least ${minLength ?? 0} characters.`,
+      required: "Please fillout this field nigga",
+      pattern: "Please enter a valid Email address bruv",
     };
-    context.push(contextField);
-  }
+  }, [maxLength, minLength]);
 
-  const validation = React.useMemo(
-    () =>
-      checkValidity(defaultValue, {
-        type,
-        maxLength,
-        minLength,
-        required,
-      }),
-    [defaultValue, maxLength, minLength, required, type],
-  );
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext();
 
-  const [helperText, setHelperText] = React.useState<string | undefined>(
-    validation.errorMessage,
-  );
-  const [hasError, setHasError] = React.useState<boolean>(!validation.isValid);
-
-  const handleValidity = (value: string) => {
-    const validation = checkValidity(value, {
-      type,
-      maxLength,
-      minLength,
-      required,
-    });
-
-    const { isValid, errorMessage } = validation;
-
-    if (contextField) contextField.checkValidity = validation;
-
-    setHasError(!isValid);
-    setHelperText(errorMessage);
-  };
-
-  const handleChange: React.ChangeEventHandler<
-    HTMLInputElement | HTMLTextAreaElement
-  > = event => {
-    const target = event.target as HTMLInputElement;
-    const value = target.value;
-
-    handleValidity(value);
-  };
+  const errorMessage = messages[errors[label]?.type as keyof typeof messages];
+  const hasError = errors[label] ? true : false;
 
   return (
-    <FormGroup sx={mergeSx(sxProp, sx.fieldWidget)}>
-      {description && (
-        <Typography variant="body1" color="GrayText" data-slot="description">
-          {description}
-        </Typography>
-      )}
-      <TextField
-        fullWidth
-        id={label}
-        label={label}
-        type={type}
-        multiline={multiline}
-        placeholder={placeholder}
-        defaultValue={defaultValue}
-        helperText={helperText}
-        required={required}
-        error={hasError}
-        onChange={handleChange}
-        inputProps={{
-          onInvalid: event => event.preventDefault(),
-        }}
-      />
-    </FormGroup>
+    <>
+      <FormGroup sx={mergeSx(sxProp, sx.fieldWidget)}>
+        {description && (
+          <Typography variant="body1" color="GrayText" data-slot="description">
+            {description}
+          </Typography>
+        )}
+        <TextField
+          {...register(label, {
+            required,
+            minLength,
+            maxLength,
+            pattern: type === "email" ? emailRegExp : undefined,
+            shouldUnregister: true,
+          })}
+          fullWidth
+          id={label}
+          label={label}
+          type={type}
+          multiline={multiline}
+          placeholder={placeholder}
+          defaultValue={defaultValue}
+          helperText={errorMessage}
+          required={required}
+          error={hasError}
+        />
+      </FormGroup>
+    </>
   );
 };
-
 export default StringFieldWidget;

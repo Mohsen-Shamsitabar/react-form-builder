@@ -1,22 +1,27 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import {
+  Box,
   Checkbox,
   FormControl,
   FormControlLabel,
   FormGroup,
   FormHelperText,
   FormLabel,
+  InputLabel,
+  MenuItem,
+  OutlinedInput,
   Radio,
   RadioGroup,
+  Select,
   SxProps,
   Theme,
   Typography,
 } from "@mui/material";
 import * as React from "react";
-import { SchemaContext, type ChoiceFieldWidgetProps } from "services";
+import { useController, useFormContext } from "react-hook-form";
+import { type ChoiceFieldWidgetProps } from "services";
 import { mergeSx, shuffleArray } from "utils";
 import * as sx from "../commonStyles";
-import { checkValidity } from "./utils";
 
 type Props = ChoiceFieldWidgetProps & {
   sx?: SxProps<Theme>;
@@ -36,162 +41,253 @@ const ChoiceFieldWidget = (props: Props) => {
     sx: sxProp,
   } = props;
 
-  const context = React.useContext(SchemaContext);
-  let contextField = context.find(field => field.id === label);
-  if (!contextField) {
-    contextField = {
-      id: label,
-      checkValidity: checkValidity(defaultValue, {
-        required,
-        multiSelect,
-        maxRequired,
-        minRequired,
-      }),
-    };
-    context.push(contextField);
-  }
+  const messages = {
+    required: `This field is required!`,
+    pickedMore: `Please pick atmost ${maxRequired ?? 0} options!`,
+    pickedLess: `Please pick atleast ${minRequired ?? 0} options!`,
+  };
 
-  const [selectedValues, setSelectedValues] = React.useState<
-    string[] | undefined
-  >(defaultValue);
+  const {
+    formState: { errors },
+    setValue,
+    control,
+  } = useFormContext();
 
-  const validation = React.useMemo(
-    () =>
-      checkValidity(defaultValue, {
-        multiSelect,
-        maxRequired,
-        minRequired,
-        required,
-      }),
-    [defaultValue, maxRequired, minRequired, multiSelect, required],
-  );
-
-  const [hasError, setHasError] = React.useState<boolean>(!validation.isValid);
-
-  const [helperText, setHelperText] = React.useState<string | undefined>(
-    validation.errorMessage,
-  );
-
-  const handleValidity = (values: string[] | undefined) => {
-    const validation = checkValidity(values, {
-      multiSelect,
-      maxRequired,
-      minRequired,
+  const { field } = useController<Record<string, string[] | undefined>>({
+    name: label,
+    control,
+    defaultValue,
+    shouldUnregister: true,
+    rules: {
       required,
-    });
-
-    const { isValid, errorMessage } = validation;
-
-    if (contextField) contextField.checkValidity = validation;
-
-    setHasError(!isValid);
-    setHelperText(errorMessage);
-  };
-
-  const makeHandleOptionClick = (newValue: string) => () => {
-    let newSelectedValues: string[];
-
-    if (multiSelect) {
-      if (selectedValues!.includes(newValue)) {
-        newSelectedValues = selectedValues!.filter(value => value !== newValue);
-      } else {
-        newSelectedValues = selectedValues!.concat(newValue);
-      }
-    } else {
-      newSelectedValues = [newValue];
-    }
-
-    handleValidity(newSelectedValues);
-    setSelectedValues(newSelectedValues);
-  };
+      validate: {
+        pickedMore: values => {
+          if (required && multiSelect) {
+            if (values!.length > (maxRequired ?? 0)) {
+              return false;
+            } else {
+              return true;
+            }
+          } else return true;
+        },
+        pickedLess: values => {
+          if (required && multiSelect) {
+            if (values!.length < (minRequired ?? 0)) {
+              return false;
+            } else {
+              return true;
+            }
+          } else return true;
+        },
+      },
+    },
+  });
 
   const options = React.useMemo(
     () => (shuffleOptions ? shuffleArray([...optionsProp]) : optionsProp),
     [optionsProp, shuffleOptions],
   );
 
+  const errorMessage = messages[errors[label]?.type as keyof typeof messages];
+  const hasError = errors[label] ? true : false;
+
+  const makeHandleOptionClick = (newValue: string) => () => {
+    const selectedValues = field.value;
+    const newSelectedValues = selectedValues
+      ? multiSelect
+        ? selectedValues.includes(newValue)
+          ? selectedValues.filter(value => value !== newValue)
+          : selectedValues.concat(newValue)
+        : [newValue]
+      : [newValue];
+
+    setValue(label, newSelectedValues);
+  };
+
   if (multiSelect) {
-    return (
-      <FormControl
-        sx={mergeSx(sxProp, sx.fieldWidget)}
-        required={required}
-        error={hasError}
-        fullWidth
-      >
-        <FormLabel id={label} component="legend">
-          {label}
-        </FormLabel>
+    if (options.length >= 2) {
+      return (
+        <Box sx={mergeSx(sxProp, sx.fieldWidget)}>
+          {description && (
+            <Typography
+              variant="body1"
+              color="GrayText"
+              data-slot="description"
+            >
+              {description}
+            </Typography>
+          )}
 
-        {description && (
-          <Typography variant="body1" color="GrayText" data-slot="description">
-            {description}
-          </Typography>
-        )}
+          <FormControl required={required} error={hasError} fullWidth>
+            <InputLabel component="legend" id={label}>
+              {label}
+            </InputLabel>
 
-        <FormGroup aria-labelledby={label}>
-          {options.map(option => (
-            <FormControlLabel
-              key={option.value}
-              label={option.label}
-              aria-label={option.label}
-              id={option.label}
-              control={
-                <Checkbox
-                  checked={selectedValues!.includes(option.value)}
+            <Select
+              ref={field.ref}
+              labelId={label}
+              id={label}
+              multiple
+              value={field.value ? field.value : []}
+              onBlur={field.onBlur}
+              input={<OutlinedInput label={label} />}
+            >
+              {options.map(option => (
+                <MenuItem
                   onClick={makeHandleOptionClick(option.value)}
-                  inputProps={{
-                    "aria-labelledby": option.label,
-                  }}
-                />
-              }
-            />
-          ))}
-        </FormGroup>
+                  key={option.label}
+                  value={option.value}
+                >
+                  {option.value}
+                </MenuItem>
+              ))}
+            </Select>
 
-        {helperText && <FormHelperText>{helperText}</FormHelperText>}
-      </FormControl>
-    );
+            {errorMessage && <FormHelperText>{errorMessage}</FormHelperText>}
+          </FormControl>
+        </Box>
+      );
+    } else {
+      return (
+        <FormControl
+          sx={mergeSx(sxProp, sx.fieldWidget)}
+          required={required}
+          error={hasError}
+          fullWidth
+        >
+          <FormLabel id={label} component="legend">
+            {label}
+          </FormLabel>
+
+          {description && (
+            <Typography
+              variant="body1"
+              color="GrayText"
+              data-slot="description"
+            >
+              {description}
+            </Typography>
+          )}
+
+          <FormGroup ref={field.ref} aria-labelledby={label}>
+            {options.map(option => (
+              <FormControlLabel
+                key={option.value}
+                label={option.label}
+                aria-label={option.label}
+                id={option.label}
+                control={
+                  <Checkbox
+                    onChange={makeHandleOptionClick(option.value)}
+                    onBlur={field.onBlur}
+                    checked={field.value?.includes(option.value)}
+                    inputProps={{
+                      "aria-labelledby": option.label,
+                    }}
+                  />
+                }
+              />
+            ))}
+          </FormGroup>
+
+          {errorMessage && <FormHelperText>{errorMessage}</FormHelperText>}
+        </FormControl>
+      );
+    }
   } else {
-    return (
-      <FormControl
-        fullWidth
-        required={required}
-        sx={mergeSx(sxProp, sx.fieldWidget)}
-        error={hasError}
-      >
-        <FormLabel id={label} component="legend">
-          {label}
-        </FormLabel>
+    if (options.length >= 10) {
+      return (
+        <Box sx={mergeSx(sxProp, sx.fieldWidget)}>
+          {description && (
+            <Typography
+              variant="body1"
+              color="GrayText"
+              data-slot="description"
+            >
+              {description}
+            </Typography>
+          )}
 
-        {description && (
-          <Typography variant="body1" color="GrayText" data-slot="description">
-            {description}
-          </Typography>
-        )}
+          <FormControl required={required} error={hasError} fullWidth>
+            <InputLabel component="legend" id={label}>
+              {label}
+            </InputLabel>
 
-        <RadioGroup aria-labelledby={label} defaultValue={defaultValue![0]}>
-          {options.map(option => (
-            <FormControlLabel
-              id={option.label}
-              key={option.value}
-              control={
-                <Radio
+            <Select
+              ref={field.ref}
+              labelId={label}
+              id={label}
+              value={field.value ? field.value : ""}
+              onBlur={field.onBlur}
+              input={<OutlinedInput label={label} />}
+            >
+              {options.map(option => (
+                <MenuItem
                   onClick={makeHandleOptionClick(option.value)}
-                  inputProps={{
-                    "aria-labelledby": label,
-                  }}
-                />
-              }
-              value={option.value}
-              label={option.label}
-              aria-label={option.label}
-            />
-          ))}
-        </RadioGroup>
+                  key={option.label}
+                  value={option.value}
+                >
+                  {option.value}
+                </MenuItem>
+              ))}
+            </Select>
 
-        {helperText && <FormHelperText>{helperText}</FormHelperText>}
-      </FormControl>
-    );
+            {errorMessage && <FormHelperText>{errorMessage}</FormHelperText>}
+          </FormControl>
+        </Box>
+      );
+    } else {
+      return (
+        <FormControl
+          fullWidth
+          required={required}
+          sx={mergeSx(sxProp, sx.fieldWidget)}
+          error={hasError}
+        >
+          <FormLabel id={label} component="legend">
+            {label}
+          </FormLabel>
+
+          {description && (
+            <Typography
+              variant="body1"
+              color="GrayText"
+              data-slot="description"
+            >
+              {description}
+            </Typography>
+          )}
+
+          <RadioGroup
+            name={field.name}
+            ref={field.ref}
+            aria-labelledby={label}
+            defaultValue={defaultValue}
+          >
+            {options.map(option => (
+              <FormControlLabel
+                id={option.label}
+                key={option.value}
+                control={
+                  <Radio
+                    onChange={makeHandleOptionClick(option.value)}
+                    onBlur={field.onBlur}
+                    inputProps={{
+                      "aria-labelledby": label,
+                    }}
+                  />
+                }
+                value={option.value}
+                label={option.label}
+                aria-label={option.label}
+              />
+            ))}
+          </RadioGroup>
+
+          {errorMessage && <FormHelperText>{errorMessage}</FormHelperText>}
+        </FormControl>
+      );
+    }
   }
 };
 
