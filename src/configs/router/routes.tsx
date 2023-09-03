@@ -1,5 +1,7 @@
-import { WithDashboardHeader } from "components/route-layouts";
-import WithDashboardSidebar from "components/route-layouts/WithDashboardSidebar/WithDashboardSidebar";
+import {
+  WithDashboardHeader,
+  WithDashboardSidebar,
+} from "components/route-layouts";
 import { RouteObject } from "react-router-dom";
 import {
   DashboardLoader,
