@@ -1,1 +1,1 @@
-export { default } from "./SchemaToJSX";
+export * from "./SchemaToJSX";
