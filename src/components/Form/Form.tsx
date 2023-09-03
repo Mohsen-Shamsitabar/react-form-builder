@@ -2,48 +2,31 @@
 import { Box, Stack, SxProps } from "@mui/material";
 import {
   FormProvider,
-  SubmitErrorHandler,
-  SubmitHandler,
   useForm,
+  type FieldValues,
+  type SubmitHandler,
 } from "react-hook-form";
 import { SchemaToJSX, type Schema } from "services";
+
 type FormProps = {
   schema: Schema;
   sx?: SxProps;
 };
 
-export type FormValues = Record<
-  string,
-  string | number | boolean | string[] | undefined
->;
-
-let renders = 0;
 const Form = (props: FormProps) => {
-  renders++;
   const { schema, sx: sxProp } = props;
 
-  const rhForm = useForm<FormValues>({ mode: "all" });
+  const form = useForm({ mode: "all" });
 
-  const onSubmit: SubmitHandler<FormValues> = (data, e) =>
-    console.log("submitted", data, e);
-
-  const onError: SubmitErrorHandler<FormValues> | undefined = (errors, e) =>
-    console.log(errors, e);
-
-  const handleClicked = () => {
-    console.log({ fields: rhForm.getValues(), formState: rhForm.formState });
-  };
+  const submitHandler: SubmitHandler<FieldValues> = (_data, _e) => void 0;
 
   return (
     <Box sx={sxProp}>
-      <form onSubmit={rhForm.handleSubmit(onSubmit)} noValidate>
-        <p>{renders}</p>
-        <FormProvider {...rhForm}>
+      <form onSubmit={form.handleSubmit(submitHandler)} noValidate>
+        <FormProvider {...form}>
           <Stack spacing={2}>
             <SchemaToJSX schema={schema} />
-            <button type="submit" onClick={handleClicked}>
-              submit
-            </button>
+            <button type="submit">submit</button>
           </Stack>
         </FormProvider>
       </form>
