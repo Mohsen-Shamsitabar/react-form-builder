@@ -5,13 +5,14 @@ import {
   NumberFieldWidget,
   StringFieldWidget,
   TextUIWidget,
+  ChoiceFieldWidget,
 } from "..";
-import ChoiceFieldWidget from "services/schema/components/field-widgets/ChoiceFieldWidget/ChoiceFieldWidget";
-import type { Schema, Widget } from "../../types";
+import type { DocumentSchema, Widget } from "../../types";
 import { isFieldWidget } from "../../utils";
+import SchemaPage from "../SchemaPage";
 
 interface Props {
-  schema: Schema;
+  schema: DocumentSchema;
 }
 
 const renderWidget = (widget: Widget) => {
@@ -59,11 +60,30 @@ const renderWidget = (widget: Widget) => {
 
 const SchemaToJSX = (props: Props): (JSX.Element | null)[] => {
   const { schema } = props;
-  const { widgets } = schema.properties;
+  const { definitions, "order:pages": pagesOrder } = schema;
 
-  const listOfComponents = widgets.map(renderWidget);
+  const pages = pagesOrder.map(pageId => {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const page = definitions.pages[pageId]!;
 
-  return listOfComponents;
+    const widgets = page["order:widgets"].map(widgetId => {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const widget = definitions.widgets[widgetId]!;
+
+      return renderWidget(widget);
+    });
+
+    return (
+      <SchemaPage
+        key={pageId}
+        widgets={widgets}
+        pageId={pageId}
+        pageTitle={page.title}
+      />
+    );
+  });
+
+  return pages;
 };
 
 export default SchemaToJSX;

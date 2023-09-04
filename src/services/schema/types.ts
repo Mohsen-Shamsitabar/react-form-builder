@@ -1,4 +1,5 @@
 //==========Common==========//
+export type SchemaID = string;
 
 type CommonFieldWidgetsProperties = {
   label: string;
@@ -110,7 +111,8 @@ export type FieldWidgets =
 
 export type FieldWidget = {
   type: "field";
-  id: string;
+  id: SchemaID;
+  "page:id": SchemaID;
   properties: FieldWidgets;
 };
 
@@ -120,7 +122,8 @@ export type UIWidgets = TextUIWidget | LinkUIWidget | DividerUIWidget;
 
 export type UIWidget = {
   type: "ui";
-  id: string;
+  id: SchemaID;
+  "page:id": SchemaID;
   properties: UIWidgets;
 };
 
@@ -128,12 +131,17 @@ export type UIWidget = {
 
 export type Widget = FieldWidget | UIWidget;
 
-export interface Schema {
-  meta: {
-    id: number;
-    title: string;
+export type PageSchema = {
+  id: SchemaID;
+  title: string;
+  "order:widgets": SchemaID[];
+};
+
+export interface DocumentSchema {
+  definitions: {
+    pages: Record<SchemaID, PageSchema>;
+    widgets: Record<SchemaID, Widget>;
   };
-  properties: {
-    widgets: Widget[];
-  };
+  submitButtonText: string;
+  "order:pages": SchemaID[];
 }
