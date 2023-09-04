@@ -58,7 +58,7 @@ export type ChoiceFieldWidgetProps = CommonFieldWidgetsProperties & {
   maxRequired?: number;
   shuffleOptions?: boolean;
   multiSelect: boolean;
-  defaultValue?: string[];
+  defaultValue?: string[] | string;
   options: ChoiceOption[];
 };
 
