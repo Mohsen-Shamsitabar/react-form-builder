@@ -1,20 +1,20 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
-import { Box, Stack, SxProps } from "@mui/material";
+import { Box, SxProps } from "@mui/material";
 import {
   FormProvider,
   useForm,
   type FieldValues,
   type SubmitHandler,
 } from "react-hook-form";
-import { SchemaToJSX, type Schema } from "services";
+import { SchemaToJSX, type DocumentSchema } from "services";
 
 type FormProps = {
-  schema: Schema;
+  schema: DocumentSchema;
   sx?: SxProps;
 };
 
 const Form = (props: FormProps) => {
   const { schema, sx: sxProp } = props;
+  const { submitButtonText } = schema;
 
   const form = useForm({ mode: "all" });
 
@@ -22,12 +22,11 @@ const Form = (props: FormProps) => {
 
   return (
     <Box sx={sxProp}>
+      {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
       <form onSubmit={form.handleSubmit(submitHandler)} noValidate>
         <FormProvider {...form}>
-          <Stack spacing={2}>
-            <SchemaToJSX schema={schema} />
-            <button type="submit">submit</button>
-          </Stack>
+          <SchemaToJSX schema={schema} />
+          <button type="submit">{submitButtonText}</button>
         </FormProvider>
       </form>
     </Box>
