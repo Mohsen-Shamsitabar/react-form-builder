@@ -14,7 +14,7 @@ interface Props {
   schema: Schema;
 }
 
-const WidgetToJSX = (widget: Widget) => {
+const renderWidget = (widget: Widget) => {
   const { id, properties: widgetProperties } = widget;
 
   if (isFieldWidget(widget)) {
@@ -61,7 +61,7 @@ const SchemaToJSX = (props: Props): (JSX.Element | null)[] => {
   const { schema } = props;
   const { widgets } = schema.properties;
 
-  const listOfComponents = widgets.map(widget => WidgetToJSX(widget));
+  const listOfComponents = widgets.map(renderWidget);
 
   return listOfComponents;
 };
