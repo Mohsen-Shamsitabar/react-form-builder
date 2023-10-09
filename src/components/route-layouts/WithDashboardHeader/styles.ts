@@ -12,6 +12,5 @@ export const header: SxProps<Theme> = theme => ({
 });
 
 export const main: SxProps<Theme> = theme => ({
-  height: `calc(100% - ${theme.spacing(6)})`,
-  overflow: "auto",
+  height: `calc(100vh - ${theme.spacing(6)})`,
 });

@@ -1,13 +1,10 @@
 import type { SxProps, Theme } from "@mui/material";
 
 export const root: SxProps<Theme> = {
-  height: "100vh",
+  height: "100%",
 };
 
 export const sidebar: SxProps<Theme> = theme => ({
-  position: "sticky",
-  top: 0,
-  left: 0,
   width: theme.spacing(32),
   height: "100%",
   boxShadow: `2px 0 0 0 ${theme.palette.divider}`,
@@ -15,6 +12,8 @@ export const sidebar: SxProps<Theme> = theme => ({
 });
 
 export const content: SxProps<Theme> = theme => ({
+  height: "100%",
   width: "100%",
   padding: theme.spacing(1),
+  overflow: "auto",
 });
