@@ -1,8 +1,9 @@
-import { Stack, type SxProps, type Theme } from "@mui/material";
+import { Stack } from "@mui/material";
 import { Navbar } from "./components";
+import type { SystemSX } from "types";
 
 interface Props {
-  sx?: SxProps<Theme>;
+  sx?: SystemSX;
 }
 
 const Sidebar = (props: Props) => {

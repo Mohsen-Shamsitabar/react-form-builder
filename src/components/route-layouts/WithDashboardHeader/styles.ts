@@ -1,17 +1,18 @@
-import type { SxProps, Theme } from "@mui/material";
+import type { SystemSX } from "types";
 
-export const root: SxProps<Theme> = {
+export const root: SystemSX = {
   height: "100vh",
 };
 
-export const header: SxProps<Theme> = theme => ({
+export const header: SystemSX = theme => ({
   width: "100%",
   height: theme.spacing(6),
   position: "sticky",
+  backgroundColor: theme.palette.background.default,
   top: 0,
+  zIndex: theme.zIndex.appBar,
 });
 
-export const main: SxProps<Theme> = theme => ({
-  height: `calc(100% - ${theme.spacing(6)})`,
-  overflow: "auto",
+export const wrapper: SystemSX = theme => ({
+  height: `calc(100vh - ${theme.spacing(6)})`,
 });

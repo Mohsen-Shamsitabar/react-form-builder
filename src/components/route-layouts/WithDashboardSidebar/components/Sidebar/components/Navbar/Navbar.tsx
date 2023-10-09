@@ -4,16 +4,15 @@ import {
   ListItemIcon,
   ListItemText,
   Stack,
-  type SxProps,
-  type Theme,
 } from "@mui/material";
 import { NAV_ITEMS } from "configs";
 import { useNavigate } from "react-router-dom";
+import type { SystemSX } from "types";
 import { mergeSx } from "utils";
 import * as sx from "./styles";
 
 interface Props {
-  sx?: SxProps<Theme>;
+  sx?: SystemSX;
 }
 
 const Navbar = (props: Props) => {
