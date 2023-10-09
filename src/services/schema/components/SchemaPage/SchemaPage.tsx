@@ -1,5 +1,5 @@
 import { Stack } from "@mui/material";
-import { type SchemaID } from "services";
+import { useFormStateManager, type SchemaID } from "services";
 import * as sx from "./styles";
 
 interface Props {
@@ -10,6 +10,10 @@ interface Props {
 
 const SchemaPage = (props: Props) => {
   const { widgets, pageId, pageTitle } = props;
+
+  const formStateManager = useFormStateManager();
+
+  if (formStateManager?.state.currentPage !== pageId) return null;
 
   return (
     <Stack id={`page-${pageId}`} sx={sx.root} spacing={2}>
