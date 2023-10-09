@@ -1,6 +1,6 @@
-import type { SxProps, Theme } from "@mui/material";
+import type { SystemSX } from "types";
 
-export const root: SxProps<Theme> = {
+export const root: SystemSX = {
   marginTop: "auto",
   marginBottom: "auto",
 };
