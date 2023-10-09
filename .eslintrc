@@ -23,17 +23,12 @@
     "sourceType": "module"
   },
   "plugins": [
-    "react-refresh",
     "import",
     "react",
     "react-hooks",
     "@typescript-eslint/eslint-plugin"
   ],
   "rules": {
-    "react-refresh/only-export-components": [
-      "warn",
-      { "allowConstantExport": true }
-    ],
     "no-alert": "error",
     "no-console": "warn",
     "prefer-const": "error",
