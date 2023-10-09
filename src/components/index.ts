@@ -1,2 +1,3 @@
+export { default as Logo } from "./Logo";
+
 export * from "./route-layouts";
-export { default as MyForm } from "./Form";

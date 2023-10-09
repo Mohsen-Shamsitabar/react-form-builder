@@ -1,18 +1,13 @@
-import {
-  FormGroup,
-  TextField,
-  Typography,
-  type SxProps,
-  type Theme,
-} from "@mui/material";
+import { FormGroup, TextField, Typography } from "@mui/material";
 import { useController, useFormContext } from "react-hook-form";
 import { type StringFieldWidgetProps } from "services";
+import type { SystemSX } from "types";
 import { mergeSx } from "utils";
 import * as sx from "../commonStyles";
-import { useErrorMessage } from "./hooks";
+import { useErrorMessage, usePageData } from "./hooks";
 
 type Props = StringFieldWidgetProps & {
-  sx?: SxProps<Theme>;
+  sx?: SystemSX;
 };
 
 const emailRegExp = /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/;
@@ -33,10 +28,12 @@ const StringFieldWidget = (props: Props) => {
 
   const { control } = useFormContext();
 
+  const fieldValue = usePageData(label, defaultValue);
+
   const { field, fieldState } = useController({
     name: label,
     control,
-    defaultValue,
+    defaultValue: fieldValue,
     shouldUnregister: true,
     rules: {
       required,

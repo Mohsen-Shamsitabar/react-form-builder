@@ -7,17 +7,17 @@ import {
   FormLabel,
   Switch,
   Typography,
-  type SxProps,
-  type Theme,
 } from "@mui/material";
 import { useController, useFormContext } from "react-hook-form";
 import { type BooleanFieldWidgetProps } from "services";
+import type { SystemSX } from "types";
 import { mergeSx } from "utils";
 import * as sx from "../commonStyles";
-import { useErrorMessage } from "./hooks";
+import { useErrorMessage, usePageData } from "./hooks";
+import * as React from "react";
 
 type Props = BooleanFieldWidgetProps & {
-  sx?: SxProps<Theme>;
+  sx?: SystemSX;
 };
 
 const BooleanFieldWidget = (props: Props) => {
@@ -29,12 +29,16 @@ const BooleanFieldWidget = (props: Props) => {
     sx: sxProp,
   } = props;
 
-  const { control } = useFormContext();
+  const { control, setValue } = useFormContext();
+
+  const fieldValue = usePageData(label, defaultChecked);
+
+  const [checked, setChecked] = React.useState(fieldValue);
 
   const { field, fieldState } = useController({
     name: label,
     control,
-    defaultValue: defaultChecked,
+    defaultValue: checked,
     shouldUnregister: true,
     rules: {
       required,
@@ -42,6 +46,12 @@ const BooleanFieldWidget = (props: Props) => {
   });
 
   const errorMessage = useErrorMessage(fieldState);
+
+  const handleChange = () => {
+    const newChecked = !checked;
+    setChecked(newChecked);
+    setValue(label, newChecked);
+  };
 
   return (
     <>
@@ -63,8 +73,9 @@ const BooleanFieldWidget = (props: Props) => {
             control={
               <Switch
                 {...field}
-                defaultChecked={defaultChecked}
+                checked={checked}
                 inputProps={{ role: "switch", "aria-labelledby": label }}
+                onChange={handleChange}
               />
             }
             label={label}

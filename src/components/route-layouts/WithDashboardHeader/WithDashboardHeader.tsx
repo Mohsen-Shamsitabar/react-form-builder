@@ -7,12 +7,10 @@ const WithDashboardHeader = () => {
   const outlet = useOutlet();
 
   return (
-    <Box sx={sx.root}>
+    <>
       <Header sx={sx.header} />
-      <Box component="main" sx={sx.main}>
-        {outlet}
-      </Box>
-    </Box>
+      <Box sx={sx.wrapper}>{outlet}</Box>
+    </>
   );
 };
 

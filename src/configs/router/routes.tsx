@@ -9,6 +9,8 @@ import {
   MyForms,
   NotFoundView,
   myFormsLoader,
+  FormView,
+  formViewLoader,
 } from "views";
 import * as paths from "./paths";
 
@@ -32,6 +34,11 @@ const routes: RouteObject[] = [
         ],
       },
     ],
+  },
+  {
+    path: paths.FORM,
+    element: <FormView />,
+    loader: formViewLoader,
   },
   {
     path: "*",

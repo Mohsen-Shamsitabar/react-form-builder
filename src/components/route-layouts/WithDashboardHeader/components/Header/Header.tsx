@@ -1,9 +1,11 @@
-import { Button, Stack, type SxProps, type Theme } from "@mui/material";
+import { Button, Stack } from "@mui/material";
 import { mergeSx } from "utils";
 import * as sx from "./styles";
+import { Logo } from "components";
+import type { SystemSX } from "types";
 
 interface Props {
-  sx?: SxProps<Theme>;
+  sx?: SystemSX;
 }
 
 const Header = (props: Props) => {
@@ -17,11 +19,7 @@ const Header = (props: Props) => {
       alignItems="center"
       sx={mergeSx(sx.root, sxProp)}
     >
-      <Stack direction="row" sx={sx.logo}>
-        <span>🚀</span>
-        <span>ReactFormBuilder</span>
-      </Stack>
-
+      <Logo />
       <Button variant="outlined">logout</Button>
     </Stack>
   );

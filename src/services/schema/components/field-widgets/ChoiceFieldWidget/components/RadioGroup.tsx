@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { mergeSx } from "utils";
 import * as sx from "../../commonStyles";
-import { FieldProps } from "./types";
+import type { FieldProps } from "./types";
 import { useErrorMessage } from "../hooks";
 
 const RadioGroup = (props: FieldProps) => {
