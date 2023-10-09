@@ -1,14 +1,15 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { SxProps, Theme } from "@mui/material";
 import * as React from "react";
 import { useController, useFormContext } from "react-hook-form";
 import { type ChoiceFieldWidgetProps } from "services";
 import { shuffleArray } from "utils";
 import { OPTIONS_THRESHOLD } from "./constants";
 import { CheckboxGroup, RadioGroup, Select } from "./components";
+import type { SystemSX } from "types";
+import { usePageData } from "./hooks";
 
 export type ChoiceProps = ChoiceFieldWidgetProps & {
-  sx?: SxProps<Theme>;
+  sx?: SystemSX;
 };
 
 const ChoiceFieldWidget = (props: ChoiceProps) => {
@@ -25,10 +26,12 @@ const ChoiceFieldWidget = (props: ChoiceProps) => {
 
   const { control } = useFormContext();
 
+  const fieldValue = usePageData(label, multiSelect, defaultValue);
+
   const { field, fieldState } = useController({
     name: label,
     control,
-    defaultValue: defaultValue ? defaultValue : multiSelect ? [] : "",
+    defaultValue: fieldValue,
     shouldUnregister: true,
     rules: {
       required,

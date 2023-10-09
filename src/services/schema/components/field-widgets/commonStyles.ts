@@ -1,6 +1,6 @@
-import type { SxProps, Theme } from "@mui/material";
+import type { SystemSX } from "types";
 
-export const fieldWidget: SxProps<Theme> = theme => ({
+export const fieldWidget: SystemSX = theme => ({
   "& > [data-slot='description']": {
     marginBottom: theme.spacing(2),
   },

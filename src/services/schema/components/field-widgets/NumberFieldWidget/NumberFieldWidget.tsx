@@ -1,18 +1,13 @@
-import {
-  FormGroup,
-  TextField,
-  Typography,
-  type SxProps,
-  type Theme,
-} from "@mui/material";
+import { FormGroup, TextField, Typography } from "@mui/material";
 import { useController, useFormContext } from "react-hook-form";
-import { type NumberFieldWidgetProps } from "services";
+import { useFormStateManager, type NumberFieldWidgetProps } from "services";
+import type { SystemSX } from "types";
 import { mergeSx } from "utils";
 import * as sx from "../commonStyles";
-import { useErrorMessage } from "./hooks";
+import { useErrorMessage, usePageData } from "./hooks";
 
 type Props = NumberFieldWidgetProps & {
-  sx?: SxProps<Theme>;
+  sx?: SystemSX;
 };
 
 const numberRegExp = /^-?[0-9]\d*(\.\d+)?$/;
@@ -31,10 +26,13 @@ const NumberFieldWidget = (props: Props) => {
 
   const { control } = useFormContext();
 
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const fieldValue = usePageData(label, defaultValue);
+
   const { field, fieldState } = useController({
     name: label,
     control,
-    defaultValue,
+    defaultValue: fieldValue,
     shouldUnregister: true,
     rules: {
       required,
