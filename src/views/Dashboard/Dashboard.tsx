@@ -1,8 +1,11 @@
-import { MyForm } from "components";
-import schema from "../../mock";
+import { Box } from "@mui/material";
 
 const Dashboard = () => {
-  return <MyForm schema={schema} />;
+  return (
+    <Box component="main">
+      <h1>Dashboard</h1>
+    </Box>
+  );
 };
 
 export default Dashboard;
