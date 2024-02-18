@@ -1,5 +1,9 @@
-//==========Common==========//
+//==========CommonFieldTypes==========//
 export type SchemaID = string;
+
+export type WidgetId = `WIDGET_${SchemaID}`;
+export type PageId = `PAGE_${SchemaID}`;
+export type EffectId = `EFFECT_${SchemaID}`;
 
 type CommonFieldWidgetsProperties = {
   label: string;
@@ -127,7 +131,90 @@ export type UIWidget = {
   properties: UIWidgets;
 };
 
+//==========CommonEffectTypes==========//
+
+export enum ComparisonTypes {
+  EQ = "EQ",
+  NEQ = "NEQ",
+  GT = "GT",
+  LT = "LT",
+  IN = "IN",
+  NIN = "NIN",
+  GTE = "GTE",
+  LTE = "LTE",
+}
+
+export enum LogicalTypes {
+  AND = "AND",
+  OR = "OR",
+}
+
+//[schemaID,unknown] => [string,unknown].
+//cuz we are storing data based on fieldLabel, not ID!
+export type ComparisonFn = [ComparisonTypes, [string, unknown]];
+
+export type LogicalFn = [LogicalTypes, [Fn, Fn]];
+
+export type Fn = ComparisonFn | LogicalFn;
+
+//==========FieldCondition==========//
+
+export enum FieldAction {
+  SHOW_FIELDS = "SHOW_FIELDS",
+  HIDE_FIELDS = "HIDE_FIELDS",
+}
+
+export type FieldActions =
+  | {
+      type: FieldAction.SHOW_FIELDS;
+      payload: {
+        fieldIds: SchemaID[];
+      };
+    }
+  | {
+      type: FieldAction.HIDE_FIELDS;
+      payload: {
+        fieldIds: SchemaID[];
+      };
+    };
+
+export type FieldEffect = {
+  owner: SchemaID;
+  type: "field";
+  id: SchemaID;
+  fn: Fn;
+  action: FieldActions;
+};
+//==========PageCondition==========//
+
+export enum PageAction {
+  GO_TO_PAGE = "GO_TO_PAGE",
+}
+
+export type PageActions = {
+  type: PageAction.GO_TO_PAGE;
+  payload: {
+    pageId: SchemaID;
+  };
+};
+
+export type PageEffect = {
+  owner: SchemaID;
+  type: "page";
+  id: SchemaID;
+  fn: Fn;
+  action: PageActions;
+};
+
 //==========Schema==========//
+export type EffectTypes = Effect["type"];
+
+export type Effect = FieldEffect | PageEffect;
+
+export type EffectMap = {
+  page: PageEffect;
+  field: FieldEffect;
+};
 
 export type Widget = FieldWidget | UIWidget;
 
@@ -135,12 +222,14 @@ export type PageSchema = {
   id: SchemaID;
   title: string;
   "order:widgets": SchemaID[];
+  effects?: SchemaID[];
 };
 
 export interface DocumentSchema {
   definitions: {
     pages: Record<SchemaID, PageSchema>;
     widgets: Record<SchemaID, Widget>;
+    effects: Record<SchemaID, Effect>;
   };
   submitButtonText: string;
   "order:pages": SchemaID[];
