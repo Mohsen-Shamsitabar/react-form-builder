@@ -1,7 +1,7 @@
 import { Box, Stack } from "@mui/material";
-import * as sx from "./styles";
-import { SystemSX } from "types";
+import type { SystemSX } from "types";
 import { mergeSx } from "utils";
+import * as sx from "./styles";
 
 interface Props {
   sx?: SystemSX;

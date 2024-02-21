@@ -1,5 +1,5 @@
 import { Link } from "@mui/material";
-import { LinkUIWidgetProps } from "services";
+import type { LinkUIWidgetProps } from "services/schema/types";
 
 const LinkUIWidget = (props: LinkUIWidgetProps) => {
   const { href, text } = props;

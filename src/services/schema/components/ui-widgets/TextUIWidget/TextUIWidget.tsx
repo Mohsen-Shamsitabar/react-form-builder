@@ -1,5 +1,5 @@
 import { Typography } from "@mui/material";
-import { type TextUIWidgetProps } from "services";
+import type { TextUIWidgetProps } from "services/schema/types";
 
 const TextUIWidget = (props: TextUIWidgetProps) => {
   const { varient, text } = props;
