@@ -1,15 +1,16 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import * as React from "react";
 import { useController, useFormContext } from "react-hook-form";
-import { type ChoiceFieldWidgetProps } from "services";
 import { shuffleArray } from "utils";
 import { OPTIONS_THRESHOLD } from "./constants";
 import { CheckboxGroup, RadioGroup, Select } from "./components";
 import type { SystemSX } from "types";
-import { usePageData } from "./hooks";
+import type { ChoiceFieldWidgetProps, SchemaID } from "services/schema/types";
+import { usePageData } from "../hooks";
 
 export type ChoiceProps = ChoiceFieldWidgetProps & {
   sx?: SystemSX;
+  widgetId: SchemaID;
 };
 
 const ChoiceFieldWidget = (props: ChoiceProps) => {
@@ -18,18 +19,26 @@ const ChoiceFieldWidget = (props: ChoiceProps) => {
     minRequired,
     multiSelect,
     options: optionsProp,
-    defaultValue,
+    defaultValue: defaultValueProp,
     shuffleOptions = false,
     label,
     required = false,
+    widgetId,
   } = props;
 
   const { control } = useFormContext();
 
-  const fieldValue = usePageData(label, multiSelect, defaultValue);
+  const defaultValue =
+    typeof defaultValueProp === "undefined"
+      ? multiSelect
+        ? []
+        : ""
+      : defaultValueProp;
+
+  const fieldValue = usePageData(widgetId, defaultValue);
 
   const { field, fieldState } = useController({
-    name: label,
+    name: widgetId,
     control,
     defaultValue: fieldValue,
     shouldUnregister: true,
@@ -70,6 +79,7 @@ const ChoiceFieldWidget = (props: ChoiceProps) => {
         options={options}
         field={field}
         fieldState={fieldState}
+        label={label}
       />
     );
   }
@@ -81,6 +91,7 @@ const ChoiceFieldWidget = (props: ChoiceProps) => {
         options={options}
         field={field}
         fieldState={fieldState}
+        label={label}
       />
     );
   }
@@ -91,6 +102,7 @@ const ChoiceFieldWidget = (props: ChoiceProps) => {
       options={options}
       field={field}
       fieldState={fieldState}
+      label={label}
     />
   );
 };

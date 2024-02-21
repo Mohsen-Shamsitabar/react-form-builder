@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Button } from "@mui/material";
 import { useFormContext } from "react-hook-form";
-import { useFormStateManager, type SchemaID } from "services";
+import { useSchemaStateManager } from "services";
+import type { SchemaID } from "services/schema/types";
 import type { SystemSX } from "types";
 
 type Props = {
@@ -14,28 +16,46 @@ const BackButton = (props: Props) => {
 
   const form = useFormContext();
 
-  const formStateManager = useFormStateManager();
-  if (!formStateManager) return;
-  const { state, goToPage, setPageData } = formStateManager;
+  const schemaStateManager = useSchemaStateManager();
+
+  if (!schemaStateManager) return;
+
+  const { state, goToPage, setPageData } = schemaStateManager;
 
   const currentPageIdx = schemaPages.findIndex(
     pageId => pageId === state.currentPage,
   );
 
+  const isFirstPage = currentPageIdx === 0;
+
+  const hasPreviousVisitedPage =
+    state.visitedPages[state.visitedPages.length - 1] ?? false;
+
+  const isDisabled = isFirstPage ? !hasPreviousVisitedPage : false;
+
   const handleClick: Props["onClick"] = event => {
     onClick?.(event);
+
     const pageData = form.getValues();
-    if (currentPageIdx === 0) {
-      return;
-    }
+
+    if (isDisabled) return;
+
+    const nextPageId = hasPreviousVisitedPage
+      ? state.visitedPages[state.visitedPages.length - 1]!
+      : schemaPages[0]!;
+
+    goToPage(nextPageId, true);
     setPageData({ [state.currentPage]: pageData });
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    goToPage(schemaPages[currentPageIdx - 1]!);
   };
 
   return (
     <>
-      <Button onClick={handleClick} sx={sx} variant="outlined">
+      <Button
+        disabled={isDisabled}
+        onClick={handleClick}
+        sx={sx}
+        variant="outlined"
+      >
         Back
       </Button>
     </>

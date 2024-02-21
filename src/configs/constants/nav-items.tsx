@@ -1,5 +1,5 @@
 import { AssignmentOutlined } from "@mui/icons-material";
-import { NavigateOptions, type To } from "react-router-dom";
+import { type NavigateOptions, type To } from "react-router-dom";
 import * as paths from "../router/paths";
 
 interface NavItem {

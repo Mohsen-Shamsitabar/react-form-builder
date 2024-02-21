@@ -1,13 +1,15 @@
 import { FormGroup, TextField, Typography } from "@mui/material";
 import { useController, useFormContext } from "react-hook-form";
-import { useFormStateManager, type NumberFieldWidgetProps } from "services";
 import type { SystemSX } from "types";
 import { mergeSx } from "utils";
 import * as sx from "../commonStyles";
-import { useErrorMessage, usePageData } from "./hooks";
+import type { NumberFieldWidgetProps, SchemaID } from "services/schema/types";
+import { usePageData } from "../hooks";
+import useErrorMessage from "./hooks";
 
 type Props = NumberFieldWidgetProps & {
   sx?: SystemSX;
+  widgetId: SchemaID;
 };
 
 const numberRegExp = /^-?[0-9]\d*(\.\d+)?$/;
@@ -18,19 +20,22 @@ const NumberFieldWidget = (props: Props) => {
     label,
     max,
     min,
-    defaultValue,
+    defaultValue: defaultValueProp,
     description,
     required = false,
     placeholder,
+    widgetId,
   } = props;
 
   const { control } = useFormContext();
 
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const fieldValue = usePageData(label, defaultValue);
+  const defaultValue =
+    typeof defaultValueProp === "undefined" ? min ?? 0 : defaultValueProp;
+
+  const fieldValue = usePageData(widgetId, defaultValue);
 
   const { field, fieldState } = useController({
-    name: label,
+    name: widgetId,
     control,
     defaultValue: fieldValue,
     shouldUnregister: true,
@@ -54,8 +59,8 @@ const NumberFieldWidget = (props: Props) => {
       <TextField
         {...field}
         fullWidth
-        id={label}
-        name={label}
+        id={widgetId}
+        name={widgetId}
         label={label}
         type="text"
         inputMode="numeric"

@@ -2,8 +2,8 @@ import type {
   ControllerFieldState,
   ControllerRenderProps,
 } from "react-hook-form";
+import { type ChoiceOption } from "services/schema/types";
 import type { ChoiceProps } from "../ChoiceFieldWidget";
-import type { ChoiceOption } from "services";
 
 export type FieldProps = Omit<
   ChoiceProps,

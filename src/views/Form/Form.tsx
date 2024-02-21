@@ -2,7 +2,7 @@ import { Box, Stack } from "@mui/material";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useLoaderData } from "react-router-dom";
-import { FormStateManager } from "services";
+import { SchemaStateManagerProvider } from "services";
 import { SchemaForm } from "services/schema/components";
 import { BackButton, Footer, Header, SubmitButton } from "./components";
 import { type LoaderData } from "./loader";
@@ -29,10 +29,9 @@ const Form = () => {
     <>
       <Header />
       <Stack direction="column" sx={sx.wrapper}>
-        <FormStateManager form={form} schemaPages={pages}>
+        <SchemaStateManagerProvider form={form} schemaPages={pages}>
           <Box sx={sx.main} component="main">
             <SchemaForm
-              // eslint-disable-next-line @typescript-eslint/no-misused-promises
               form={form}
               schema={schema}
               submitButton={
@@ -61,7 +60,7 @@ const Form = () => {
               />
             }
           />
-        </FormStateManager>
+        </SchemaStateManagerProvider>
       </Stack>
     </>
   );

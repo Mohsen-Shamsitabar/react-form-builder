@@ -1,7 +1,7 @@
 import * as React from "react";
 import { type ControllerFieldState } from "react-hook-form";
 
-const useErrorMessage = (fieldState: ControllerFieldState) => {
+export const useErrorMessage = (fieldState: ControllerFieldState) => {
   const messages = React.useMemo(() => {
     return {
       required: "Please check this box if you want to proceed nigga.",
@@ -12,5 +12,3 @@ const useErrorMessage = (fieldState: ControllerFieldState) => {
 
   return messages[fieldState.error.type as keyof typeof messages];
 };
-
-export default useErrorMessage;

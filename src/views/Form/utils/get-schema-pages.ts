@@ -1,4 +1,4 @@
-import { type DocumentSchema } from "services";
+import type { DocumentSchema } from "services/schema/types";
 
 const getSchemaPages = (schema: DocumentSchema) => schema["order:pages"];
 

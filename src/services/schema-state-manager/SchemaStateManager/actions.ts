@@ -1,5 +1,5 @@
 import type { FieldValues } from "react-hook-form";
-import { type SchemaID } from "services";
+import type { SchemaID } from "services/schema/types";
 
 export enum ActionType {
   GO_TO_PAGE,
@@ -10,16 +10,19 @@ export enum ActionType {
 export type Action =
   | {
       type: ActionType.GO_TO_PAGE;
-      payload: { pageId: SchemaID };
+      payload: { pageId: SchemaID; isBack: boolean };
     }
   | {
       type: ActionType.SET_PAGE_DATA;
       payload: { pageData: FieldValues };
     };
 
-export const createGoToPageAction = (pageId: SchemaID): Action => ({
+export const createGoToPageAction = (
+  pageId: SchemaID,
+  isBack = false,
+): Action => ({
   type: ActionType.GO_TO_PAGE,
-  payload: { pageId },
+  payload: { pageId, isBack },
 });
 
 export const createSetPageData = (pageData: FieldValues): Action => ({

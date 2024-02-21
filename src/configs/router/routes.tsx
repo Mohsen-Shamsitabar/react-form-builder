@@ -2,15 +2,15 @@ import {
   WithDashboardHeader,
   WithDashboardSidebar,
 } from "components/route-layouts";
-import { RouteObject } from "react-router-dom";
+import { type RouteObject } from "react-router-dom";
 import {
   DashboardLoader,
   DashboardView,
+  FormView,
   MyForms,
   NotFoundView,
-  myFormsLoader,
-  FormView,
   formViewLoader,
+  myFormsLoader,
 } from "views";
 import * as paths from "./paths";
 
