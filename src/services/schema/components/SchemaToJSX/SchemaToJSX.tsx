@@ -1,11 +1,11 @@
 import {
   BooleanFieldWidget,
+  ChoiceFieldWidget,
   DividerUIWidget,
   LinkUIWidget,
   NumberFieldWidget,
   StringFieldWidget,
   TextUIWidget,
-  ChoiceFieldWidget,
 } from "..";
 import type { DocumentSchema, Widget } from "../../types";
 import { isFieldWidget } from "../../utils";
@@ -23,16 +23,16 @@ const renderWidget = (widget: Widget) => {
 
     switch (type) {
       case "string": {
-        return <StringFieldWidget {...properties} key={id} />;
+        return <StringFieldWidget {...properties} key={id} widgetId={id} />;
       }
       case "number": {
-        return <NumberFieldWidget {...properties} key={id} />;
+        return <NumberFieldWidget {...properties} key={id} widgetId={id} />;
       }
       case "boolean": {
-        return <BooleanFieldWidget {...properties} key={id} />;
+        return <BooleanFieldWidget {...properties} key={id} widgetId={id} />;
       }
       case "choice": {
-        return <ChoiceFieldWidget {...properties} key={id} />;
+        return <ChoiceFieldWidget {...properties} key={id} widgetId={id} />;
       }
       default: {
         return null;

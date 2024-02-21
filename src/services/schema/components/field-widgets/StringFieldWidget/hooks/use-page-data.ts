@@ -1,16 +1,18 @@
-import { type SchemaID, useFormStateManager } from "services";
+import { useSchemaStateManager } from "services";
+import type { SchemaID } from "services/schema/types";
 
-const usePageData = (label: SchemaID, defaultValue: string) => {
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const formStateManager = useFormStateManager()!;
-  const { state } = formStateManager;
+const usePageData = (fieldId: SchemaID, defaultValue: string) => {
+  const schemaStateManager = useSchemaStateManager();
+
+  if (!schemaStateManager) return defaultValue;
+
+  const { state } = schemaStateManager;
   const currentPage = state.currentPage;
   const currentPageData = state.pageData[currentPage];
-  const fieldValue = currentPageData
-    ? (currentPageData[label] as string)
-    : defaultValue;
 
-  return fieldValue;
+  if (!currentPageData) return defaultValue;
+
+  return currentPageData[fieldId] as string;
 };
 
 export default usePageData;

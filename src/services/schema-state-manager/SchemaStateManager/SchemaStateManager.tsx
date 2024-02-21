@@ -1,10 +1,10 @@
 import * as React from "react";
-import { FieldValues, FormProvider, UseFormReturn } from "react-hook-form";
-import { type SchemaID } from "services";
+import { FormProvider, type UseFormReturn } from "react-hook-form";
+import type { SchemaID } from "services/schema/types";
 import { createGoToPageAction, createSetPageData } from "./actions";
 import {
-  Provider as FormStateManagerProvider,
-  type ContextValue as FormStateManagerContextValue,
+  Provider as SchemaStateManagerProvider,
+  type ContextValue as SchemaStateManagerContextValue,
 } from "./context";
 import reducer, { INITIAL_STATE } from "./reducer";
 
@@ -14,7 +14,7 @@ type Props = {
   schemaPages: SchemaID[];
 };
 
-const FormStateManager = (props: Props) => {
+const SchemaStateManager = (props: Props) => {
   const { children, form, schemaPages } = props;
 
   const [state, dispatch] = React.useReducer(reducer, INITIAL_STATE, state => ({
@@ -23,24 +23,23 @@ const FormStateManager = (props: Props) => {
     currentPage: schemaPages[0]!,
   }));
 
-  const stateManagerContext = React.useMemo<FormStateManagerContextValue>(
+  const stateManagerContext = React.useMemo<SchemaStateManagerContextValue>(
     () => ({
       state,
-      goToPage: (pageId: SchemaID) => dispatch(createGoToPageAction(pageId)),
-
-      setPageData: (pageData: FieldValues) =>
-        dispatch(createSetPageData(pageData)),
+      goToPage: (pageId, isBack) =>
+        dispatch(createGoToPageAction(pageId, isBack)),
+      setPageData: pageData => dispatch(createSetPageData(pageData)),
     }),
     [state],
   );
 
   return (
     <FormProvider {...form}>
-      <FormStateManagerProvider context={stateManagerContext}>
+      <SchemaStateManagerProvider context={stateManagerContext}>
         {children}
-      </FormStateManagerProvider>
+      </SchemaStateManagerProvider>
     </FormProvider>
   );
 };
 
-export default FormStateManager;
+export default SchemaStateManager;

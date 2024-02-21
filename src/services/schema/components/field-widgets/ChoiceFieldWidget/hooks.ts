@@ -1,12 +1,13 @@
 import * as React from "react";
 import { type ControllerFieldState } from "react-hook-form";
 
-interface Props {
-  maxRequired?: number;
-  minRequired?: number;
-}
-
-const useErrorMessage = (fieldState: ControllerFieldState, props: Props) => {
+export const useErrorMessage = (
+  fieldState: ControllerFieldState,
+  props: {
+    maxRequired?: number;
+    minRequired?: number;
+  },
+) => {
   const { maxRequired, minRequired } = props;
 
   const messages = React.useMemo(() => {
@@ -21,5 +22,3 @@ const useErrorMessage = (fieldState: ControllerFieldState, props: Props) => {
 
   return messages[fieldState.error.type as keyof typeof messages];
 };
-
-export default useErrorMessage;

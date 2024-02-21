@@ -1,4 +1,3 @@
-/* eslint-disable no-case-declarations */
 import {
   FormControl,
   FormControlLabel,
@@ -9,15 +8,17 @@ import {
   Typography,
 } from "@mui/material";
 import { useController, useFormContext } from "react-hook-form";
-import { type BooleanFieldWidgetProps } from "services";
 import type { SystemSX } from "types";
 import { mergeSx } from "utils";
 import * as sx from "../commonStyles";
-import { useErrorMessage, usePageData } from "./hooks";
+import { useErrorMessage } from "./hooks";
 import * as React from "react";
+import type { BooleanFieldWidgetProps, SchemaID } from "services/schema/types";
+import { usePageData } from "../hooks";
 
 type Props = BooleanFieldWidgetProps & {
   sx?: SystemSX;
+  widgetId: SchemaID;
 };
 
 const BooleanFieldWidget = (props: Props) => {
@@ -27,16 +28,17 @@ const BooleanFieldWidget = (props: Props) => {
     description,
     required = false,
     sx: sxProp,
+    widgetId,
   } = props;
 
   const { control, setValue } = useFormContext();
 
-  const fieldValue = usePageData(label, defaultChecked);
+  const fieldValue = usePageData(widgetId, defaultChecked);
 
   const [checked, setChecked] = React.useState(fieldValue);
 
   const { field, fieldState } = useController({
-    name: label,
+    name: widgetId,
     control,
     defaultValue: checked,
     shouldUnregister: true,
@@ -50,7 +52,7 @@ const BooleanFieldWidget = (props: Props) => {
   const handleChange = () => {
     const newChecked = !checked;
     setChecked(newChecked);
-    setValue(label, newChecked);
+    setValue(widgetId, newChecked);
   };
 
   return (
@@ -69,7 +71,7 @@ const BooleanFieldWidget = (props: Props) => {
         <FormGroup>
           <FormControlLabel
             required={required}
-            id={label}
+            id={widgetId}
             control={
               <Switch
                 {...field}

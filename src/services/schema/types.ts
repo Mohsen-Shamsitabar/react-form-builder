@@ -1,4 +1,10 @@
-//==========CommonFieldTypes==========//
+import type {
+  ComparisonTypes,
+  FieldAction,
+  LogicalTypes,
+  PageAction,
+} from "./constants";
+
 export type SchemaID = string;
 
 export type WidgetId = `WIDGET_${SchemaID}`;
@@ -10,8 +16,6 @@ type CommonFieldWidgetsProperties = {
   description?: string;
   required?: boolean;
 };
-
-//==========StringField==========//
 
 export type StringFieldWidgetProps = CommonFieldWidgetsProperties & {
   type: "email" | "text";
@@ -27,8 +31,6 @@ export type StringFieldWidget = {
   properties: StringFieldWidgetProps;
 };
 
-//==========NumberField==========//
-
 export type NumberFieldWidgetProps = CommonFieldWidgetsProperties & {
   placeholder?: string;
   max?: number;
@@ -41,8 +43,6 @@ export type NumberFieldWidget = {
   properties: NumberFieldWidgetProps;
 };
 
-//==========BooleanField==========//
-
 export type BooleanFieldWidgetProps = CommonFieldWidgetsProperties & {
   defaultChecked?: boolean;
 };
@@ -51,7 +51,6 @@ export type BooleanFieldWidget = {
   type: "boolean";
   properties: BooleanFieldWidgetProps;
 };
-//==========ChoiceField==========//
 
 export type ChoiceOption = {
   label: string;
@@ -74,8 +73,6 @@ export type ChoiceFieldWidget = {
   properties: ChoiceFieldWidgetProps;
 };
 
-//==========TextUI==========//
-
 export type TextUIWidgetProps = {
   text: string;
   varient: "paragraph" | "title" | "subtitle";
@@ -85,8 +82,6 @@ export type TextUIWidget = {
   type: "text";
   properties: TextUIWidgetProps;
 };
-
-//==========LinkUI==========//
 
 export type LinkUIWidgetProps = {
   href: string;
@@ -98,14 +93,10 @@ export type LinkUIWidget = {
   properties: LinkUIWidgetProps;
 };
 
-//==========DividerUI==========//
-
 export type DividerUIWidget = {
   type: "divider";
   properties: null;
 };
-
-//==========FieldWidgets==========//
 
 export type FieldWidgets =
   | StringFieldWidget
@@ -120,8 +111,6 @@ export type FieldWidget = {
   properties: FieldWidgets;
 };
 
-//==========UIWidgets==========//
-
 export type UIWidgets = TextUIWidget | LinkUIWidget | DividerUIWidget;
 
 export type UIWidget = {
@@ -131,40 +120,17 @@ export type UIWidget = {
   properties: UIWidgets;
 };
 
-//==========CommonEffectTypes==========//
+export type ComparisonFnParams = [SchemaID, unknown];
 
-export enum ComparisonTypes {
-  EQ = "EQ",
-  NEQ = "NEQ",
-  GT = "GT",
-  LT = "LT",
-  IN = "IN",
-  NIN = "NIN",
-  GTE = "GTE",
-  LTE = "LTE",
-}
+export type ComparisonFn = [ComparisonTypes, ComparisonFnParams];
 
-export enum LogicalTypes {
-  AND = "AND",
-  OR = "OR",
-}
+export type LogicalFnParams = [Fn, Fn];
 
-//[schemaID,unknown] => [string,unknown].
-//cuz we are storing data based on fieldLabel, not ID!
-export type ComparisonFn = [ComparisonTypes, [string, unknown]];
-
-export type LogicalFn = [LogicalTypes, [Fn, Fn]];
+export type LogicalFn = [LogicalTypes, LogicalFnParams];
 
 export type Fn = ComparisonFn | LogicalFn;
 
-//==========FieldCondition==========//
-
-export enum FieldAction {
-  SHOW_FIELDS = "SHOW_FIELDS",
-  HIDE_FIELDS = "HIDE_FIELDS",
-}
-
-export type FieldActions =
+export type FieldEffectActions =
   | {
       type: FieldAction.SHOW_FIELDS;
       payload: {
@@ -183,15 +149,10 @@ export type FieldEffect = {
   type: "field";
   id: SchemaID;
   fn: Fn;
-  action: FieldActions;
+  action: FieldEffectActions;
 };
-//==========PageCondition==========//
 
-export enum PageAction {
-  GO_TO_PAGE = "GO_TO_PAGE",
-}
-
-export type PageActions = {
+export type PageEffectActions = {
   type: PageAction.GO_TO_PAGE;
   payload: {
     pageId: SchemaID;
@@ -203,10 +164,11 @@ export type PageEffect = {
   type: "page";
   id: SchemaID;
   fn: Fn;
-  action: PageActions;
+  action: PageEffectActions;
 };
 
-//==========Schema==========//
+export type EffectActions = FieldEffectActions | PageEffectActions;
+
 export type EffectTypes = Effect["type"];
 
 export type Effect = FieldEffect | PageEffect;
