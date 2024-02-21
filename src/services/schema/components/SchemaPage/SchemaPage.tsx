@@ -1,5 +1,4 @@
 import { Stack } from "@mui/material";
-import { useSchemaStateManager } from "services";
 import type { SchemaID } from "services/schema/types";
 import * as sx from "./styles";
 
@@ -11,11 +10,6 @@ interface Props {
 
 const SchemaPage = (props: Props) => {
   const { widgets, pageId, pageTitle } = props;
-
-  const schemaStateManager = useSchemaStateManager();
-
-  if (!schemaStateManager) return null;
-  if (schemaStateManager.state.currentPage !== pageId) return null;
 
   return (
     <Stack id={`page-${pageId}`} sx={sx.root} spacing={2}>
