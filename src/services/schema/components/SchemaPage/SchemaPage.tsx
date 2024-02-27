@@ -1,19 +1,18 @@
 import { Stack } from "@mui/material";
-import type { SchemaID } from "services/schema/types";
+import type { PageSchema } from "services/schema/types";
 import * as sx from "./styles";
 
 interface Props {
+  page: PageSchema;
   widgets: (JSX.Element | null)[];
-  pageId: SchemaID;
-  pageTitle: string;
 }
 
 const SchemaPage = (props: Props) => {
-  const { widgets, pageId, pageTitle } = props;
+  const { page, widgets } = props;
 
   return (
-    <Stack id={`page-${pageId}`} sx={sx.root} spacing={2}>
-      <h1>{pageTitle}</h1>
+    <Stack id={`page-${page.id}`} sx={sx.root} spacing={2}>
+      <h1>{page.title}</h1>
       {widgets}
     </Stack>
   );

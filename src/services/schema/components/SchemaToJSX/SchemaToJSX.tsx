@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { useSchemaStateManager } from "services";
+import { useSchema, useSchemaStateManager } from "services";
 import {
   BooleanFieldWidget,
   ChoiceFieldWidget,
@@ -9,15 +9,11 @@ import {
   StringFieldWidget,
   TextUIWidget,
 } from "..";
-import type { DocumentSchema, Widget } from "../../types";
+import type { Widget } from "../../types";
 import { isFieldWidget } from "../../utils";
 import SchemaPage from "../SchemaPage";
 
-interface Props {
-  schema: DocumentSchema;
-}
-
-const renderWidget = (widget: Widget) => {
+export const renderWidget = (widget: Widget) => {
   const { id, properties: widgetProperties } = widget;
 
   if (isFieldWidget(widget)) {
@@ -60,31 +56,27 @@ const renderWidget = (widget: Widget) => {
   }
 };
 
-const SchemaToJSX = (props: Props): JSX.Element | null => {
-  const { schema } = props;
-  const { definitions } = schema;
-
+const SchemaToJSX = (): JSX.Element | null => {
+  const schema = useSchema();
   const schemaStateManager = useSchemaStateManager();
 
+  if (!schema) return null;
   if (!schemaStateManager) return null;
+
+  const { definitions } = schema;
 
   const { state } = schemaStateManager;
 
-  const page = definitions.pages[state.currentPage]!;
+  const pageSchema = definitions.pages[state.currentPage]!;
 
-  const widgets = page["order:widgets"].map(widgetId => {
-    const widget = definitions.widgets[widgetId]!;
+  const widgets = state.visibleWidgets.map(widgetId => {
+    if (!schema) return null;
 
+    const widget = schema.definitions.widgets[widgetId]!;
     return renderWidget(widget);
   });
 
-  return (
-    <SchemaPage
-      widgets={widgets}
-      pageId={state.currentPage}
-      pageTitle={page.title}
-    />
-  );
+  return <SchemaPage page={pageSchema} widgets={widgets} />;
 };
 
 export default SchemaToJSX;

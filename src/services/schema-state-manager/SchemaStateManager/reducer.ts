@@ -7,12 +7,16 @@ export type State = {
   visitedPages: SchemaID[];
   pageData: Record<SchemaID, FieldValues>;
   currentPage: SchemaID;
+  visibleWidgets: SchemaID[];
+  currentPageWidgets: SchemaID[];
 };
 
 export const INITIAL_STATE: State = {
   visitedPages: [],
   pageData: {},
   currentPage: "",
+  visibleWidgets: [],
+  currentPageWidgets: [],
 };
 
 const reducer: React.Reducer<State, Action> = (state, action) => {
@@ -28,10 +32,34 @@ const reducer: React.Reducer<State, Action> = (state, action) => {
         newVisitedPages = newVisitedPages.slice(0, -1);
       }
 
+      // ======
+
       const newState: State = {
         ...state,
         currentPage: pageId,
         visitedPages: newVisitedPages,
+      };
+
+      return newState;
+    }
+    case ActionType.SET_VISIBLE_WIDGETS: {
+      const { widgetIds } = action.payload;
+
+      // const newVisibleWidgets = [...state.visibleWidgets, ...widgetIds];
+
+      const newState: State = {
+        ...state,
+        visibleWidgets: widgetIds,
+      };
+
+      return newState;
+    }
+    case ActionType.SET_CURRENT_PAGE_WIDGETS: {
+      const { widgetIds } = action.payload;
+
+      const newState: State = {
+        ...state,
+        currentPageWidgets: widgetIds,
       };
 
       return newState;

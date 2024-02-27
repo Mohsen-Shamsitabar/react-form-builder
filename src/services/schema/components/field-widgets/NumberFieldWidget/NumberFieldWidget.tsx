@@ -1,9 +1,15 @@
 import { FormGroup, TextField, Typography } from "@mui/material";
 import { useController, useFormContext } from "react-hook-form";
+import { useSchema, useSchemaStateManager } from "services";
+import type {
+  FieldDatas,
+  NumberFieldWidgetProps,
+  SchemaID,
+} from "services/schema/types";
 import type { SystemSX } from "types";
 import { mergeSx } from "utils";
 import * as sx from "../commonStyles";
-import type { NumberFieldWidgetProps, SchemaID } from "services/schema/types";
+import handleFieldEffects from "../handleFieldEffects";
 import { usePageData } from "../hooks";
 import useErrorMessage from "./hooks";
 
@@ -20,17 +26,20 @@ const NumberFieldWidget = (props: Props) => {
     label,
     max,
     min,
-    defaultValue: defaultValueProp,
+    defaultValue,
     description,
     required = false,
     placeholder,
     widgetId,
   } = props;
 
-  const { control } = useFormContext();
+  const schemaStateManager = useSchemaStateManager();
 
-  const defaultValue =
-    typeof defaultValueProp === "undefined" ? min ?? 0 : defaultValueProp;
+  const schema = useSchema();
+
+  const form = useFormContext();
+
+  const { control, getValues } = form;
 
   const fieldValue = usePageData(widgetId, defaultValue);
 
@@ -38,7 +47,7 @@ const NumberFieldWidget = (props: Props) => {
     name: widgetId,
     control,
     defaultValue: fieldValue,
-    shouldUnregister: true,
+    shouldUnregister: false,
     rules: {
       required,
       max,
@@ -48,6 +57,20 @@ const NumberFieldWidget = (props: Props) => {
   });
 
   const errorMessage = useErrorMessage(fieldState, { max, min });
+
+  if (!schemaStateManager) return;
+  if (!schema) return;
+
+  // if (!schemaStateManager.state.visibleWidgets.includes(widgetId)) return null;
+
+  const handleOnChange: React.ChangeEventHandler<
+    HTMLInputElement | HTMLTextAreaElement
+  > = e => {
+    field.onChange(e);
+    const fieldDatas = getValues() as FieldDatas;
+
+    handleFieldEffects(schema, schemaStateManager, fieldDatas);
+  };
 
   return (
     <FormGroup sx={mergeSx(sxProp, sx.fieldWidget)}>
@@ -68,6 +91,7 @@ const NumberFieldWidget = (props: Props) => {
         placeholder={placeholder}
         helperText={errorMessage}
         error={Boolean(errorMessage)}
+        onChange={handleOnChange}
       />
     </FormGroup>
   );

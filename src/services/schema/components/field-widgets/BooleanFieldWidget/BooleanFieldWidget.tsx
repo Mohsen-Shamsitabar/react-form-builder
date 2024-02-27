@@ -8,13 +8,18 @@ import {
   Typography,
 } from "@mui/material";
 import { useController, useFormContext } from "react-hook-form";
+import { useSchema, useSchemaStateManager } from "services";
+import type {
+  BooleanFieldWidgetProps,
+  FieldDatas,
+  SchemaID,
+} from "services/schema/types";
 import type { SystemSX } from "types";
 import { mergeSx } from "utils";
 import * as sx from "../commonStyles";
-import { useErrorMessage } from "./hooks";
-import * as React from "react";
-import type { BooleanFieldWidgetProps, SchemaID } from "services/schema/types";
+import handleFieldEffects from "../handleFieldEffects";
 import { usePageData } from "../hooks";
+import { useErrorMessage } from "./hooks";
 
 type Props = BooleanFieldWidgetProps & {
   sx?: SystemSX;
@@ -24,24 +29,28 @@ type Props = BooleanFieldWidgetProps & {
 const BooleanFieldWidget = (props: Props) => {
   const {
     label,
-    defaultChecked = false,
+    defaultChecked,
     description,
     required = false,
     sx: sxProp,
     widgetId,
   } = props;
 
-  const { control, setValue } = useFormContext();
+  const schemaStateManager = useSchemaStateManager();
+
+  const schema = useSchema();
+
+  const form = useFormContext();
+
+  const { control, getValues } = form;
 
   const fieldValue = usePageData(widgetId, defaultChecked);
-
-  const [checked, setChecked] = React.useState(fieldValue);
 
   const { field, fieldState } = useController({
     name: widgetId,
     control,
-    defaultValue: checked,
-    shouldUnregister: true,
+    defaultValue: fieldValue,
+    shouldUnregister: false,
     rules: {
       required,
     },
@@ -49,10 +58,16 @@ const BooleanFieldWidget = (props: Props) => {
 
   const errorMessage = useErrorMessage(fieldState);
 
-  const handleChange = () => {
-    const newChecked = !checked;
-    setChecked(newChecked);
-    setValue(widgetId, newChecked);
+  if (!schemaStateManager) return;
+  if (!schema) return;
+
+  // if (!schemaStateManager.state.visibleWidgets.includes(widgetId)) return null;
+
+  const handleOnChange: React.ChangeEventHandler<HTMLInputElement> = e => {
+    field.onChange(e);
+    const fieldDatas = getValues() as FieldDatas;
+
+    handleFieldEffects(schema, schemaStateManager, fieldDatas);
   };
 
   return (
@@ -75,9 +90,9 @@ const BooleanFieldWidget = (props: Props) => {
             control={
               <Switch
                 {...field}
-                checked={checked}
+                checked={field.value as boolean}
                 inputProps={{ role: "switch", "aria-labelledby": label }}
-                onChange={handleChange}
+                onChange={handleOnChange}
               />
             }
             label={label}

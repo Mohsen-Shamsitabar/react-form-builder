@@ -1,13 +1,11 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import * as React from "react";
-import {
-  type FieldValues,
-  type SubmitHandler,
-  type UseFormReturn,
-} from "react-hook-form";
-import { useSchemaStateManager } from "services";
+import { useFormContext, type SubmitHandler } from "react-hook-form";
+import { useSchema, useSchemaStateManager } from "services";
 import { PageAction } from "services/schema/constants";
-import type { DocumentSchema, SchemaID } from "services/schema/types";
+import type { FieldDatas, PageData, SchemaID } from "services/schema/types";
 import {
+  calcVisibleFieldsData,
   getPageEffects,
   isEffectTriggered,
   triggerEffectAction,
@@ -15,34 +13,42 @@ import {
 import SchemaToJSX from "../SchemaToJSX";
 
 type Props = {
-  form: UseFormReturn;
-  schema: DocumentSchema;
   submitButton: JSX.Element;
 };
 
 const SchemaForm = (props: Props) => {
-  const { form, schema, submitButton } = props;
+  const { submitButton } = props;
 
-  const schemaPages = React.useMemo(() => schema["order:pages"], [schema]);
+  const form = useFormContext();
 
+  const schema = useSchema();
   const schemaStateManager = useSchemaStateManager();
 
+  const schemaPages = React.useMemo(
+    () => schema?.["order:pages"] ?? [],
+    [schema],
+  );
+
+  if (!schema) return;
   if (!schemaStateManager) return;
 
   const { goToPage, setPageData, state } = schemaStateManager;
+  const { currentPage, visitedPages, pageData, visibleWidgets } = state;
 
   const currentPageIdx = schemaPages.findIndex(
-    pageId => pageId === state.currentPage,
+    pageId => pageId === currentPage,
   );
 
-  const submitFormData = (
+  const submitForm = (
     visitedPage: SchemaID[],
-    pageData: Record<SchemaID, FieldValues>,
+    pageData: Record<SchemaID, FieldDatas>,
   ) => {
+    console.log({ visitedPage, pageData });
+
     const formData = visitedPage.reduce(
       (flattenData, visitedPageId) => ({
         ...flattenData,
-        ...(pageData[visitedPageId] ?? {}),
+        ...pageData[visitedPageId],
       }),
       {},
     );
@@ -50,16 +56,17 @@ const SchemaForm = (props: Props) => {
     console.log({ formData });
   };
 
-  const onSubmit: SubmitHandler<FieldValues> = (data, _e) => {
-    const currentPageData = { [state.currentPage]: data };
+  const onNextPage: SubmitHandler<FieldDatas> = (formValues, _e) => {
+    const data = calcVisibleFieldsData(formValues, visibleWidgets);
+    const currentPageData: PageData = { [currentPage]: data };
 
     setPageData(currentPageData);
 
-    const pageEffects = getPageEffects(state.currentPage, schema);
+    const pageEffects = getPageEffects(currentPage, schema);
     let willPageChange = false;
 
     pageEffects.forEach(pageEffect => {
-      const isTriggered = isEffectTriggered(pageEffect.fn, form);
+      const isTriggered = isEffectTriggered(pageEffect.fn, data);
 
       if (!isTriggered) return;
 
@@ -73,24 +80,24 @@ const SchemaForm = (props: Props) => {
     const isLastPage = currentPageIdx === schemaPages.length - 1;
 
     if (isLastPage) {
-      const newPageData = { ...state.pageData, [state.currentPage]: data };
-      const newVisitedPage = state.visitedPages.concat(state.currentPage);
+      const newPageData: PageData = {
+        ...pageData,
+        [currentPage]: data,
+      };
+      const newVisitedPage = visitedPages.concat(currentPage);
 
-      submitFormData(newVisitedPage, newPageData);
+      submitForm(newVisitedPage, newPageData);
 
       return;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     goToPage(schemaPages[currentPageIdx + 1]!);
   };
 
-  console.log(state.visitedPages);
-
   return (
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
-    <form onSubmit={form.handleSubmit(onSubmit)} noValidate>
-      <SchemaToJSX schema={schema} />
+    <form onSubmit={form.handleSubmit(onNextPage)} noValidate>
+      <SchemaToJSX />
       {submitButton}
     </form>
   );
