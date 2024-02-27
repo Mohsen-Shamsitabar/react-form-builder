@@ -4,7 +4,9 @@ export const main: SystemSX = theme => ({
   padding: theme.spacing(2),
   maxWidth: theme.typography.pxToRem(512),
   width: "100%",
-  margin: "auto",
+  marginLeft: "auto",
+  marginRight: "auto",
+  marginBottom: "auto",
 });
 
 export const footer: SystemSX = theme => ({
