@@ -7,6 +7,9 @@ import type {
 
 export type SchemaID = string;
 
+export type FieldDatas = Record<SchemaID, unknown>;
+export type PageData = Record<SchemaID, FieldDatas>;
+
 export type WidgetId = `WIDGET_${SchemaID}`;
 export type PageId = `PAGE_${SchemaID}`;
 export type EffectId = `EFFECT_${SchemaID}`;
@@ -23,7 +26,7 @@ export type StringFieldWidgetProps = CommonFieldWidgetsProperties & {
   multiline?: boolean;
   maxLength?: number;
   minLength?: number;
-  defaultValue?: string;
+  defaultValue: string;
 };
 
 export type StringFieldWidget = {
@@ -35,7 +38,7 @@ export type NumberFieldWidgetProps = CommonFieldWidgetsProperties & {
   placeholder?: string;
   max?: number;
   min?: number;
-  defaultValue?: number;
+  defaultValue: number;
 };
 
 export type NumberFieldWidget = {
@@ -44,7 +47,7 @@ export type NumberFieldWidget = {
 };
 
 export type BooleanFieldWidgetProps = CommonFieldWidgetsProperties & {
-  defaultChecked?: boolean;
+  defaultChecked: boolean;
 };
 
 export type BooleanFieldWidget = {
@@ -62,7 +65,7 @@ export type ChoiceFieldWidgetProps = CommonFieldWidgetsProperties & {
   maxRequired?: number;
   shuffleOptions?: boolean;
   multiSelect: boolean;
-  defaultValue?: string[] | string;
+  defaultValue: string[] | string;
   options: ChoiceOption[];
 };
 
@@ -130,19 +133,12 @@ export type LogicalFn = [LogicalTypes, LogicalFnParams];
 
 export type Fn = ComparisonFn | LogicalFn;
 
-export type FieldEffectActions =
-  | {
-      type: FieldAction.SHOW_FIELDS;
-      payload: {
-        fieldIds: SchemaID[];
-      };
-    }
-  | {
-      type: FieldAction.HIDE_FIELDS;
-      payload: {
-        fieldIds: SchemaID[];
-      };
-    };
+export type FieldEffectActions = {
+  type: FieldAction.HIDE_WIDGETS;
+  payload: {
+    widgetIds: SchemaID[];
+  };
+};
 
 export type FieldEffect = {
   owner: SchemaID;
