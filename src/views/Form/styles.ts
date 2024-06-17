@@ -18,6 +18,7 @@ export const footer: SystemSX = theme => ({
 });
 
 export const wrapper: SystemSX = theme => ({
+  overflowY: "auto",
   height: `calc(100vh - ${theme.spacing(6)})`,
 });
 
