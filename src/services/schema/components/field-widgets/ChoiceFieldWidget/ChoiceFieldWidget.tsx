@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import * as React from "react";
 import type { ChoiceFieldWidgetProps, SchemaID } from "services/schema/types";
 import type { SystemSX } from "types";

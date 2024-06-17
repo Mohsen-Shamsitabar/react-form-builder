@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { FormGroup, TextField, Typography } from "@mui/material";
 import * as React from "react";
 import { useController, useFormContext } from "react-hook-form";

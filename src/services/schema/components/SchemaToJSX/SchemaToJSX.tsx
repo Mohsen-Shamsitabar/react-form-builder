@@ -69,6 +69,8 @@ const SchemaToJSX = (): JSX.Element | null => {
 
   const pageSchema = definitions.pages[state.currentPage]!;
 
+  console.log(state.visibleWidgets);
+
   const widgets = state.visibleWidgets.map(widgetId => {
     if (!schema) return null;
 

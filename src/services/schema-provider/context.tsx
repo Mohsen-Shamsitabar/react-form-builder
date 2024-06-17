@@ -12,10 +12,12 @@ type ProviderProps = {
   schema: DocumentSchema;
 };
 
-export const Provider = (props: ProviderProps) => {
+const Provider = (props: ProviderProps) => {
   const { children, schema } = props;
 
   return <Context.Provider value={schema}>{children}</Context.Provider>;
 };
 
-export const useContext = () => React.useContext(Context);
+const useContext = () => React.useContext(Context);
+
+export { Provider as SchemaProvider, useContext as useSchema };
