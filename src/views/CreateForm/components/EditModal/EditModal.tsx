@@ -24,6 +24,7 @@ import {
 import {
   type BooleanFieldWidgetProps,
   type ChoiceFieldWidgetProps,
+  type Effect,
   type LinkUIWidgetProps,
   type NumberFieldWidgetProps,
   type StringFieldWidgetProps,
@@ -40,6 +41,7 @@ import {
 import { SettingsEditor, TabPanel } from "./components";
 import { EditModalItemProvider } from "./components/itemProvider";
 import * as sx from "./styles";
+import { calcFnDefaultValues } from "./utils";
 
 type TabName = "effects" | "settings";
 
@@ -54,6 +56,12 @@ type Props = {
   onClose: () => void;
   onCloseFinish: () => void;
 };
+
+// type UUID = string;
+// type FnID = `FN_${UUID}` | `ROOTFN_${UUID}`;
+// type EffectID = `EFFECT_${UUID}`;
+// type EffectFieldNames = "effectType" | "actionType" | "actionPayload";
+// type FnFieldNames = "operator" | "fieldId" | "value" | "fn1" | "fn2";
 
 const EditModal = (props: Props) => {
   const { onClose, onCloseFinish, open, item } = props;
@@ -70,27 +78,30 @@ const EditModal = (props: Props) => {
         };
       }
 
-      // const effects = item.effects?.map(
-      //   effectId => data.effects.byId[effectId]!,
-      // );
-
       const pageDefaultValues = { title: item.title };
 
-      // effects?.forEach(effect => {
-      //   const defaultValues = {
-      //     [`${effect.id}_type`]: effect.type,
-      //     [`${effect.id}_actionType`]: effect.action.type,
-      //     [`${effect.id}_actionPayload`]:
-      //       effect.type === "page"
-      //         ? effect.action.payload.pageId
-      //         : effect.action.payload.widgetIds,
-      //   };
+      const effects = item.effects?.map(
+        effectId => data.effects.byId[effectId] as Effect,
+      );
 
-      //   const fnsDefaultValues = calcFnsDefaultValues(effect.fn, effect.id);
+      if (!effects) return pageDefaultValues;
 
-      //   Object.assign(defaultValues, fnsDefaultValues);
-      //   Object.assign(pageDefaultValues, defaultValues);
-      // });
+      effects.forEach(effect => {
+        const effectDefaultValues = {
+          [`${effect.id}~effectType`]: effect.type,
+          [`${effect.id}~actionType`]: effect.action.type,
+          [`${effect.id}~actionPayload`]:
+            effect.type === "field"
+              ? effect.action.payload.widgetIds
+              : effect.action.payload.pageId,
+        };
+
+        Object.assign(pageDefaultValues, effectDefaultValues);
+
+        const fnDefaultValues = calcFnDefaultValues(effect.fn, effect.id);
+
+        Object.assign(pageDefaultValues, fnDefaultValues);
+      });
 
       return pageDefaultValues;
     }
