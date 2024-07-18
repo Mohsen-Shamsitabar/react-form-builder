@@ -57,12 +57,6 @@ type Props = {
   onCloseFinish: () => void;
 };
 
-// type UUID = string;
-// type FnID = `FN_${UUID}` | `ROOTFN_${UUID}`;
-// type EffectID = `EFFECT_${UUID}`;
-// type EffectFieldNames = "effectType" | "actionType" | "actionPayload";
-// type FnFieldNames = "operator" | "fieldId" | "value" | "fn1" | "fn2";
-
 const EditModal = (props: Props) => {
   const { onClose, onCloseFinish, open, item } = props;
 
@@ -292,7 +286,7 @@ const EditModal = (props: Props) => {
         open={open}
         aria-labelledby="edit-dialog-title"
         onTransitionEnd={onCloseFinish}
-        maxWidth="sm"
+        maxWidth="md"
         scroll="paper"
       >
         <FormProvider {...form}>

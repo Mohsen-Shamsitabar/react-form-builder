@@ -6,6 +6,7 @@ import type {
 } from "services/schema/types";
 import { isLogicalFn } from "services/schema/utils";
 import { v4 as uuid } from "uuid";
+import { EFFECT_KEY_SEPERATOR } from "./components/EffectsEditor/constants";
 
 export const calcFnDefaultValues = (
   fn: Fn,
@@ -16,10 +17,16 @@ export const calcFnDefaultValues = (
   const operator = fn[0];
 
   if (!fnId) {
-    fnId = `FN_${uuid()}`;
-    Object.assign(result, { [`${effectId}~ROOT${fnId}~operator`]: operator });
+    fnId = `ROOTFN_${uuid()}`;
+    Object.assign(result, {
+      [`${effectId}${EFFECT_KEY_SEPERATOR}${fnId}${EFFECT_KEY_SEPERATOR}operator`]:
+        operator,
+    });
   } else {
-    Object.assign(result, { [`${effectId}~${fnId}~operator`]: operator });
+    Object.assign(result, {
+      [`${effectId}${EFFECT_KEY_SEPERATOR}${fnId}${EFFECT_KEY_SEPERATOR}operator`]:
+        operator,
+    });
   }
 
   if (isLogicalFn(operator)) {
@@ -27,8 +34,14 @@ export const calcFnDefaultValues = (
     const fn1Id = `FN_${uuid()}`;
     const fn2Id = `FN_${uuid()}`;
 
-    Object.assign(result, { [`${effectId}~${fnId}~fn1`]: fn1Id });
-    Object.assign(result, { [`${effectId}~${fnId}~fn2`]: fn2Id });
+    Object.assign(result, {
+      [`${effectId}${EFFECT_KEY_SEPERATOR}${fnId}${EFFECT_KEY_SEPERATOR}fn1`]:
+        fn1Id,
+    });
+    Object.assign(result, {
+      [`${effectId}${EFFECT_KEY_SEPERATOR}${fnId}${EFFECT_KEY_SEPERATOR}fn2`]:
+        fn2Id,
+    });
 
     Object.assign(result, calcFnDefaultValues(fn1, effectId, fn1Id));
     Object.assign(result, calcFnDefaultValues(fn2, effectId, fn2Id));
@@ -37,8 +50,14 @@ export const calcFnDefaultValues = (
 
   const [fieldId, value] = fn[1] as ComparisonFnParams;
 
-  Object.assign(result, { [`${effectId}~${fnId}~fieldId`]: fieldId });
-  Object.assign(result, { [`${effectId}~${fnId}~value`]: value });
+  Object.assign(result, {
+    [`${effectId}${EFFECT_KEY_SEPERATOR}${fnId}${EFFECT_KEY_SEPERATOR}fieldId`]:
+      fieldId,
+  });
+  Object.assign(result, {
+    [`${effectId}${EFFECT_KEY_SEPERATOR}${fnId}${EFFECT_KEY_SEPERATOR}value`]:
+      value,
+  });
 
   return result;
 };
