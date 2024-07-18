@@ -170,7 +170,7 @@ export const data: CreateFormData = {
         fn: [ComparisonTypes.EQ, ["WIDGET_F1", "1"]],
         action: {
           type: PageAction.GO_TO_PAGE,
-          payload: { pageId: "PAGE_1" },
+          payload: { pageId: "PAGE_2" },
         },
       },
       EFFECT_2: {
