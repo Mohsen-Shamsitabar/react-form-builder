@@ -130,6 +130,7 @@ const ChoiceFormControl = (props: Props) => {
         required={required}
         sx={sx.formControl}
         fullWidth={fullWidth}
+        size={size}
         error={Boolean(errorMessage)}
       >
         <FormLabel htmlFor={`field-${name}`} id={`field-${name}-label`}>
@@ -146,7 +147,6 @@ const ChoiceFormControl = (props: Props) => {
           labelId={`field-${name}-label`}
           aria-describedby={`field-${name}-description`}
           onChange={handleChange}
-          size={size}
           variant={varinet}
         >
           {options.map(option => (
@@ -167,6 +167,7 @@ const ChoiceFormControl = (props: Props) => {
       sx={sx.formControl}
       fullWidth={fullWidth}
       error={Boolean(errorMessage)}
+      size={size}
     >
       <InputLabel htmlFor={`field-${name}`} id={`field-${name}-label`}>
         {label}
@@ -179,7 +180,6 @@ const ChoiceFormControl = (props: Props) => {
         labelId={`field-${name}-label`}
         label={label}
         onChange={handleChange}
-        size={size}
         variant={varinet}
       >
         {options.map(option => (
