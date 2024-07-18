@@ -214,12 +214,15 @@ const EditModal = (props: Props) => {
 
   const onSubmitClick = async () => {
     const isFormValid = await form.trigger();
+    const errors = form.formState.errors;
 
     if (isFormValid) {
       btnRef.current?.click();
       onClose();
     } else {
-      throw new Error("Your field has errors!");
+      throw new Error(
+        "Your form has errors!" + `${Object.keys(errors).join(", ")}`,
+      );
     }
   };
 
