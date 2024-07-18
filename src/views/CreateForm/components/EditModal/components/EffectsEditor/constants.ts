@@ -58,3 +58,10 @@ export const fnTypes: ChoiceOption[] = [
   { label: "Logical", value: "logical" },
   { label: "Comparison", value: "comparison" },
 ];
+
+export const fxTypes: ChoiceOption[] = [
+  { label: "Field Effect", value: "field" },
+  { label: "Page Effect", value: "page" },
+];
+
+export const EFFECT_KEY_SEPERATOR = "~";
