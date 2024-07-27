@@ -2,11 +2,7 @@ import { Box, Stack, Typography } from "@mui/material";
 import * as sx from "../../../../commonStyles";
 import { StringFormControl } from "../../../../form-controls";
 
-type Props = { title: string };
-
-const PagePropertySettings = (props: Props) => {
-  const { title } = props;
-
+const PagePropertySettings = () => {
   return (
     <Stack direction="column">
       <Box sx={sx.fieldset} component="fieldset">
