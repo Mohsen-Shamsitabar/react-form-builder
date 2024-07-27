@@ -30,8 +30,6 @@ const Trigger = (props: TriggerProps) => {
 
     if (!modalManager) return;
 
-    console.log("ADD");
-
     modalManager.addModal.open();
     // add item will only trigger on Pages.
     modalManager.addModal.setParent(item as PageNode);
@@ -44,8 +42,6 @@ const Trigger = (props: TriggerProps) => {
 
     if (!modalManager) return;
 
-    console.log("DELETE");
-
     modalManager.deleteModal.setItem(item);
     modalManager.deleteModal.open();
   };
@@ -54,8 +50,6 @@ const Trigger = (props: TriggerProps) => {
     event.stopPropagation();
 
     if (!modalManager) return;
-
-    console.log("EDIT");
 
     modalManager.editModal.setItem(item);
     modalManager.editModal.open();
