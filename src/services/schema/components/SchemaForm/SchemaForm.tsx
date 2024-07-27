@@ -43,8 +43,6 @@ const SchemaForm = (props: Props) => {
     visitedPage: SchemaID[],
     pageData: Record<SchemaID, FieldDatas>,
   ) => {
-    console.log({ visitedPage, pageData });
-
     const formData = visitedPage.reduce(
       (flattenData, visitedPageId) => ({
         ...flattenData,
