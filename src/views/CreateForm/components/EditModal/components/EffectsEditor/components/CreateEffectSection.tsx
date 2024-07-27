@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import {
   Button,
   FormControl,
@@ -12,11 +11,22 @@ import {
   type SelectChangeEvent,
 } from "@mui/material";
 import * as React from "react";
-import { type Effect, type EffectTypes } from "services/schema/types";
+import { useFormContext } from "react-hook-form";
+import {
+  type Effect,
+  type EffectTypes,
+  type FieldEffect,
+  type PageEffect,
+} from "services/schema/types";
 import { v4 as uuid } from "uuid";
 import { Fieldset, isPageNode } from "views/CreateForm/utils";
+import {
+  comparisonOperators,
+  EFFECT_IDENTIFIER,
+  fxTypes,
+} from "../../../constants";
+import { calcEffectFieldValues } from "../../../utils";
 import { useEditModalItem } from "../../itemProvider";
-import { comparisonOperators, fxTypes } from "../constants";
 import { useEditorData } from "../editorDataCtx";
 import { useEffectData } from "../hooks";
 
@@ -53,12 +63,13 @@ const CreateEffectSection = () => {
   const editorData = useEditorData();
   const effectData = useEffectData(effectType as EffectTypes);
   const currentPage = useEditModalItem();
-  if (!effectData) return null;
-  if (!editorData) return null;
+  const form = useFormContext();
+  if (!editorData || !effectData || !form) return null;
   if (!currentPage || !isPageNode(currentPage)) return null;
 
   const { payloadOptions, typeOptions } = effectData;
   const { allEffects, setAllEffects, allFieldWidgets } = editorData;
+  const { setValue } = form;
 
   const handleEffectTypeChange = (event: SelectChangeEvent<string>) => {
     const newEffectType = event.target.value;
@@ -71,8 +82,8 @@ const CreateEffectSection = () => {
   const handleAddClick = () => {
     const newEffect: Effect =
       effectType === "field"
-        ? {
-            id: `EFFECT_${uuid()}`,
+        ? ({
+            id: `${EFFECT_IDENTIFIER}${uuid()}`,
             owner: currentPage.id,
             type: effectType,
             action: {
@@ -80,9 +91,9 @@ const CreateEffectSection = () => {
               payload: { widgetIds: actionPayload },
             },
             fn: [fnOperator, [fnWidget, fnValue]],
-          }
-        : {
-            id: `EFFECT_${uuid()}`,
+          } as FieldEffect)
+        : ({
+            id: `${EFFECT_IDENTIFIER}${uuid()}`,
             owner: currentPage.id,
             type: effectType,
             action: {
@@ -90,7 +101,13 @@ const CreateEffectSection = () => {
               payload: { pageId: actionPayload },
             },
             fn: [fnOperator, [fnWidget, fnValue]],
-          };
+          } as PageEffect);
+
+    const newEffectFieldValues = calcEffectFieldValues(newEffect);
+
+    Object.keys(newEffectFieldValues).forEach(name =>
+      setValue(name, newEffectFieldValues[name]),
+    );
 
     setAllEffects(allEffects.concat(newEffect));
     resetStates();

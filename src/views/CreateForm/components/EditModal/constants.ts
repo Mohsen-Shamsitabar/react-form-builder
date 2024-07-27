@@ -64,4 +64,10 @@ export const fxTypes: ChoiceOption[] = [
   { label: "Page Effect", value: "page" },
 ];
 
-export const EFFECT_KEY_SEPERATOR = "~";
+export const EFFECT_NAME_SEPERATOR = "~";
+export const EFFECT_IDENTIFIER = "EFFECT_";
+export const FN_IDENTIFIER = "FN_";
+export const COMPARISON_FN_IDENTIFIER = `COMPARISON${FN_IDENTIFIER}`;
+export const LOGICAL_FN_IDENTIFIER = `LOGICAL${FN_IDENTIFIER}`;
+export const FIRST_COMPARISON_FN_IDENTIFIER = `FIRST${COMPARISON_FN_IDENTIFIER}`;
+export const SECOND_COMPARISON_FN_IDENTIFIER = `SECOND${COMPARISON_FN_IDENTIFIER}`;

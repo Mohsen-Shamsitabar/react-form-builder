@@ -2,7 +2,7 @@ import { Stack } from "@mui/material";
 import * as React from "react";
 import type { Effect, SchemaID } from "services/schema/types";
 import { Fieldset } from "views/CreateForm/utils";
-import EffectAccordion from "./EffectAccordion";
+import EffectAccordion from "./components/EffectAccordion/EffectAccordion";
 
 type Props = {
   effects: Effect[];

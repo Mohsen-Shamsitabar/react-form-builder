@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import {
   AutoAwesome as AutoAwesomeIcon,
@@ -41,7 +40,7 @@ import {
 import { SettingsEditor, TabPanel } from "./components";
 import { EditModalItemProvider } from "./components/itemProvider";
 import * as sx from "./styles";
-import { calcFnDefaultValues } from "./utils";
+import { calcEffectFieldValues } from "./utils";
 
 type TabName = "effects" | "settings";
 
@@ -72,7 +71,7 @@ const EditModal = (props: Props) => {
         };
       }
 
-      const pageDefaultValues = { title: item.title };
+      let pageDefaultValues = { title: item.title };
 
       const effects = item.effects?.map(
         effectId => data.effects.byId[effectId] as Effect,
@@ -81,20 +80,9 @@ const EditModal = (props: Props) => {
       if (!effects) return pageDefaultValues;
 
       effects.forEach(effect => {
-        const effectDefaultValues = {
-          [`${effect.id}~effectType`]: effect.type,
-          [`${effect.id}~actionType`]: effect.action.type,
-          [`${effect.id}~actionPayload`]:
-            effect.type === "field"
-              ? effect.action.payload.widgetIds
-              : effect.action.payload.pageId,
-        };
+        const effectDefaultValues = calcEffectFieldValues(effect);
 
-        Object.assign(pageDefaultValues, effectDefaultValues);
-
-        const fnDefaultValues = calcFnDefaultValues(effect.fn, effect.id);
-
-        Object.assign(pageDefaultValues, fnDefaultValues);
+        pageDefaultValues = { ...pageDefaultValues, ...effectDefaultValues };
       });
 
       return pageDefaultValues;
@@ -206,7 +194,10 @@ const EditModal = (props: Props) => {
     defaultValues,
   });
 
-  const title = `Editing item (${getItemTitle(item)})`;
+  const title = React.useMemo(
+    () => `Editing item (${getItemTitle(item)})`,
+    [item],
+  );
 
   const handleTabChange = (_e: React.SyntheticEvent, newTab: TabName) => {
     setCurrentActiveTab(newTab);

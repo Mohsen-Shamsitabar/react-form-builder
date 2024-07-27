@@ -1,9 +1,17 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { type ChoiceOption, type EffectTypes } from "services/schema/types";
+import { useFormContext } from "react-hook-form";
+import {
+  type ChoiceOption,
+  type EffectTypes,
+  type SchemaID,
+} from "services/schema/types";
 import { useCreateFormData } from "views/CreateForm/DataProvider";
 import { isPageNode } from "views/CreateForm/utils";
+import {
+  fieldEffectActions,
+  FN_IDENTIFIER,
+  pageEffectActions,
+} from "../../constants";
 import { useEditModalItem } from "../itemProvider";
-import { fieldEffectActions, pageEffectActions } from "./constants";
 
 export const useEffectData = (effectType: EffectTypes) => {
   const data = useCreateFormData();
@@ -30,4 +38,25 @@ export const useEffectData = (effectType: EffectTypes) => {
     effectType === "field" ? fieldEffectActions : pageEffectActions;
 
   return { payloadOptions, typeOptions };
+};
+
+export const useEffectFieldNames = (effectId: SchemaID) => {
+  const { getValues, formState } = useFormContext();
+  const { errors } = formState;
+
+  const allValues = getValues();
+
+  const effectFieldNames = Object.keys(allValues).filter(name =>
+    name.includes(effectId),
+  );
+
+  const fnFieldNames = effectFieldNames.filter(name =>
+    name.includes(`${FN_IDENTIFIER}`),
+  );
+
+  const effectErrors = Object.keys(errors).filter(name =>
+    name.includes(effectId),
+  );
+
+  return { effectFieldNames, fnFieldNames, effectErrors };
 };
