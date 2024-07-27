@@ -15,6 +15,7 @@ import useErrorMessage from "./hooks";
 type Props = Omit<NumberFieldWidgetProps, "defaultValue"> & {
   name: string;
   onChange?: (newValue: number) => void;
+  shouldUnregister?: boolean;
 };
 
 const NumberFormControl = (props: Props) => {
@@ -27,16 +28,17 @@ const NumberFormControl = (props: Props) => {
     min,
     onChange,
     required = false,
+    shouldUnregister = false,
   } = props;
 
   const numberRegExp = /^-?[0-9]\d*(\.\d+)?$/;
 
-  const { control, trigger } = useFormContext();
+  const { control } = useFormContext();
 
   const { field, fieldState } = useController({
     name,
     control,
-    shouldUnregister: false,
+    shouldUnregister,
     rules: {
       required,
       min,
@@ -47,11 +49,11 @@ const NumberFormControl = (props: Props) => {
 
   const errorMessage = useErrorMessage(fieldState, { max, min });
 
-  const revalidate = () => {
-    void trigger(name);
-  };
+  // const revalidate = () => {
+  //   void trigger(name);
+  // };
 
-  React.useEffect(revalidate, [name, trigger, min, max]);
+  // React.useEffect(revalidate, [name, trigger, min, max]);
 
   const handleChange: React.ChangeEventHandler<
     HTMLInputElement | HTMLTextAreaElement
@@ -94,6 +96,7 @@ const NumberFormControl = (props: Props) => {
         error={Boolean(errorMessage)}
       >
         <TextField
+          error={Boolean(errorMessage)}
           {...field}
           sx={sx.input}
           label={label}
@@ -121,6 +124,7 @@ const NumberFormControl = (props: Props) => {
       {renderDescription()}
 
       <OutlinedInput
+        error={Boolean(errorMessage)}
         {...field}
         sx={sx.input}
         id={`field-${name}`}

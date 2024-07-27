@@ -4,6 +4,7 @@ import {
   FormLabel,
   OutlinedInput,
   TextField,
+  type TextFieldProps,
   Typography,
 } from "@mui/material";
 import * as React from "react";
@@ -17,6 +18,8 @@ type Props = Omit<StringFieldWidgetProps, "type" | "defaultValue"> & {
   name: string;
   type?: StringFieldWidgetProps["type"];
   defaultValue?: string;
+  size?: TextFieldProps["size"];
+  shouldUnregister?: boolean;
 };
 
 const StringFormControl = (props: Props) => {
@@ -32,11 +35,13 @@ const StringFormControl = (props: Props) => {
     required = false,
     multiline = false,
     type = "text",
+    size = "medium",
+    shouldUnregister = false,
   } = props;
 
   const emailRegExp = /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/;
 
-  const { control, trigger, getValues } = useFormContext();
+  const { control, getValues } = useFormContext();
 
   const defaultValue = (getValues(name) as unknown) ?? defaultValueProp;
 
@@ -44,7 +49,7 @@ const StringFormControl = (props: Props) => {
     name,
     control,
     defaultValue,
-    shouldUnregister: false,
+    shouldUnregister,
     rules: {
       required,
       maxLength,
@@ -58,11 +63,11 @@ const StringFormControl = (props: Props) => {
     minLength,
   });
 
-  const revalidate = () => {
-    void trigger(name);
-  };
+  // const revalidate = () => {
+  //   void trigger(name);
+  // };
 
-  React.useEffect(revalidate, [name, trigger, type, minLength, maxLength]);
+  // React.useEffect(revalidate, [name, trigger, type, minLength, maxLength]);
 
   const renderDescription = () => {
     if (!description) return null;
@@ -103,8 +108,12 @@ const StringFormControl = (props: Props) => {
         sx={sx.formControl}
         fullWidth
         error={Boolean(errorMessage)}
+        size={size}
       >
         <TextField
+          required={required}
+          error={Boolean(errorMessage)}
+          size={size}
           {...field}
           sx={sx.input}
           label={label}
@@ -125,6 +134,7 @@ const StringFormControl = (props: Props) => {
       sx={sx.formControl}
       fullWidth
       error={Boolean(errorMessage)}
+      size={size}
     >
       <FormLabel htmlFor={`field-${name}`} id={`field-${name}-label`}>
         {label}
@@ -133,6 +143,8 @@ const StringFormControl = (props: Props) => {
       {renderDescription()}
 
       <OutlinedInput
+        error={Boolean(errorMessage)}
+        required={required}
         {...field}
         sx={sx.input}
         id={`field-${name}`}
@@ -142,6 +154,7 @@ const StringFormControl = (props: Props) => {
         type={type}
         placeholder={placeholder}
         onChange={handleChange}
+        size={size}
       />
 
       {renderHelperText()}

@@ -12,17 +12,24 @@ import { useErrorMessage } from "./hooks";
 type Props = Omit<BooleanFieldWidgetProps, "description" | "defaultChecked"> & {
   name: string;
   onChange?: (value: boolean) => void;
+  shouldUnregister?: boolean;
 };
 
 const BooleanFormControl = (props: Props) => {
-  const { label, name, onChange, required = false } = props;
+  const {
+    label,
+    name,
+    onChange,
+    required = false,
+    shouldUnregister = false,
+  } = props;
 
   const { control } = useFormContext();
 
   const { field, fieldState } = useController({
     name,
     control,
-    shouldUnregister: false,
+    shouldUnregister,
     rules: {
       required,
     },
@@ -33,7 +40,6 @@ const BooleanFormControl = (props: Props) => {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     field.onChange(event);
 
-    // send the newValue
     if (onChange) onChange(!field.value);
   };
 

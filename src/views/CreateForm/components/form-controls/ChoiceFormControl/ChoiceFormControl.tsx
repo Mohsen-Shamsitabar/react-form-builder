@@ -10,7 +10,6 @@ import {
   type SelectChangeEvent,
   type SelectProps,
 } from "@mui/material";
-import * as React from "react";
 import { useController, useFormContext } from "react-hook-form";
 import type { ChoiceFieldWidgetProps } from "services/schema/types";
 import * as sx from "../../commonStyles";
@@ -18,12 +17,22 @@ import { useErrorMessage } from "./hooks";
 
 type Props = Omit<ChoiceFieldWidgetProps, "shuffleOptions" | "defaultValue"> & {
   name: string;
-  onChange?: (newValue: unknown) => void;
   varinet?: SelectProps["variant"];
   size?: SelectProps["size"];
   fullWidth?: boolean;
-  defaultValue?: string | string[];
-};
+  shouldUnregister?: boolean;
+} & (
+    | {
+        multiSelect: false;
+        defaultValue?: string;
+        onChange?: (currentValue: string) => void;
+      }
+    | {
+        multiSelect: true;
+        defaultValue?: string[];
+        onChange?: (currentValue: string[]) => void;
+      }
+  );
 
 const ChoiceFormControl = (props: Props) => {
   const {
@@ -40,9 +49,10 @@ const ChoiceFormControl = (props: Props) => {
     size = "medium",
     varinet = "outlined",
     fullWidth = true,
+    shouldUnregister = false,
   } = props;
 
-  const { control, trigger, getValues } = useFormContext();
+  const { control, getValues } = useFormContext();
 
   const defaultValue = (getValues(name) as unknown) ?? defaultValueProp;
 
@@ -50,7 +60,7 @@ const ChoiceFormControl = (props: Props) => {
     name,
     control,
     defaultValue,
-    shouldUnregister: false,
+    shouldUnregister,
     rules: {
       required,
       validate: {
@@ -81,25 +91,26 @@ const ChoiceFormControl = (props: Props) => {
     minRequired,
   });
 
-  const revalidate = () => {
-    void trigger(name);
-  };
+  // const revalidate = () => {
+  //   void trigger(name);
+  // };
 
-  React.useEffect(revalidate, [
-    name,
-    trigger,
-    maxRequired,
-    minRequired,
-    multiSelect,
-    required,
-  ]);
+  // React.useEffect(revalidate, [
+  //   name,
+  //   trigger,
+  //   maxRequired,
+  //   minRequired,
+  //   multiSelect,
+  //   required,
+  // ]);
 
-  const handleChange = (event: SelectChangeEvent<unknown>) => {
+  const handleChange = (event: SelectChangeEvent<string | string[]>) => {
     field.onChange(event);
 
     if (onChange) {
       const newValue = event.target.value;
 
+      // @ts-expect-error weird ts error!
       onChange(newValue);
     }
   };
@@ -140,6 +151,7 @@ const ChoiceFormControl = (props: Props) => {
         {renderDescription()}
 
         <Select
+          error={Boolean(errorMessage)}
           {...field}
           multiple={multiSelect}
           sx={sx.input}
@@ -174,6 +186,7 @@ const ChoiceFormControl = (props: Props) => {
       </InputLabel>
 
       <Select
+        error={Boolean(errorMessage)}
         {...field}
         multiple={multiSelect}
         id={`field-${name}`}
