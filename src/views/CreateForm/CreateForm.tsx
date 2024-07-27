@@ -25,14 +25,15 @@ export const data: CreateFormData = {
         title: "Page 1",
         widgets: ["WIDGET_F1", "WIDGET_U1", "WIDGET_F2"],
         effects: ["EFFECT_1", "EFFECT_2"],
+        // effects: ["EFFECT_1"],
       },
       PAGE_2: {
         id: "PAGE_2",
         type: "page",
         title: "Page 2",
         widgets: ["WIDGET_F3", "WIDGET_U2", "WIDGET_F4", "WIDGET_U3"],
-        // effects: ["EFFECT_3", "EFFECT_4", "EFFECT_5"],
-        effects: ["EFFECT_5"],
+        effects: ["EFFECT_3", "EFFECT_4", "EFFECT_5"],
+        // effects: ["EFFECT_5"],
       },
     },
     allIds: ["PAGE_1", "PAGE_2"],
@@ -177,7 +178,7 @@ export const data: CreateFormData = {
         id: "EFFECT_2",
         owner: "PAGE_1",
         type: "field",
-        fn: [ComparisonTypes.EQ, ["WIDGET_F2", true]],
+        fn: [ComparisonTypes.EQ, ["WIDGET_F2", "true"]],
         action: {
           type: FieldAction.HIDE_WIDGETS,
           payload: { widgetIds: ["WIDGET_F1", "WIDGET_U1"] },
@@ -190,8 +191,8 @@ export const data: CreateFormData = {
         fn: [
           LogicalTypes.OR,
           [
-            [ComparisonTypes.EQ, ["WIDGET_F4", 1]],
-            [ComparisonTypes.EQ, ["WIDGET_F4", 2]],
+            [ComparisonTypes.EQ, ["WIDGET_F4", "1"]],
+            [ComparisonTypes.EQ, ["WIDGET_F4", "2"]],
           ],
         ],
         action: {
@@ -206,7 +207,7 @@ export const data: CreateFormData = {
         fn: [
           LogicalTypes.AND,
           [
-            [ComparisonTypes.EQ, ["WIDGET_F4", 1]],
+            [ComparisonTypes.EQ, ["WIDGET_F4", "1"]],
             [ComparisonTypes.IN, ["WIDGET_F3", "female"]],
           ],
         ],
@@ -222,7 +223,7 @@ export const data: CreateFormData = {
         fn: [
           LogicalTypes.AND,
           [
-            [ComparisonTypes.EQ, ["WIDGET_F4", 1]],
+            [ComparisonTypes.EQ, ["WIDGET_F4", "1"]],
             [ComparisonTypes.IN, ["WIDGET_F3", "female"]],
           ],
         ],

@@ -123,7 +123,7 @@ export type UIWidget = {
   properties: UIWidgets;
 };
 
-export type ComparisonFnParams = [SchemaID, unknown];
+export type ComparisonFnParams = [SchemaID, string];
 
 export type ComparisonFn = [ComparisonTypes, ComparisonFnParams];
 
