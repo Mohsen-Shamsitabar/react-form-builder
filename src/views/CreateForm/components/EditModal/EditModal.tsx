@@ -37,7 +37,8 @@ import {
   isPageNode,
   renderChip,
 } from "views/CreateForm/utils";
-import { SettingsEditor, TabPanel } from "./components";
+import { SettingsEditor } from "../SettingsEditor";
+import { TabPanel } from "./components";
 import { EditModalItemProvider } from "./components/itemProvider";
 import * as sx from "./styles";
 import { calcEffectFieldValues } from "./utils";

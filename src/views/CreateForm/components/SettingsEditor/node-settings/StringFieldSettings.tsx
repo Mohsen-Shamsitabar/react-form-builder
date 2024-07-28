@@ -1,13 +1,13 @@
 import { Box, Stack, Typography } from "@mui/material";
 import { useFormContext } from "react-hook-form";
 import { type StringFieldWidgetProps } from "services/schema/types";
-import * as sx from "../../../../commonStyles";
+import * as sx from "../../commonStyles";
 import {
   BooleanFormControl,
   ChoiceFormControl,
   NumberFormControl,
   StringFormControl,
-} from "../../../../form-controls";
+} from "../../form-controls";
 
 const StringFieldSettings = () => {
   const { watch } = useFormContext();

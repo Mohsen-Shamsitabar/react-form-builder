@@ -1,6 +1,6 @@
 import { Box, Stack, Typography } from "@mui/material";
-import * as sx from "../../../../commonStyles";
-import { StringFormControl } from "../../../../form-controls";
+import * as sx from "../../commonStyles";
+import { StringFormControl } from "../../form-controls";
 
 const LinkUISettings = () => {
   return (

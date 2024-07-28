@@ -1,7 +1,6 @@
 import { Box, Stack, Typography } from "@mui/material";
-import * as sx from "../../../../commonStyles";
-import ChoiceFormControl from "../../../../form-controls/ChoiceFormControl/ChoiceFormControl";
-import StringFormControl from "../../../../form-controls/StringFormControl/StringFormControl";
+import * as sx from "../../commonStyles";
+import { ChoiceFormControl, StringFormControl } from "../../form-controls";
 
 const TextUiSettings = () => {
   return (

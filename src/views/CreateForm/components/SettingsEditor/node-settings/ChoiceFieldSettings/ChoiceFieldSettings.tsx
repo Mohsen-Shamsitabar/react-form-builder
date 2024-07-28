@@ -11,13 +11,13 @@ import {
 } from "@mui/material";
 import { useFormContext } from "react-hook-form";
 import { type ChoiceFieldWidgetProps } from "services/schema/types";
-import * as sx from "../../../../../commonStyles";
+import * as sx from "../../../commonStyles";
 import {
   BooleanFormControl,
   ChoiceFormControl,
   NumberFormControl,
   StringFormControl,
-} from "../../../../../form-controls";
+} from "../../../form-controls";
 import CreateOptionSection from "./CreateOptionSection";
 import * as choiceSx from "./styles";
 

@@ -1,9 +1,9 @@
 import { Box } from "@mui/material";
+import { SettingsEditor } from "views/CreateForm/components/SettingsEditor";
 import { type FormItem } from "views/CreateForm/types";
 import { isPageNode } from "views/CreateForm/utils";
 import type { TabState } from "../../types";
 import EffectsEditor from "../EffectsEditor";
-import SettingsEditor from "../SettingsEditor";
 
 type Props = {
   tabState: TabState;

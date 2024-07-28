@@ -1,9 +1,6 @@
 import { Box, Stack, Typography } from "@mui/material";
-import * as sx from "../../../../commonStyles";
-import {
-  BooleanFormControl,
-  StringFormControl,
-} from "../../../../form-controls";
+import * as sx from "../../commonStyles";
+import { BooleanFormControl, StringFormControl } from "../../form-controls";
 
 const BooleanFieldSettings = () => {
   return (
