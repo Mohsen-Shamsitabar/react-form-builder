@@ -19,6 +19,11 @@ import {
 } from "views/CreateForm/components/EditModal/constants";
 import { createEffectNameGenerator } from "views/CreateForm/components/EditModal/utils";
 import { ChoiceFormControl } from "views/CreateForm/components/form-controls";
+import {
+  COMPARISON_NODE_GRIDSIZE,
+  DIVIDER_GRIDSIZE,
+  LOGICAL_NODE_GRIDSIZE,
+} from "../constants";
 import ComparisonNode from "./ComparisonNode";
 import NodeCard from "./NodeCard";
 
@@ -61,7 +66,7 @@ const ChainNodesSection = (props: Props) => {
   if (logicalOperator) {
     return (
       <>
-        <Grid item xs={1}>
+        <Grid item xs={LOGICAL_NODE_GRIDSIZE}>
           <NodeCard>
             <Stack direction={"column"}>
               <ChoiceFormControl
@@ -80,11 +85,11 @@ const ChainNodesSection = (props: Props) => {
           </NodeCard>
         </Grid>
 
-        <Grid item xs={0.5}>
+        <Grid item xs={DIVIDER_GRIDSIZE}>
           <Divider orientation="horizontal" />
         </Grid>
 
-        <Grid item xs={1.5}>
+        <Grid item xs={COMPARISON_NODE_GRIDSIZE}>
           <NodeCard>
             <ComparisonNode
               effectId={effectId}
@@ -104,7 +109,7 @@ const ChainNodesSection = (props: Props) => {
 
   return (
     <>
-      <Grid item xs={1}>
+      <Grid item xs={LOGICAL_NODE_GRIDSIZE}>
         <NodeCard>
           <FormControl fullWidth size={"small"}>
             <InputLabel
@@ -131,9 +136,9 @@ const ChainNodesSection = (props: Props) => {
         </NodeCard>
       </Grid>
 
-      <Grid item xs={1}></Grid>
+      <Grid item xs={DIVIDER_GRIDSIZE}></Grid>
 
-      <Grid item xs={1}></Grid>
+      <Grid item xs={COMPARISON_NODE_GRIDSIZE}></Grid>
     </>
   );
 };

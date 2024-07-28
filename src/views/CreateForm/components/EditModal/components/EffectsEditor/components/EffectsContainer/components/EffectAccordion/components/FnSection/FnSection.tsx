@@ -24,6 +24,11 @@ import {
   LogicalNode,
   NodeCard,
 } from "./components";
+import {
+  COMPARISON_NODE_GRIDSIZE,
+  DIVIDER_GRIDSIZE,
+  LOGICAL_NODE_GRIDSIZE,
+} from "./constants";
 
 type FnFieldsetProps = {
   fn: Fn;
@@ -81,7 +86,7 @@ const FnSection = (props: FnFieldsetProps) => {
     return (
       <Fieldset title={"Conditions"}>
         <Grid container columns={5} alignItems={"center"}>
-          <Grid item xs={1}>
+          <Grid item xs={COMPARISON_NODE_GRIDSIZE}>
             <NodeCard>
               <ComparisonNode
                 effectId={effectId}
@@ -94,11 +99,11 @@ const FnSection = (props: FnFieldsetProps) => {
             </NodeCard>
           </Grid>
 
-          <Grid item xs={1}>
+          <Grid item xs={DIVIDER_GRIDSIZE}>
             <Divider orientation="horizontal" />
           </Grid>
 
-          <Grid item xs={1}>
+          <Grid item xs={LOGICAL_NODE_GRIDSIZE}>
             <NodeCard>
               <Stack direction={"column"}>
                 <LogicalNode
@@ -113,11 +118,11 @@ const FnSection = (props: FnFieldsetProps) => {
             </NodeCard>
           </Grid>
 
-          <Grid item xs={1}>
+          <Grid item xs={DIVIDER_GRIDSIZE}>
             <Divider orientation="horizontal" />
           </Grid>
 
-          <Grid item xs={1}>
+          <Grid item xs={COMPARISON_NODE_GRIDSIZE}>
             <NodeCard>
               <ComparisonNode
                 effectId={effectId}
@@ -145,7 +150,7 @@ const FnSection = (props: FnFieldsetProps) => {
   return (
     <Fieldset title={"Conditions"}>
       <Grid container columns={5} alignItems={"center"}>
-        <Grid item xs={1.5}>
+        <Grid item xs={COMPARISON_NODE_GRIDSIZE}>
           <NodeCard>
             <ComparisonNode
               effectId={effectId}
@@ -158,7 +163,7 @@ const FnSection = (props: FnFieldsetProps) => {
           </NodeCard>
         </Grid>
 
-        <Grid item xs={0.5}>
+        <Grid item xs={DIVIDER_GRIDSIZE}>
           <Divider orientation="horizontal" />
         </Grid>
 
