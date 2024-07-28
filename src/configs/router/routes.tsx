@@ -4,6 +4,7 @@ import {
 } from "components/route-layouts";
 import { type RouteObject } from "react-router-dom";
 import {
+  CreateForm,
   DashboardLoader,
   DashboardView,
   FormView,
@@ -32,6 +33,10 @@ const routes: RouteObject[] = [
             loader: myFormsLoader,
           },
         ],
+      },
+      {
+        element: <CreateForm />,
+        path: paths.CREATE_FORM,
       },
     ],
   },

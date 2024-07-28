@@ -54,7 +54,6 @@ const Form = () => {
   const form = useForm({
     mode: "all",
     defaultValues: formDefaultValues as object,
-    // shouldUnregister: true,
   });
 
   const btnRef = React.useRef<HTMLButtonElement>(null);
