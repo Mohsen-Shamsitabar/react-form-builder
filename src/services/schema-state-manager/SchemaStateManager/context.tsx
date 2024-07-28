@@ -1,12 +1,12 @@
 import * as React from "react";
-import { type FieldValues } from "react-hook-form";
-import type { SchemaID } from "services/schema/types";
+import type { PageData, SchemaID } from "services/schema/types";
 import { type State } from "./reducer";
 
 export type ContextValue = {
   state: State;
   goToPage: (pageId: SchemaID, isBack?: boolean) => void;
-  setPageData: (pageData: FieldValues) => void;
+  setPageData: (pageData: PageData) => void;
+  setVisibleWidgets: (widgetIds: SchemaID[]) => void;
 };
 
 const Context = React.createContext<ContextValue | null>(null);

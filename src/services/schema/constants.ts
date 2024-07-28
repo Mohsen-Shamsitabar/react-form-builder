@@ -15,8 +15,7 @@ export enum LogicalTypes {
 }
 
 export enum FieldAction {
-  SHOW_FIELDS = "SHOW_FIELDS",
-  HIDE_FIELDS = "HIDE_FIELDS",
+  HIDE_WIDGETS = "HIDE_WIDGETS",
 }
 
 export enum PageAction {

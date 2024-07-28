@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+import { useSchema, useSchemaStateManager } from "services";
 import {
   BooleanFieldWidget,
   ChoiceFieldWidget,
@@ -7,15 +9,11 @@ import {
   StringFieldWidget,
   TextUIWidget,
 } from "..";
-import type { DocumentSchema, Widget } from "../../types";
+import type { Widget } from "../../types";
 import { isFieldWidget } from "../../utils";
 import SchemaPage from "../SchemaPage";
 
-interface Props {
-  schema: DocumentSchema;
-}
-
-const renderWidget = (widget: Widget) => {
+export const renderWidget = (widget: Widget) => {
   const { id, properties: widgetProperties } = widget;
 
   if (isFieldWidget(widget)) {
@@ -58,32 +56,27 @@ const renderWidget = (widget: Widget) => {
   }
 };
 
-const SchemaToJSX = (props: Props): (JSX.Element | null)[] => {
-  const { schema } = props;
-  const { definitions, "order:pages": pagesOrder } = schema;
+const SchemaToJSX = (): JSX.Element | null => {
+  const schema = useSchema();
+  const schemaStateManager = useSchemaStateManager();
 
-  const pages = pagesOrder.map(pageId => {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const page = definitions.pages[pageId]!;
+  if (!schema) return null;
+  if (!schemaStateManager) return null;
 
-    const widgets = page["order:widgets"].map(widgetId => {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const widget = definitions.widgets[widgetId]!;
+  const { definitions } = schema;
 
-      return renderWidget(widget);
-    });
+  const { state } = schemaStateManager;
 
-    return (
-      <SchemaPage
-        key={pageId}
-        widgets={widgets}
-        pageId={pageId}
-        pageTitle={page.title}
-      />
-    );
+  const pageSchema = definitions.pages[state.currentPage]!;
+
+  const widgets = state.visibleWidgets.map(widgetId => {
+    if (!schema) return null;
+
+    const widget = schema.definitions.widgets[widgetId]!;
+    return renderWidget(widget);
   });
 
-  return pages;
+  return <SchemaPage page={pageSchema} widgets={widgets} />;
 };
 
 export default SchemaToJSX;

@@ -1,10 +1,18 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { FormGroup, TextField, Typography } from "@mui/material";
+import * as React from "react";
 import { useController, useFormContext } from "react-hook-form";
+import { useSchema, useSchemaStateManager } from "services";
+import type {
+  FieldDatas,
+  SchemaID,
+  StringFieldWidgetProps,
+} from "services/schema/types";
 import type { SystemSX } from "types";
 import { mergeSx } from "utils";
 import * as sx from "../commonStyles";
+import handleFieldEffects from "../handleFieldEffects";
 import { useErrorMessage, usePageData } from "./hooks";
-import type { SchemaID, StringFieldWidgetProps } from "services/schema/types";
 
 type Props = StringFieldWidgetProps & {
   sx?: SystemSX;
@@ -22,13 +30,19 @@ const StringFieldWidget = (props: Props) => {
     description,
     maxLength,
     minLength,
-    defaultValue = "",
+    defaultValue,
     required = false,
     multiline = false,
     widgetId,
   } = props;
 
-  const { control } = useFormContext();
+  const schemaStateManager = useSchemaStateManager();
+
+  const schema = useSchema();
+
+  const form = useFormContext();
+
+  const { control, getValues } = form;
 
   const fieldValue = usePageData(widgetId, defaultValue);
 
@@ -36,7 +50,7 @@ const StringFieldWidget = (props: Props) => {
     name: widgetId,
     control,
     defaultValue: fieldValue,
-    shouldUnregister: true,
+    shouldUnregister: false,
     rules: {
       required,
       minLength,
@@ -49,6 +63,20 @@ const StringFieldWidget = (props: Props) => {
     maxLength,
     minLength,
   });
+
+  if (!schemaStateManager) return;
+  if (!schema) return;
+
+  // if (!schemaStateManager.state.visibleWidgets.includes(widgetId)) return null;
+
+  const handleOnChange: React.ChangeEventHandler<
+    HTMLInputElement | HTMLTextAreaElement
+  > = e => {
+    field.onChange(e);
+    const fieldDatas = getValues() as FieldDatas;
+
+    handleFieldEffects(schema, schemaStateManager, fieldDatas);
+  };
 
   return (
     <FormGroup sx={mergeSx(sxProp, sx.fieldWidget)}>
@@ -68,6 +96,7 @@ const StringFieldWidget = (props: Props) => {
         helperText={errorMessage}
         required={required}
         error={Boolean(errorMessage)}
+        onChange={handleOnChange}
       />
     </FormGroup>
   );
