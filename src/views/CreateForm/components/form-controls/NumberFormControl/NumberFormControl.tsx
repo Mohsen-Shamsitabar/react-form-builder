@@ -14,6 +14,7 @@ import useErrorMessage from "./hooks";
 
 type Props = Omit<NumberFieldWidgetProps, "defaultValue"> & {
   name: string;
+  defaultValue?: number;
   onChange?: (newValue: number) => void;
   shouldUnregister?: boolean;
 };
@@ -27,17 +28,21 @@ const NumberFormControl = (props: Props) => {
     max,
     min,
     onChange,
+    defaultValue: defaultValueProp,
     required = false,
     shouldUnregister = false,
   } = props;
 
   const numberRegExp = /^-?[0-9]\d*(\.\d+)?$/;
 
-  const { control } = useFormContext();
+  const { control, getValues } = useFormContext();
+
+  const defaultValue = (getValues(name) as unknown) ?? defaultValueProp;
 
   const { field, fieldState } = useController({
     name,
     control,
+    defaultValue,
     shouldUnregister,
     rules: {
       required,
