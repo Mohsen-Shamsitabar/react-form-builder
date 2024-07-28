@@ -13,10 +13,13 @@ import {
   type SubmitHandler,
   useForm,
 } from "react-hook-form";
+import { v4 as uuid } from "uuid";
 import type { PageNode } from "views/CreateForm/types";
+import { SettingsEditor } from "../SettingsEditor";
+import { NewWidgetSection } from "./components";
 
 type ModalProps = {
-  parent: PageNode;
+  parent: PageNode | null;
   open: boolean;
   onClose: () => void;
   onCloseFinish: () => void;
@@ -25,31 +28,45 @@ type ModalProps = {
 const AddModal = (props: ModalProps) => {
   const { onClose, onCloseFinish, open, parent } = props;
 
-  const title = `Adding a new item to ${parent.title}`;
+  const title = !parent
+    ? "Adding a new page to form"
+    : `Adding a new widget to ${parent.title}`;
 
   const btnRef = React.useRef<HTMLButtonElement | null>(null);
 
   const form = useForm({
     mode: "all",
-    defaultValues: {},
   });
 
   const onSubmitClick = async () => {
     const isFormValid = await form.trigger();
-    const errors = form.formState.errors;
 
     if (isFormValid) {
       btnRef.current?.click();
       onClose();
     } else {
-      throw new Error(
-        "Your form has errors!" + `${Object.keys(errors).join(", ")}`,
-      );
+      throw new Error("Your form has errors!");
     }
   };
 
   const submitForm: SubmitHandler<FieldValues> = (data, _e) => {
     console.log(data);
+  };
+
+  const renderDialogContent = () => {
+    if (!parent) {
+      const newPage: PageNode = {
+        id: `PAGE_${uuid()}`,
+        type: "page",
+        title: "",
+        widgets: [],
+        effects: [],
+      };
+
+      return <SettingsEditor item={newPage} />;
+    }
+
+    return <NewWidgetSection page={parent} />;
   };
 
   return (
@@ -60,14 +77,14 @@ const AddModal = (props: ModalProps) => {
         fullWidth
         open={open}
         onClose={onClose}
-        aria-labelledby="delete-dialog-title"
+        aria-labelledby="add-dialog-title"
         onTransitionEnd={onCloseFinish}
-        maxWidth="xs"
+        maxWidth="sm"
       >
-        <DialogTitle id="delete-dialog-title">{title}</DialogTitle>
+        <DialogTitle id="add-dialog-title">{title}</DialogTitle>
 
         <FormProvider {...form}>
-          <DialogContent>{/* CONTENT */}</DialogContent>
+          <DialogContent>{renderDialogContent()}</DialogContent>
         </FormProvider>
 
         <DialogActions sx={theme => ({ color: theme.palette.action.active })}>
