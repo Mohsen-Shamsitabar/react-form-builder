@@ -1,31 +1,36 @@
 import { useFormContext } from "react-hook-form";
-import { v4 as uuid } from "uuid";
-import type { PageNode, WidgetNode } from "views/CreateForm/types";
+import {
+  FIELD_WIDGET_TYPE_OPTIONS,
+  UI_WIDGET_TYPE_OPTIONS,
+  WIDGET_TYPE_OPTIONS,
+} from "services/schema/constants";
 import { Fieldset } from "views/CreateForm/utils";
 import { ChoiceFormControl } from "../../form-controls";
-import { SettingsEditor } from "../../SettingsEditor";
-
-type Props = {
-  page: PageNode;
-};
+import {
+  BooleanFieldSettings,
+  ChoiceFieldSettings,
+  LinkUISettings,
+  NumberFieldSettings,
+  StringFieldSettings,
+} from "../../SettingsEditor";
+import TextUiSettings from "../../SettingsEditor/node-settings/TextUISettings";
 
 type WidgetTypes = "field" | "ui";
 type FieldPropTypes = "string" | "boolean" | "choice" | "number";
 type UiPropTypes = "text" | "link" | "divider";
 type PropTypes = UiPropTypes | FieldPropTypes;
 
-const NewWidgetSection = (props: Props) => {
-  const { page } = props;
-
+const NewWidgetSection = () => {
   const { watch, setValue } = useFormContext();
 
-  const widgetType = watch("widgetType") as WidgetTypes | undefined;
-  const propType = watch("propType") as PropTypes | undefined;
+  const WIDGET_TYPE_NAME = "widget-type";
+  const PROP_TYPE_NAME = "prop-type";
 
-  console.log({ widgetType, propType });
+  const widgetType = watch(WIDGET_TYPE_NAME) as WidgetTypes | null;
+  const propType = watch(PROP_TYPE_NAME) as PropTypes | null;
 
   const handleWidgetTypeChange = () => {
-    setValue("propType", "");
+    setValue("prop-type", "");
   };
 
   const renderPropTypeSelect = () => {
@@ -34,16 +39,10 @@ const NewWidgetSection = (props: Props) => {
     if (widgetType === "field") {
       return (
         <ChoiceFormControl
-          name="propType"
-          label="Property type"
-          options={[
-            { label: "String", value: "string" },
-            { label: "Number", value: "number" },
-            { label: "Choice", value: "choice" },
-            { label: "Boolean", value: "boolean" },
-          ]}
+          name={PROP_TYPE_NAME}
+          label="Field widget type"
+          options={FIELD_WIDGET_TYPE_OPTIONS}
           multiSelect={false}
-          defaultValue={""}
           size="small"
           shouldUnregister
           required
@@ -53,13 +52,9 @@ const NewWidgetSection = (props: Props) => {
 
     return (
       <ChoiceFormControl
-        name="propType"
-        label="Property type"
-        options={[
-          { label: "Text", value: "text" },
-          { label: "Link", value: "link" },
-          { label: "Divider", value: "divider" },
-        ]}
+        name={PROP_TYPE_NAME}
+        label="UI widget type"
+        options={UI_WIDGET_TYPE_OPTIONS}
         multiSelect={false}
         defaultValue={""}
         size="small"
@@ -74,38 +69,25 @@ const NewWidgetSection = (props: Props) => {
 
     switch (propType) {
       case "string": {
-        const widget: WidgetNode = {
-          id: `WIDGET_${uuid()}`,
-          pageId: page.id,
-          type: "field",
-          properties: {
-            type: "string",
-            properties: {
-              type: "text",
-              label: "",
-              defaultValue: "",
-            },
-          },
-        };
-
-        return <SettingsEditor item={widget} />;
+        return <StringFieldSettings shouldUnregister />;
       }
       case "number": {
-        return null;
+        return <NumberFieldSettings shouldUnregister />;
       }
       case "boolean": {
-        return null;
-      }
-      case "text": {
-        return null;
-      }
-      case "link": {
-        return null;
-      }
-      case "divider": {
-        return null;
+        return <BooleanFieldSettings shouldUnregister />;
       }
       case "choice": {
+        return <ChoiceFieldSettings shouldUnregister />;
+      }
+      case "text": {
+        return <TextUiSettings shouldUnregister />;
+      }
+      case "link": {
+        return <LinkUISettings shouldUnregister />;
+      }
+      case "divider": {
+        // divider has no settings
         return null;
       }
       default:
@@ -117,12 +99,9 @@ const NewWidgetSection = (props: Props) => {
     <>
       <Fieldset title={"Type Information"}>
         <ChoiceFormControl
-          name="widgetType"
+          name={WIDGET_TYPE_NAME}
           label="Widget type"
-          options={[
-            { label: "Field", value: "field" },
-            { label: "UI", value: "ui" },
-          ]}
+          options={WIDGET_TYPE_OPTIONS}
           multiSelect={false}
           defaultValue={""}
           size="small"
