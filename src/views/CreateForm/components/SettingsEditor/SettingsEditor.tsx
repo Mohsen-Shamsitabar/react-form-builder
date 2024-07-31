@@ -19,14 +19,14 @@ const SettingsEditor = (props: Props) => {
 
   if (!item) return null;
 
-  if (isPageNode(item)) return <PagePropertySettings page={item} />;
+  if (isPageNode(item)) return <PagePropertySettings />;
 
   if (item.type === "field") {
     const itemType = item.properties.type;
 
     switch (itemType) {
       case "string": {
-        return <StringFieldSettings item={item} />;
+        return <StringFieldSettings />;
       }
       case "number": {
         return <NumberFieldSettings />;

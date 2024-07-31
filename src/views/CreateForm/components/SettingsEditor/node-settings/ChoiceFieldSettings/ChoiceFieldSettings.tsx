@@ -18,18 +18,21 @@ import {
   NumberFormControl,
   StringFormControl,
 } from "../../../form-controls";
+import { type WidgetSettingsProps } from "../types";
 import CreateOptionSection from "./CreateOptionSection";
 import * as choiceSx from "./styles";
 
-const ChoiceFieldSettings = () => {
+const ChoiceFieldSettings = (props: WidgetSettingsProps) => {
+  const { shouldUnregister = false } = props;
+
   const { watch, setValue, getValues } = useFormContext();
 
   const multiSelect = watch(
     "multiSelect",
   ) as ChoiceFieldWidgetProps["multiSelect"];
 
-  const options = watch("options") as ChoiceFieldWidgetProps["options"];
-  const required = watch("required") as ChoiceFieldWidgetProps["required"];
+  const options = (watch("options") as ChoiceFieldWidgetProps["options"]) ?? [];
+  // const required = watch("required") as ChoiceFieldWidgetProps["required"];
   const maxRequired = watch(
     "maxRequired",
   ) as ChoiceFieldWidgetProps["maxRequired"];
@@ -65,6 +68,42 @@ const ChoiceFieldSettings = () => {
     }
   };
 
+  const renderOptions = () => {
+    return options.map(option => (
+      <Stack
+        key={option.value}
+        sx={choiceSx.choiceOption}
+        direction="row"
+        alignItems="center"
+        justifyContent="space-between"
+      >
+        <TextField
+          value={option.label}
+          size="small"
+          label="Label"
+          type="text"
+          placeholder="Option label"
+          aria-readonly
+          inputProps={{ readOnly: true }}
+        />
+
+        <TextField
+          value={option.value}
+          size="small"
+          label="Value"
+          type="text"
+          placeholder="Option Value"
+          aria-readonly
+          inputProps={{ readOnly: true }}
+        />
+
+        <IconButton onClick={makeHandleOptionDelete(option.value)}>
+          <DeleteIcon fontSize="small" />
+        </IconButton>
+      </Stack>
+    ));
+  };
+
   return (
     <Stack direction="column" alignItems="center">
       <Box sx={sx.fieldset} component="fieldset">
@@ -83,6 +122,7 @@ const ChoiceFieldSettings = () => {
           placeholder="Enter a label"
           description="The name of the field, which is visible to the user."
           required
+          shouldUnregister={shouldUnregister}
         />
 
         {/* ===== DESCRIPTION ===== */}
@@ -90,10 +130,15 @@ const ChoiceFieldSettings = () => {
           name="description"
           label="Description"
           placeholder="Enter a description"
+          shouldUnregister={shouldUnregister}
         />
 
         {/* ===== REQUIRED ===== */}
-        <BooleanFormControl name="required" label="Is this field required" />
+        <BooleanFormControl
+          name="required"
+          label="Is this field required"
+          shouldUnregister={shouldUnregister}
+        />
       </Box>
 
       <Box sx={sx.fieldset} component="fieldset">
@@ -110,6 +155,7 @@ const ChoiceFieldSettings = () => {
           name="multiSelect"
           label="Is this field able to select multiple options"
           onChange={onMultiSelectChange}
+          shouldUnregister={shouldUnregister}
         />
 
         {/* ===== OPTIONS ===== */}
@@ -131,39 +177,7 @@ const ChoiceFieldSettings = () => {
 
             <FormGroup>
               <Stack direction="column" justifyContent="center">
-                {options.map(option => (
-                  <Stack
-                    key={option.value}
-                    sx={choiceSx.choiceOption}
-                    direction="row"
-                    alignItems="center"
-                    justifyContent="space-between"
-                  >
-                    <TextField
-                      value={option.label}
-                      size="small"
-                      label="Label"
-                      type="text"
-                      placeholder="Option label"
-                      aria-readonly
-                      inputProps={{ readOnly: true }}
-                    />
-
-                    <TextField
-                      value={option.value}
-                      size="small"
-                      label="Value"
-                      type="text"
-                      placeholder="Option Value"
-                      aria-readonly
-                      inputProps={{ readOnly: true }}
-                    />
-
-                    <IconButton onClick={makeHandleOptionDelete(option.value)}>
-                      <DeleteIcon fontSize="small" />
-                    </IconButton>
-                  </Stack>
-                ))}
+                {renderOptions()}
               </Stack>
             </FormGroup>
           </Box>
@@ -175,9 +189,11 @@ const ChoiceFieldSettings = () => {
           label="Initial field value"
           options={options}
           multiSelect={multiSelect}
-          required={required}
+          // required={required}
+          required
           maxRequired={maxRequired}
           minRequired={minRequired}
+          shouldUnregister={shouldUnregister}
         />
       </Box>
 
@@ -196,6 +212,7 @@ const ChoiceFieldSettings = () => {
           label="Maximum select count"
           description="Maximum number of options to select. (The field needs to be Required)"
           placeholder="Enter a number for maximum select count"
+          shouldUnregister={shouldUnregister}
         />
 
         {/* ===== MIN-LENGTH ===== */}
@@ -204,12 +221,14 @@ const ChoiceFieldSettings = () => {
           label="Minimum select count"
           description="Minimum number of options to select. (The field needs to be Required)"
           placeholder="Enter a number for minimum select count"
+          shouldUnregister={shouldUnregister}
         />
 
         {/* ===== SHUFFLE-OPTIONS ===== */}
         <BooleanFormControl
           name="shuffleOptions"
           label="Should this field shuffle its options"
+          shouldUnregister={shouldUnregister}
         />
       </Box>
     </Stack>

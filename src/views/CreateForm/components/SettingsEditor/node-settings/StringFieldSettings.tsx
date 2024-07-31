@@ -1,7 +1,6 @@
 import { Box, Stack, Typography } from "@mui/material";
 import { useFormContext } from "react-hook-form";
 import { type StringFieldWidgetProps } from "services/schema/types";
-import { type WidgetNode } from "views/CreateForm/types";
 import * as sx from "../../commonStyles";
 import {
   BooleanFormControl,
@@ -9,15 +8,10 @@ import {
   NumberFormControl,
   StringFormControl,
 } from "../../form-controls";
+import { type WidgetSettingsProps } from "./types";
 
-type Props = {
-  item: WidgetNode;
-};
-
-const StringFieldSettings = (props: Props) => {
-  const { item } = props;
-  const itemProps = item.properties
-    .properties as unknown as StringFieldWidgetProps;
+const StringFieldSettings = (props: WidgetSettingsProps) => {
+  const { shouldUnregister = false } = props;
 
   const { watch } = useFormContext();
 
@@ -43,8 +37,7 @@ const StringFieldSettings = (props: Props) => {
           label="Label"
           placeholder="Enter a label"
           description="The name of the field, which is visible to the user."
-          defaultValue={itemProps.label}
-          shouldUnregister
+          shouldUnregister={shouldUnregister}
           required
         />
 
@@ -57,8 +50,8 @@ const StringFieldSettings = (props: Props) => {
             { label: "Text", value: "text" },
           ]}
           multiSelect={false}
-          defaultValue={itemProps.type}
-          shouldUnregister
+          shouldUnregister={shouldUnregister}
+          required
         />
 
         {/* ===== DESCRIPTION ===== */}
@@ -66,8 +59,7 @@ const StringFieldSettings = (props: Props) => {
           name="description"
           label="Description"
           placeholder="Enter a description"
-          defaultValue={itemProps.description ?? ""}
-          shouldUnregister
+          shouldUnregister={shouldUnregister}
         />
 
         {/* ===== PLACEHOLDER ===== */}
@@ -78,16 +70,14 @@ const StringFieldSettings = (props: Props) => {
           This hint is usually a sample value or a brief description of the
           expected format."
           placeholder="Enter a placeholder"
-          defaultValue={itemProps.placeholder ?? ""}
-          shouldUnregister
+          shouldUnregister={shouldUnregister}
         />
 
         {/* ===== REQUIRED ===== */}
         <BooleanFormControl
           name="required"
           label="Is this field required"
-          defaultChecked={itemProps.required ?? false}
-          shouldUnregister
+          shouldUnregister={shouldUnregister}
         />
       </Box>
 
@@ -104,8 +94,7 @@ const StringFieldSettings = (props: Props) => {
         <BooleanFormControl
           name="multiline"
           label="Is this field able to accept multiple lines"
-          defaultChecked={itemProps.multiline ?? false}
-          shouldUnregister
+          shouldUnregister={shouldUnregister}
         />
 
         {/* ===== DEFAULT-VALUE ===== */}
@@ -114,12 +103,12 @@ const StringFieldSettings = (props: Props) => {
           label="Initial field value"
           description="This value will be the initial value for this field."
           placeholder="Enter an initial value"
-          defaultValue={itemProps.defaultValue}
           type={inputType}
           maxLength={maxLength}
           minLength={minLength}
           multiline={multiline}
-          shouldUnregister
+          shouldUnregister={shouldUnregister}
+          required
         />
       </Box>
 
@@ -138,8 +127,7 @@ const StringFieldSettings = (props: Props) => {
           label="Maximum character count"
           description="Maximum number of characters in this field."
           placeholder="Enter a number for maximum character count"
-          defaultValue={itemProps.maxLength ?? 0}
-          shouldUnregister
+          shouldUnregister={shouldUnregister}
         />
 
         {/* ===== MIN-LENGTH ===== */}
@@ -148,8 +136,7 @@ const StringFieldSettings = (props: Props) => {
           label="Minimum character count"
           description="Minimum number of characters in this field."
           placeholder="Enter a number for minimum character count"
-          defaultValue={itemProps.minLength ?? 0}
-          shouldUnregister
+          shouldUnregister={shouldUnregister}
         />
       </Box>
     </Stack>
