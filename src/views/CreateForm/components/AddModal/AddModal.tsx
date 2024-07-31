@@ -13,9 +13,8 @@ import {
   type SubmitHandler,
   useForm,
 } from "react-hook-form";
-import { v4 as uuid } from "uuid";
 import type { PageNode } from "views/CreateForm/types";
-import { SettingsEditor } from "../SettingsEditor";
+import { PagePropertySettings } from "../SettingsEditor";
 import { NewWidgetSection } from "./components";
 
 type ModalProps = {
@@ -45,28 +44,29 @@ const AddModal = (props: ModalProps) => {
       btnRef.current?.click();
       onClose();
     } else {
-      throw new Error("Your form has errors!");
+      const { errors } = form.formState;
+
+      throw new Error(
+        "Your form has errors: " + Object.keys(errors).join(", "),
+      );
     }
   };
 
   const submitForm: SubmitHandler<FieldValues> = (data, _e) => {
     console.log(data);
+    if (!parent) {
+      console.log("PAGE ADDED TO FORM");
+      return;
+    }
+    console.log(`WIDGET ADDED TO ${parent.id}`);
   };
 
   const renderDialogContent = () => {
     if (!parent) {
-      const newPage: PageNode = {
-        id: `PAGE_${uuid()}`,
-        type: "page",
-        title: "",
-        widgets: [],
-        effects: [],
-      };
-
-      return <SettingsEditor item={newPage} />;
+      return <PagePropertySettings />;
     }
 
-    return <NewWidgetSection page={parent} />;
+    return <NewWidgetSection />;
   };
 
   return (
