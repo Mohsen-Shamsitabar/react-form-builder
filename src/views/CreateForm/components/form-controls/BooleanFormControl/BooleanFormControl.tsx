@@ -21,7 +21,7 @@ const BooleanFormControl = (props: Props) => {
     label,
     name,
     onChange,
-    defaultChecked,
+    defaultChecked = false,
     required = false,
     shouldUnregister = false,
   } = props;

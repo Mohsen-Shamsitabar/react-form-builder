@@ -44,7 +44,7 @@ const ChoiceFormControl = (props: Props) => {
     maxRequired,
     minRequired,
     onChange,
-    defaultValue: defaultValueProp,
+    defaultValue: defaultValueProp = multiSelect ? [] : "",
     required = false,
     size = "medium",
     varinet = "outlined",

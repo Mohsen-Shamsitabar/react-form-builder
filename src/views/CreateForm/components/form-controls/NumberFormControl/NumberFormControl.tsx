@@ -28,7 +28,7 @@ const NumberFormControl = (props: Props) => {
     max,
     min,
     onChange,
-    defaultValue: defaultValueProp,
+    defaultValue: defaultValueProp = "",
     required = false,
     shouldUnregister = false,
   } = props;
