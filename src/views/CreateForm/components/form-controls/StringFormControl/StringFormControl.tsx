@@ -31,7 +31,7 @@ const StringFormControl = (props: Props) => {
     onChange,
     maxLength,
     minLength,
-    defaultValue: defaultValueProp,
+    defaultValue: defaultValueProp = "",
     required = false,
     multiline = false,
     type = "text",

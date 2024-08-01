@@ -1,11 +1,11 @@
 import { Box, Stack, Typography } from "@mui/material";
-import * as sx from "../../../../commonStyles";
-import {
-  BooleanFormControl,
-  StringFormControl,
-} from "../../../../form-controls";
+import * as sx from "../../commonStyles";
+import { BooleanFormControl, StringFormControl } from "../../form-controls";
+import { type WidgetSettingsProps } from "./types";
 
-const BooleanFieldSettings = () => {
+const BooleanFieldSettings = (props: WidgetSettingsProps) => {
+  const { shouldUnregister = false } = props;
+
   return (
     <Stack direction="column" alignItems="center">
       <Box sx={sx.fieldset} component="fieldset">
@@ -24,6 +24,7 @@ const BooleanFieldSettings = () => {
           description="The name of the field, which is visible to the user."
           placeholder="Enter a label"
           required
+          shouldUnregister={shouldUnregister}
         />
 
         {/* ===== DESCRIPTION ===== */}
@@ -31,10 +32,15 @@ const BooleanFieldSettings = () => {
           name="description"
           label="Description"
           placeholder="Enter a description"
+          shouldUnregister={shouldUnregister}
         />
 
         {/* ===== REQUIRED ===== */}
-        <BooleanFormControl name="required" label="Is this field required" />
+        <BooleanFormControl
+          name="required"
+          label="Is this field required"
+          shouldUnregister={shouldUnregister}
+        />
       </Box>
 
       <Box sx={sx.fieldset} component="fieldset">
@@ -50,6 +56,7 @@ const BooleanFieldSettings = () => {
         <BooleanFormControl
           name="defaultChecked"
           label="Is this field chekced"
+          shouldUnregister={shouldUnregister}
         />
       </Box>
     </Stack>

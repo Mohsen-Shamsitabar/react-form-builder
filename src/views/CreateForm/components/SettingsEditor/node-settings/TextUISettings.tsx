@@ -1,9 +1,11 @@
 import { Box, Stack, Typography } from "@mui/material";
-import * as sx from "../../../../commonStyles";
-import ChoiceFormControl from "../../../../form-controls/ChoiceFormControl/ChoiceFormControl";
-import StringFormControl from "../../../../form-controls/StringFormControl/StringFormControl";
+import * as sx from "../../commonStyles";
+import { ChoiceFormControl, StringFormControl } from "../../form-controls";
+import { type WidgetSettingsProps } from "./types";
 
-const TextUiSettings = () => {
+const TextUiSettings = (props: WidgetSettingsProps) => {
+  const { shouldUnregister = false } = props;
+
   return (
     <Stack direction="column" alignItems="center">
       <Box sx={sx.fieldset} component="fieldset">
@@ -20,6 +22,8 @@ const TextUiSettings = () => {
           name="text"
           label="Text"
           placeholder="Enter a text"
+          shouldUnregister={shouldUnregister}
+          required
         />
 
         {/* ===== VARIENT ===== */}
@@ -32,6 +36,8 @@ const TextUiSettings = () => {
             { label: "Subtitle", value: "subtitle" },
           ]}
           multiSelect={false}
+          shouldUnregister={shouldUnregister}
+          required
         />
       </Box>
     </Stack>

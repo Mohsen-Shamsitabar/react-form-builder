@@ -1,14 +1,17 @@
 import { Box, Stack, Typography } from "@mui/material";
 import { useFormContext } from "react-hook-form";
 import { type NumberFieldWidgetProps } from "services/schema/types";
-import * as sx from "../../../../commonStyles";
+import * as sx from "../../commonStyles";
 import {
   BooleanFormControl,
   NumberFormControl,
   StringFormControl,
-} from "../../../../form-controls";
+} from "../../form-controls";
+import { type WidgetSettingsProps } from "./types";
 
-const NumberFieldSettings = () => {
+const NumberFieldSettings = (props: WidgetSettingsProps) => {
+  const { shouldUnregister = false } = props;
+
   const { watch } = useFormContext();
 
   const min = watch("min") as NumberFieldWidgetProps["min"];
@@ -31,6 +34,7 @@ const NumberFieldSettings = () => {
           label="Label"
           placeholder="Enter a label"
           description="The name of the field, which is visible to the user."
+          shouldUnregister={shouldUnregister}
           required
         />
 
@@ -39,6 +43,7 @@ const NumberFieldSettings = () => {
           name="description"
           label="Description"
           placeholder="Enter a description"
+          shouldUnregister={shouldUnregister}
         />
 
         {/* ===== PLACEHOLDER ===== */}
@@ -49,10 +54,15 @@ const NumberFieldSettings = () => {
           This hint is usually a sample value or a brief description of the
           expected format."
           placeholder="Enter a placeholder"
+          shouldUnregister={shouldUnregister}
         />
 
         {/* ===== REQUIRED ===== */}
-        <BooleanFormControl name="required" label="Is this field required" />
+        <BooleanFormControl
+          name="required"
+          label="Is this field required"
+          shouldUnregister={shouldUnregister}
+        />
       </Box>
 
       <Box sx={sx.fieldset} component="fieldset">
@@ -72,6 +82,8 @@ const NumberFieldSettings = () => {
           placeholder="Enter an initial value for this field"
           min={min}
           max={max}
+          shouldUnregister={shouldUnregister}
+          required
         />
       </Box>
 
@@ -90,6 +102,7 @@ const NumberFieldSettings = () => {
           label="Maximum number value"
           description="Maximum number for this field."
           placeholder="Enter a number for maximum value"
+          shouldUnregister={shouldUnregister}
         />
 
         {/* ===== MIN ===== */}
@@ -98,6 +111,7 @@ const NumberFieldSettings = () => {
           label="Minimum number value"
           description="Minimum number for this field."
           placeholder="Enter a number for minimum value"
+          shouldUnregister={shouldUnregister}
         />
       </Box>
     </Stack>

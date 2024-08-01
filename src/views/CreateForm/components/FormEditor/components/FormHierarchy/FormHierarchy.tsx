@@ -1,19 +1,19 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import {
+  Add as AddIcon,
   ChevronRight as ChevronRightIcon,
   ExpandMore as ExpandMoreIcon,
 } from "@mui/icons-material";
-import { Box } from "@mui/material";
+import { Box, Button, Stack } from "@mui/material";
 import { TreeItem, TreeView } from "@mui/x-tree-view";
 import * as React from "react";
 import { useCreateFormData } from "views/CreateForm/DataProvider";
+import { useModalManager } from "views/CreateForm/modal-manager";
 import type { CreateFormData, PageNode } from "views/CreateForm/types";
 import { Trigger } from "./components";
 import * as sx from "./styles";
 
 const FormHierarchy = () => {
-  const data = useCreateFormData();
-
   const renderTree = React.useCallback((data: CreateFormData) => {
     const { pages, widgets } = data;
 
@@ -48,19 +48,35 @@ const FormHierarchy = () => {
     });
   }, []);
 
+  const data = useCreateFormData();
+  const modalManager = useModalManager();
+  if (!modalManager) return null;
+
+  const { addModal } = modalManager;
+
+  const handleAddNewPage = () => {
+    addModal.open();
+    addModal.setParent(null);
+  };
+
   if (!data) return null;
 
   return (
     <Box sx={sx.root}>
-      <Box sx={sx.treeContainer}>
+      <Stack direction={"column"} justifyContent={"center"}>
+        <Button onClick={handleAddNewPage}>
+          <AddIcon fontSize="inherit" />
+          Create new Page
+        </Button>
+
         <TreeView
-          aria-label="form"
+          aria-label="form-tree-view"
           defaultCollapseIcon={<ExpandMoreIcon />}
           defaultExpandIcon={<ChevronRightIcon />}
         >
           {renderTree(data)}
         </TreeView>
-      </Box>
+      </Stack>
     </Box>
   );
 };

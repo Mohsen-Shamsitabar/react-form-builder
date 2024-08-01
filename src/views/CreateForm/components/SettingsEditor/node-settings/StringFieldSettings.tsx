@@ -1,15 +1,18 @@
 import { Box, Stack, Typography } from "@mui/material";
 import { useFormContext } from "react-hook-form";
 import { type StringFieldWidgetProps } from "services/schema/types";
-import * as sx from "../../../../commonStyles";
+import * as sx from "../../commonStyles";
 import {
   BooleanFormControl,
   ChoiceFormControl,
   NumberFormControl,
   StringFormControl,
-} from "../../../../form-controls";
+} from "../../form-controls";
+import { type WidgetSettingsProps } from "./types";
 
-const StringFieldSettings = () => {
+const StringFieldSettings = (props: WidgetSettingsProps) => {
+  const { shouldUnregister = false } = props;
+
   const { watch } = useFormContext();
 
   const inputType = watch("type") as StringFieldWidgetProps["type"];
@@ -34,6 +37,7 @@ const StringFieldSettings = () => {
           label="Label"
           placeholder="Enter a label"
           description="The name of the field, which is visible to the user."
+          shouldUnregister={shouldUnregister}
           required
         />
 
@@ -46,6 +50,8 @@ const StringFieldSettings = () => {
             { label: "Text", value: "text" },
           ]}
           multiSelect={false}
+          shouldUnregister={shouldUnregister}
+          required
         />
 
         {/* ===== DESCRIPTION ===== */}
@@ -53,6 +59,7 @@ const StringFieldSettings = () => {
           name="description"
           label="Description"
           placeholder="Enter a description"
+          shouldUnregister={shouldUnregister}
         />
 
         {/* ===== PLACEHOLDER ===== */}
@@ -63,10 +70,15 @@ const StringFieldSettings = () => {
           This hint is usually a sample value or a brief description of the
           expected format."
           placeholder="Enter a placeholder"
+          shouldUnregister={shouldUnregister}
         />
 
         {/* ===== REQUIRED ===== */}
-        <BooleanFormControl name="required" label="Is this field required" />
+        <BooleanFormControl
+          name="required"
+          label="Is this field required"
+          shouldUnregister={shouldUnregister}
+        />
       </Box>
 
       <Box sx={sx.fieldset} component="fieldset">
@@ -82,6 +94,7 @@ const StringFieldSettings = () => {
         <BooleanFormControl
           name="multiline"
           label="Is this field able to accept multiple lines"
+          shouldUnregister={shouldUnregister}
         />
 
         {/* ===== DEFAULT-VALUE ===== */}
@@ -94,6 +107,8 @@ const StringFieldSettings = () => {
           maxLength={maxLength}
           minLength={minLength}
           multiline={multiline}
+          shouldUnregister={shouldUnregister}
+          required
         />
       </Box>
 
@@ -112,6 +127,7 @@ const StringFieldSettings = () => {
           label="Maximum character count"
           description="Maximum number of characters in this field."
           placeholder="Enter a number for maximum character count"
+          shouldUnregister={shouldUnregister}
         />
 
         {/* ===== MIN-LENGTH ===== */}
@@ -120,6 +136,7 @@ const StringFieldSettings = () => {
           label="Minimum character count"
           description="Minimum number of characters in this field."
           placeholder="Enter a number for minimum character count"
+          shouldUnregister={shouldUnregister}
         />
       </Box>
     </Stack>

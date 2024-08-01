@@ -1,8 +1,11 @@
 import { Box, Stack, Typography } from "@mui/material";
-import * as sx from "../../../../commonStyles";
-import { StringFormControl } from "../../../../form-controls";
+import * as sx from "../../commonStyles";
+import { StringFormControl } from "../../form-controls";
+import { type WidgetSettingsProps } from "./types";
 
-const LinkUISettings = () => {
+const LinkUISettings = (props: WidgetSettingsProps) => {
+  const { shouldUnregister = false } = props;
+
   return (
     <Stack direction="column" alignItems="center">
       <Box sx={sx.fieldset} component="fieldset">
@@ -21,6 +24,7 @@ const LinkUISettings = () => {
           placeholder="Enter a text for this link"
           description="A text associated with a link target."
           required
+          shouldUnregister={shouldUnregister}
         />
 
         {/* ===== HREF ===== */}
@@ -30,6 +34,7 @@ const LinkUISettings = () => {
           placeholder="Enter a valid URL"
           description="The destination of the link."
           required
+          shouldUnregister={shouldUnregister}
         />
       </Box>
     </Stack>

@@ -24,35 +24,31 @@ const Trigger = (props: TriggerProps) => {
   const title = getItemTitle(item);
 
   const modalManager = useModalManager();
+  if (!modalManager) return null;
+
+  const { addModal, deleteModal, editModal } = modalManager;
 
   const handleAddClick: React.MouseEventHandler<HTMLButtonElement> = event => {
     event.stopPropagation();
 
-    if (!modalManager) return;
-
-    modalManager.addModal.open();
-    // add item will only trigger on Pages.
-    modalManager.addModal.setParent(item as PageNode);
+    addModal.open();
+    addModal.setParent(item as PageNode);
   };
 
-  const handleDeleteClick: React.MouseEventHandler<
-    HTMLButtonElement
-  > = event => {
+  const handleDeleteClick = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+  ) => {
     event.stopPropagation();
 
-    if (!modalManager) return;
-
-    modalManager.deleteModal.setItem(item);
-    modalManager.deleteModal.open();
+    deleteModal.setItem(item);
+    deleteModal.open();
   };
 
   const handleEditClick: React.MouseEventHandler<HTMLButtonElement> = event => {
     event.stopPropagation();
 
-    if (!modalManager) return;
-
-    modalManager.editModal.setItem(item);
-    modalManager.editModal.open();
+    editModal.setItem(item);
+    editModal.open();
   };
 
   // all GOOOOD ?!?!?

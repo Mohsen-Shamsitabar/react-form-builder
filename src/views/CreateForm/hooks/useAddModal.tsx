@@ -16,7 +16,8 @@ const useAddModal = (): AddModalController => {
   }, []);
 
   const render = React.useCallback(() => {
-    if (!parent) return null;
+    // if (!parent) return null;
+    if (!isOpen) return null;
 
     return (
       <AddModal

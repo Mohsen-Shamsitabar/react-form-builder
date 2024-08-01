@@ -13,6 +13,7 @@ type Props = Omit<BooleanFieldWidgetProps, "description" | "defaultChecked"> & {
   name: string;
   onChange?: (value: boolean) => void;
   shouldUnregister?: boolean;
+  defaultChecked?: boolean;
 };
 
 const BooleanFormControl = (props: Props) => {
@@ -20,15 +21,19 @@ const BooleanFormControl = (props: Props) => {
     label,
     name,
     onChange,
+    defaultChecked = false,
     required = false,
     shouldUnregister = false,
   } = props;
 
-  const { control } = useFormContext();
+  const { control, getValues } = useFormContext();
+
+  const defaultValue = (getValues(name) as unknown) ?? defaultChecked;
 
   const { field, fieldState } = useController({
     name,
     control,
+    defaultValue,
     shouldUnregister,
     rules: {
       required,
