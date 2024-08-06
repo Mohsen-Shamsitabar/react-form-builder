@@ -195,6 +195,9 @@ const EditModal = (props: Props) => {
     defaultValues,
   });
 
+  const errors = form.formState.errors;
+  const errorKeys = Object.keys(errors);
+
   const title = React.useMemo(
     () => `Editing item (${getItemTitle(item)})`,
     [item],
@@ -204,17 +207,12 @@ const EditModal = (props: Props) => {
     setCurrentActiveTab(newTab);
   };
 
-  const onSubmitClick = async () => {
-    const isFormValid = await form.trigger();
-    const errors = form.formState.errors;
-
-    if (isFormValid) {
+  const onSubmitClick = () => {
+    if (!errorKeys.length) {
       btnRef.current?.click();
       onClose();
     } else {
-      throw new Error(
-        "Your form has errors!" + `${Object.keys(errors).join(", ")}`,
-      );
+      throw new Error("Your form has errors:\n" + `${errorKeys.join(", ")}`);
     }
   };
 
@@ -250,6 +248,7 @@ const EditModal = (props: Props) => {
                 label={tab.name}
                 aria-controls={`tabpanel-${tab.name}`}
                 icon={tab.icon}
+                disabled={errorKeys.length !== 0}
               />
             ))}
           </Tabs>
