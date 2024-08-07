@@ -1,6 +1,7 @@
 import { Box, Stack, Typography } from "@mui/material";
 import * as sx from "../../commonStyles";
 import { StringFormControl } from "../../form-controls";
+import * as names from "./names";
 
 const PagePropertySettings = () => {
   return (
@@ -16,7 +17,7 @@ const PagePropertySettings = () => {
 
         {/* ===== TITLE ===== */}
         <StringFormControl
-          name="title"
+          name={names.TITLE}
           label="Title"
           description="The title of this page, which is visible to the user."
           placeholder="Enter a title"

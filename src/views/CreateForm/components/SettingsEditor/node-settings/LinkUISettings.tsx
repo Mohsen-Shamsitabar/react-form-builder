@@ -1,6 +1,7 @@
 import { Box, Stack, Typography } from "@mui/material";
 import * as sx from "../../commonStyles";
 import { StringFormControl } from "../../form-controls";
+import * as names from "./names";
 import { type WidgetSettingsProps } from "./types";
 
 const LinkUISettings = (props: WidgetSettingsProps) => {
@@ -19,7 +20,7 @@ const LinkUISettings = (props: WidgetSettingsProps) => {
 
         {/* ===== LINK_TEXT ===== */}
         <StringFormControl
-          name="text"
+          name={names.TEXT}
           label="Link text"
           placeholder="Enter a text for this link"
           description="A text associated with a link target."
@@ -29,7 +30,7 @@ const LinkUISettings = (props: WidgetSettingsProps) => {
 
         {/* ===== HREF ===== */}
         <StringFormControl
-          name="href"
+          name={names.HREF}
           label="Link URL"
           placeholder="Enter a valid URL"
           description="The destination of the link."

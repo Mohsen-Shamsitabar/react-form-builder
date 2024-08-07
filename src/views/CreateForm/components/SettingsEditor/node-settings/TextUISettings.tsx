@@ -1,6 +1,7 @@
 import { Box, Stack, Typography } from "@mui/material";
 import * as sx from "../../commonStyles";
 import { ChoiceFormControl, StringFormControl } from "../../form-controls";
+import * as names from "./names";
 import { type WidgetSettingsProps } from "./types";
 
 const TextUiSettings = (props: WidgetSettingsProps) => {
@@ -19,7 +20,7 @@ const TextUiSettings = (props: WidgetSettingsProps) => {
 
         {/* ===== TEXT ===== */}
         <StringFormControl
-          name="text"
+          name={names.TEXT}
           label="Text"
           placeholder="Enter a text"
           shouldUnregister={shouldUnregister}
@@ -28,7 +29,7 @@ const TextUiSettings = (props: WidgetSettingsProps) => {
 
         {/* ===== VARIENT ===== */}
         <ChoiceFormControl
-          name="varient"
+          name={names.VARIENT}
           label="Text varient"
           options={[
             { label: "Paragraph", value: "paragraph" },
