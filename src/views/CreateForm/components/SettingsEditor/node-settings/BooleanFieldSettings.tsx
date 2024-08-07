@@ -1,6 +1,7 @@
 import { Box, Stack, Typography } from "@mui/material";
 import * as sx from "../../commonStyles";
 import { BooleanFormControl, StringFormControl } from "../../form-controls";
+import * as names from "./names";
 import { type WidgetSettingsProps } from "./types";
 
 const BooleanFieldSettings = (props: WidgetSettingsProps) => {
@@ -19,7 +20,7 @@ const BooleanFieldSettings = (props: WidgetSettingsProps) => {
 
         {/* ===== LABEL ===== */}
         <StringFormControl
-          name="label"
+          name={names.LABEL}
           label="Label"
           description="The name of the field, which is visible to the user."
           placeholder="Enter a label"
@@ -29,7 +30,7 @@ const BooleanFieldSettings = (props: WidgetSettingsProps) => {
 
         {/* ===== DESCRIPTION ===== */}
         <StringFormControl
-          name="description"
+          name={names.DESCRIPTION}
           label="Description"
           placeholder="Enter a description"
           shouldUnregister={shouldUnregister}
@@ -37,7 +38,7 @@ const BooleanFieldSettings = (props: WidgetSettingsProps) => {
 
         {/* ===== REQUIRED ===== */}
         <BooleanFormControl
-          name="required"
+          name={names.REQUIRED}
           label="Is this field required"
           shouldUnregister={shouldUnregister}
         />
@@ -54,7 +55,7 @@ const BooleanFieldSettings = (props: WidgetSettingsProps) => {
 
         {/* ===== DEFAULT-CHECKED ===== */}
         <BooleanFormControl
-          name="defaultChecked"
+          name={names.DEFAULT_CHECKED}
           label="Is this field chekced"
           shouldUnregister={shouldUnregister}
         />

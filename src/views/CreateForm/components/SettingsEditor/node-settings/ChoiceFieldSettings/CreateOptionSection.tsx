@@ -3,6 +3,7 @@ import { FormHelperText, IconButton, Stack, TextField } from "@mui/material";
 import * as React from "react";
 import { useFormContext } from "react-hook-form";
 import type { ChoiceOption } from "services/schema/types";
+import * as names from "../names";
 
 type Props = {
   options: ChoiceOption[];
@@ -48,7 +49,7 @@ const CreateOptionSection = (props: Props) => {
 
     const newOptions = [...options, newOption];
 
-    setValue("options", newOptions);
+    setValue(names.OPTIONS, newOptions);
     setInputLabel("");
     setInputValue("");
   };

@@ -18,6 +18,7 @@ import {
   NumberFormControl,
   StringFormControl,
 } from "../../../form-controls";
+import * as names from "../names";
 import { type WidgetSettingsProps } from "../types";
 import CreateOptionSection from "./CreateOptionSection";
 import * as choiceSx from "./styles";
@@ -28,43 +29,46 @@ const ChoiceFieldSettings = (props: WidgetSettingsProps) => {
   const { watch, setValue, getValues } = useFormContext();
 
   const multiSelect = watch(
-    "multiSelect",
+    names.MULTISELECT,
   ) as ChoiceFieldWidgetProps["multiSelect"];
 
-  const options = (watch("options") as ChoiceFieldWidgetProps["options"]) ?? [];
+  const options =
+    (watch(names.OPTIONS) as ChoiceFieldWidgetProps["options"]) ?? [];
+
   // const required = watch("required") as ChoiceFieldWidgetProps["required"];
+
   const maxRequired = watch(
-    "maxRequired",
+    names.MAX_REQUIRED,
   ) as ChoiceFieldWidgetProps["maxRequired"];
 
   const minRequired = watch(
-    "minRequired",
+    names.MIN_REQUIRED,
   ) as ChoiceFieldWidgetProps["minRequired"];
 
   // ========================================
 
   const onMultiSelectChange = (newMultiSelect: boolean) => {
     if (newMultiSelect) {
-      setValue("defaultValue", []);
+      setValue(names.DEFAULT_VALUE, []);
     } else {
-      setValue("defaultValue", "");
+      setValue(names.DEFAULT_VALUE, "");
     }
   };
 
   const makeHandleOptionDelete = (value: string) => () => {
     const newOptions = options.filter(option => option.value !== value);
-    setValue("options", newOptions);
+    setValue(names.OPTIONS, newOptions);
 
     const defaultValue = getValues(
-      "defaultValue",
+      names.DEFAULT_VALUE,
     ) as ChoiceFieldWidgetProps["defaultValue"];
 
     if (typeof defaultValue === "string" && defaultValue === value) {
-      setValue("defaultValue", "");
+      setValue(names.DEFAULT_VALUE, "");
     }
 
     if (typeof defaultValue !== "string" && defaultValue.includes(value)) {
-      setValue("defaultValue", []);
+      setValue(names.DEFAULT_VALUE, []);
     }
   };
 
@@ -117,7 +121,7 @@ const ChoiceFieldSettings = (props: WidgetSettingsProps) => {
 
         {/* ===== LABEL ===== */}
         <StringFormControl
-          name="label"
+          name={names.LABEL}
           label="Label"
           placeholder="Enter a label"
           description="The name of the field, which is visible to the user."
@@ -127,7 +131,7 @@ const ChoiceFieldSettings = (props: WidgetSettingsProps) => {
 
         {/* ===== DESCRIPTION ===== */}
         <StringFormControl
-          name="description"
+          name={names.DESCRIPTION}
           label="Description"
           placeholder="Enter a description"
           shouldUnregister={shouldUnregister}
@@ -135,7 +139,7 @@ const ChoiceFieldSettings = (props: WidgetSettingsProps) => {
 
         {/* ===== REQUIRED ===== */}
         <BooleanFormControl
-          name="required"
+          name={names.REQUIRED}
           label="Is this field required"
           shouldUnregister={shouldUnregister}
         />
@@ -152,7 +156,7 @@ const ChoiceFieldSettings = (props: WidgetSettingsProps) => {
 
         {/* ===== MULTISELECT ===== */}
         <BooleanFormControl
-          name="multiSelect"
+          name={names.MULTISELECT}
           label="Is this field able to select multiple options"
           onChange={onMultiSelectChange}
           shouldUnregister={shouldUnregister}
@@ -185,7 +189,7 @@ const ChoiceFieldSettings = (props: WidgetSettingsProps) => {
 
         {/* ===== DEFAULT-VALUE ===== */}
         <ChoiceFormControl
-          name="defaultValue"
+          name={names.DEFAULT_VALUE}
           label="Initial field value"
           options={options}
           multiSelect={multiSelect}
@@ -208,7 +212,7 @@ const ChoiceFieldSettings = (props: WidgetSettingsProps) => {
 
         {/* ===== MAX-LENGTH ===== */}
         <NumberFormControl
-          name="maxRequired"
+          name={names.MAX_REQUIRED}
           label="Maximum select count"
           description="Maximum number of options to select. (The field needs to be Required)"
           placeholder="Enter a number for maximum select count"
@@ -217,7 +221,7 @@ const ChoiceFieldSettings = (props: WidgetSettingsProps) => {
 
         {/* ===== MIN-LENGTH ===== */}
         <NumberFormControl
-          name="minRequired"
+          name={names.MIN_REQUIRED}
           label="Minimum select count"
           description="Minimum number of options to select. (The field needs to be Required)"
           placeholder="Enter a number for minimum select count"
@@ -226,7 +230,7 @@ const ChoiceFieldSettings = (props: WidgetSettingsProps) => {
 
         {/* ===== SHUFFLE-OPTIONS ===== */}
         <BooleanFormControl
-          name="shuffleOptions"
+          name={names.SHUFFLE_OPTIONS}
           label="Should this field shuffle its options"
           shouldUnregister={shouldUnregister}
         />
