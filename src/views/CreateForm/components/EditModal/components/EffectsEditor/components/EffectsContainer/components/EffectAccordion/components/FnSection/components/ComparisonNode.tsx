@@ -1,7 +1,12 @@
 import { FormGroup, Stack } from "@mui/material";
 import type { ChoiceOption } from "services/schema/types";
 import { useEditorData } from "views/CreateForm/components/EditModal/components/EffectsEditor/editorDataCtx";
-import { comparisonOperators } from "views/CreateForm/components/EditModal/constants";
+import {
+  comparisonOperators,
+  FIELD_ID,
+  OPERATOR,
+  VALUE,
+} from "views/CreateForm/components/EditModal/constants";
 import { type ComparisonFnNodeProps } from "views/CreateForm/components/EditModal/types";
 import { createEffectNameGenerator } from "views/CreateForm/components/EditModal/utils";
 import {
@@ -24,16 +29,16 @@ const ComparisonNode = (props: ComparisonFnNodeProps) => {
   const generateEffectName = createEffectNameGenerator(effectId, fnId);
 
   const fieldIdEffectName =
-    fnFieldNames.find(key => key.includes(fnId) && key.includes("fieldId")) ??
-    generateEffectName("fieldId");
+    fnFieldNames.find(key => key.includes(fnId) && key.includes(FIELD_ID)) ??
+    generateEffectName(FIELD_ID);
 
   const operatorEffectName =
-    fnFieldNames.find(key => key.includes(fnId) && key.includes("operator")) ??
-    generateEffectName("operator");
+    fnFieldNames.find(key => key.includes(fnId) && key.includes(OPERATOR)) ??
+    generateEffectName(OPERATOR);
 
   const valueEffectName =
-    fnFieldNames.find(key => key.includes(fnId) && key.includes("value")) ??
-    generateEffectName("value");
+    fnFieldNames.find(key => key.includes(fnId) && key.includes(VALUE)) ??
+    generateEffectName(VALUE);
 
   const editorData = useEditorData();
   if (!editorData) return null;

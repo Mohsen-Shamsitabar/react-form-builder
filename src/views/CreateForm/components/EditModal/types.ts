@@ -1,9 +1,20 @@
 import { type ComparisonFnParams, type SchemaID } from "services/schema/types";
+import {
+  type ACTION_PAYLOAD,
+  type ACTION_TYPE,
+  type EFFECT_TYPE,
+  type FIELD_ID,
+  type OPERATOR,
+  type VALUE,
+} from "./constants";
 
 export type TabState = "effects" | "settings";
 
-export type EffectFieldNames = "effectType" | "actionType" | "actionPayload";
-export type FnFieldNames = "operator" | "fieldId" | "value";
+export type EffectFieldNames =
+  | typeof EFFECT_TYPE
+  | typeof ACTION_TYPE
+  | typeof ACTION_PAYLOAD;
+export type FnFieldNames = typeof OPERATOR | typeof FIELD_ID | typeof VALUE;
 export type FieldNames = EffectFieldNames | FnFieldNames;
 
 // type EffectID = `EFFECT_${string}`;
@@ -13,11 +24,6 @@ export type FieldNames = EffectFieldNames | FnFieldNames;
 
 // type SplittedEffectName = [EffectID, EffectFieldNames];
 // type SplittedEffectFnName = [EffectID, FnID, FnFieldNames];
-
-export type Position = {
-  x: number;
-  y: number;
-};
 
 type FnNodeProps = {
   effectId: SchemaID;

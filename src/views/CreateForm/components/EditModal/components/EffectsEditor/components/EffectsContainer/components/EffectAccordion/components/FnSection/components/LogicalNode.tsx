@@ -1,5 +1,8 @@
 import { FormGroup } from "@mui/material";
-import { logicalOperators } from "views/CreateForm/components/EditModal/constants";
+import {
+  OPERATOR,
+  logicalOperators,
+} from "views/CreateForm/components/EditModal/constants";
 import { type LogicalFnNodeProps } from "views/CreateForm/components/EditModal/types";
 import { createEffectNameGenerator } from "views/CreateForm/components/EditModal/utils";
 import { ChoiceFormControl } from "views/CreateForm/components/form-controls";
@@ -18,8 +21,8 @@ const LogicalNode = (props: LogicalFnNodeProps) => {
   const generateEffectName = createEffectNameGenerator(effectId, fnId);
 
   const operatorEffectName =
-    fnFieldNames.find(key => key.includes(fnId) && key.includes("operator")) ??
-    generateEffectName("operator");
+    fnFieldNames.find(key => key.includes(fnId) && key.includes(OPERATOR)) ??
+    generateEffectName(OPERATOR);
 
   return (
     <FormGroup>

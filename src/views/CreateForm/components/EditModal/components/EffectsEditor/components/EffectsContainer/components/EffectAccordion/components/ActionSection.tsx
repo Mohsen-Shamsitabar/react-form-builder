@@ -4,7 +4,12 @@ import * as React from "react";
 import { useFormContext } from "react-hook-form";
 import { FieldAction } from "services/schema/constants";
 import { type Effect, type EffectTypes } from "services/schema/types";
-import { fxTypes } from "views/CreateForm/components/EditModal/constants";
+import {
+  ACTION_PAYLOAD,
+  ACTION_TYPE,
+  EFFECT_TYPE,
+  fxTypes,
+} from "views/CreateForm/components/EditModal/constants";
 import { ChoiceFormControl } from "views/CreateForm/components/form-controls";
 import { Fieldset } from "views/CreateForm/utils";
 import { useEffectData, useEffectFieldNames } from "../../../../../hooks";
@@ -33,15 +38,15 @@ const ActionSection = (props: Props) => {
   const { payloadOptions, typeOptions } = actionOptions;
 
   const effectTypeFieldName = effectFieldNames.find(key =>
-    key.includes("effectType"),
+    key.includes(EFFECT_TYPE),
   )!;
 
   const actionTypeFieldName = effectFieldNames.find(key =>
-    key.includes("actionType"),
+    key.includes(ACTION_TYPE),
   )!;
 
   const actionPayloadFieldName = effectFieldNames.find(key =>
-    key.includes("actionPayload"),
+    key.includes(ACTION_PAYLOAD),
   )!;
 
   const handleEffectTypeChange = (newEffectType: string | string[]) => {

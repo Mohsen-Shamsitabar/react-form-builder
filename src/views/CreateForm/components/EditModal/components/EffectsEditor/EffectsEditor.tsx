@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Stack } from "@mui/material";
 import * as React from "react";
-import type { Effect } from "services/schema/types";
+import { useFormContext } from "react-hook-form";
 import { useCreateFormData } from "views/CreateForm/DataProvider";
 import type { PageNode } from "views/CreateForm/types";
 import { isFieldWidgetNode } from "views/CreateForm/utils";
+import { getEffectsFromFormValues } from "../../utils";
 import { CreateEffectSection, EffectsContainer } from "./components";
 import { EditorDataProvider } from "./editorDataCtx";
 
@@ -17,10 +18,12 @@ const EffectsEditor = (props: Props) => {
 
   const data = useCreateFormData();
 
-  const [allEffects, setAllEffects] = React.useState(() =>
-    !data || !page.effects
-      ? []
-      : (page.effects.map(effectId => data.effects.byId[effectId]) as Effect[]),
+  const { getValues } = useFormContext();
+
+  const allFieldNames = getValues();
+
+  const [allEffects, setAllEffects] = React.useState(
+    getEffectsFromFormValues(page.id, allFieldNames),
   );
 
   if (!data) return null;
@@ -30,6 +33,12 @@ const EffectsEditor = (props: Props) => {
 
     return isFieldWidgetNode(widget);
   });
+
+  const renderEffectsContainer = () => {
+    if (allEffects.length === 0) return null;
+
+    return <EffectsContainer effects={allEffects} />;
+  };
 
   // const fieldEffects = allEffects.filter(effect => effect.type === "field");
   // const pageEffects = allEffects.filter(effect => effect.type === "page");
@@ -50,7 +59,7 @@ const EffectsEditor = (props: Props) => {
       >
         <CreateEffectSection />
 
-        {allEffects.length !== 0 && <EffectsContainer effects={allEffects} />}
+        {renderEffectsContainer()}
       </EditorDataProvider>
     </Stack>
   );

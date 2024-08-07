@@ -15,6 +15,7 @@ import { v4 as uuid } from "uuid";
 import {
   LOGICAL_FN_IDENTIFIER,
   logicalOperators,
+  OPERATOR,
   SECOND_COMPARISON_FN_IDENTIFIER,
 } from "views/CreateForm/components/EditModal/constants";
 import { createEffectNameGenerator } from "views/CreateForm/components/EditModal/utils";
@@ -56,7 +57,7 @@ const ChainNodesSection = (props: Props) => {
     logicalFnId,
   );
 
-  const logicalFnOperatorName = generateLogicalFnFieldName("operator");
+  const logicalFnOperatorName = generateLogicalFnFieldName(OPERATOR);
 
   const handleLogicalNodeChange = (event: SelectChangeEvent<string>) => {
     const newValue = event.target.value;
