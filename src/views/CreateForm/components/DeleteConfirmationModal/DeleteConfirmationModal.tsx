@@ -24,8 +24,7 @@ const DeleteConfirmationModal = (props: ModalProps) => {
 
   if (!formStateManager) return null;
 
-  const { pageActions, widgetActions, state } = formStateManager;
-  // console.log(state);
+  const { pageActions, widgetActions } = formStateManager;
 
   const title = `Deleting item (${getItemTitle(item)})`;
 
