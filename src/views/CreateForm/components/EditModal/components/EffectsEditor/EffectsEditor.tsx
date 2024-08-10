@@ -2,7 +2,7 @@
 import { Stack } from "@mui/material";
 import * as React from "react";
 import { useFormContext } from "react-hook-form";
-import { useCreateFormData } from "views/CreateForm/DataProvider";
+import { useFormStateManager } from "views/CreateForm/form-state-manager";
 import type { PageNode } from "views/CreateForm/types";
 import { isFieldWidgetNode } from "views/CreateForm/utils";
 import { getEffectsFromFormValues } from "../../utils";
@@ -16,7 +16,7 @@ type Props = {
 const EffectsEditor = (props: Props) => {
   const { page } = props;
 
-  const data = useCreateFormData();
+  const formStateManager = useFormStateManager();
 
   const { getValues } = useFormContext();
 
@@ -26,10 +26,12 @@ const EffectsEditor = (props: Props) => {
     getEffectsFromFormValues(page.id, allFieldNames),
   );
 
-  if (!data) return null;
+  if (!formStateManager) return null;
+
+  const { state } = formStateManager;
 
   const allFieldWidgets = page.widgets.filter(widgetId => {
-    const widget = data.widgets.byId[widgetId]!;
+    const widget = state.widgets.byId[widgetId]!;
 
     return isFieldWidgetNode(widget);
   });

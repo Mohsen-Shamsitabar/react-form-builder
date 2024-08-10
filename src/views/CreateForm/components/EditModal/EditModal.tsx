@@ -29,7 +29,7 @@ import {
   type StringFieldWidgetProps,
   type TextUIWidgetProps,
 } from "services/schema/types";
-import { useCreateFormData } from "views/CreateForm/DataProvider";
+import { useFormStateManager } from "views/CreateForm/form-state-manager";
 import type { FormItem } from "views/CreateForm/types";
 import {
   getItemTitle,
@@ -60,17 +60,19 @@ type Props = {
 const EditModal = (props: Props) => {
   const { onClose, onCloseFinish, open, item } = props;
 
-  const data = useCreateFormData();
+  const formStateManager = useFormStateManager();
 
   const btnRef = React.useRef<HTMLButtonElement | null>(null);
 
   const defaultValues: FieldValues = React.useMemo(() => {
     if (isPageNode(item)) {
-      if (!data) {
+      if (!formStateManager) {
         return {
           title: item.title,
         };
       }
+
+      const { state: data } = formStateManager;
 
       let pageDefaultValues = { title: item.title };
 
@@ -185,7 +187,7 @@ const EditModal = (props: Props) => {
       default:
         return {};
     }
-  }, [data, item]);
+  }, [item, formStateManager]);
 
   const [currentActiveTab, setCurrentActiveTab] =
     React.useState<TabName>("settings");
@@ -195,13 +197,13 @@ const EditModal = (props: Props) => {
     defaultValues,
   });
 
-  const errors = form.formState.errors;
-  const errorKeys = Object.keys(errors);
-
   const title = React.useMemo(
     () => `Editing item (${getItemTitle(item)})`,
     [item],
   );
+
+  const errors = form.formState.errors;
+  const errorKeys = Object.keys(errors);
 
   const handleTabChange = (_e: React.SyntheticEvent, newTab: TabName) => {
     setCurrentActiveTab(newTab);
