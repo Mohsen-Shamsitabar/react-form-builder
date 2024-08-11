@@ -25,7 +25,7 @@ import {
   OPERATOR,
   SECOND_COMPARISON_FN_IDENTIFIER,
   VALUE,
-} from "../../constants";
+} from "views/CreateForm/names";
 import { type FieldNames } from "./types";
 
 export const calcFnFieldValues = (

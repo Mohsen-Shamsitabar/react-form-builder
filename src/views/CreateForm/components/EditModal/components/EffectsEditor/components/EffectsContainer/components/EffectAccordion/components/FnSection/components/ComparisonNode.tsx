@@ -7,12 +7,8 @@ import {
   ChoiceFormControl,
   StringFormControl,
 } from "views/CreateForm/components/form-controls";
-import {
-  comparisonOperators,
-  FIELD_ID,
-  OPERATOR,
-  VALUE,
-} from "views/CreateForm/constants";
+import { comparisonOperators } from "views/CreateForm/constants";
+import { FIELD_ID, OPERATOR, VALUE } from "views/CreateForm/names";
 
 const ComparisonNode = (props: ComparisonFnNodeProps) => {
   const {

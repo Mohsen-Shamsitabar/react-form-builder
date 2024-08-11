@@ -4,13 +4,13 @@ import {
   type EffectTypes,
   type SchemaID,
 } from "services/schema/types";
-import { useFormStateManager } from "views/CreateForm/form-state-manager";
-import { isPageNode } from "views/CreateForm/utils";
 import {
   fieldEffectActions,
-  FN_IDENTIFIER,
   pageEffectActions,
-} from "../../../../constants";
+} from "views/CreateForm/constants";
+import { useFormStateManager } from "views/CreateForm/form-state-manager";
+import { FN_IDENTIFIER } from "views/CreateForm/names";
+import { isPageNode } from "views/CreateForm/utils";
 import { useEditModalItem } from "../itemProvider";
 
 export const useEffectData = (effectType: EffectTypes) => {

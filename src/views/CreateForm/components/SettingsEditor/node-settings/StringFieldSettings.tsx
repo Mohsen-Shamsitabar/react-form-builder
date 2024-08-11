@@ -1,6 +1,7 @@
 import { Box, Stack, Typography } from "@mui/material";
 import { useFormContext } from "react-hook-form";
 import { type StringFieldWidgetProps } from "services/schema/types";
+import * as names from "../../../names";
 import * as sx from "../../commonStyles";
 import {
   BooleanFormControl,
@@ -8,7 +9,6 @@ import {
   NumberFormControl,
   StringFormControl,
 } from "../../form-controls";
-import * as names from "./names";
 import { type WidgetSettingsProps } from "./types";
 
 const StringFieldSettings = (props: WidgetSettingsProps) => {

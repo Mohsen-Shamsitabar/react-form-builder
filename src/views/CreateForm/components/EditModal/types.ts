@@ -6,7 +6,7 @@ import {
   type FIELD_ID,
   type OPERATOR,
   type VALUE,
-} from "../../constants";
+} from "views/CreateForm/names";
 
 export type TabState = "effects" | "settings";
 

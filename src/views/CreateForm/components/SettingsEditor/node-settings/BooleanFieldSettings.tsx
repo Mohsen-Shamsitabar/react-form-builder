@@ -1,7 +1,7 @@
 import { Box, Stack, Typography } from "@mui/material";
+import * as names from "../../../names";
 import * as sx from "../../commonStyles";
 import { BooleanFormControl, StringFormControl } from "../../form-controls";
-import * as names from "./names";
 import { type WidgetSettingsProps } from "./types";
 
 const BooleanFieldSettings = (props: WidgetSettingsProps) => {

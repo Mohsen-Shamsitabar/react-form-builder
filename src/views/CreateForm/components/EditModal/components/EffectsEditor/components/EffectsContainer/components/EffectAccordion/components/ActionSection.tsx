@@ -5,12 +5,12 @@ import { useFormContext } from "react-hook-form";
 import { FieldAction } from "services/schema/constants";
 import { type Effect, type EffectTypes } from "services/schema/types";
 import { ChoiceFormControl } from "views/CreateForm/components/form-controls";
+import { fxTypes } from "views/CreateForm/constants";
 import {
   ACTION_PAYLOAD,
   ACTION_TYPE,
   EFFECT_TYPE,
-  fxTypes,
-} from "views/CreateForm/constants";
+} from "views/CreateForm/names";
 import { Fieldset } from "views/CreateForm/utils";
 import { useEffectData, useEffectFieldNames } from "../../../../../hooks";
 

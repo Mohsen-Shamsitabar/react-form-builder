@@ -1,7 +1,7 @@
 import { Box, Stack, Typography } from "@mui/material";
+import * as names from "../../../names";
 import * as sx from "../../commonStyles";
 import { StringFormControl } from "../../form-controls";
-import * as names from "./names";
 
 const PagePropertySettings = () => {
   return (
