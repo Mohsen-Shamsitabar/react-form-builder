@@ -15,11 +15,7 @@ import {
   StringFieldSettings,
 } from "../../SettingsEditor";
 import TextUiSettings from "../../SettingsEditor/node-settings/TextUISettings";
-
-type WidgetTypes = "field" | "ui";
-type FieldPropTypes = "string" | "boolean" | "choice" | "number";
-type UiPropTypes = "text" | "link" | "divider";
-type PropTypes = UiPropTypes | FieldPropTypes;
+import type { PropTypes, WidgetTypes } from "./types";
 
 const NewWidgetSection = () => {
   const { watch, setValue } = useFormContext();
