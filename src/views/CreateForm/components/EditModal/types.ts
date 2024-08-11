@@ -6,7 +6,7 @@ import {
   type FIELD_ID,
   type OPERATOR,
   type VALUE,
-} from "./constants";
+} from "../../constants";
 
 export type TabState = "effects" | "settings";
 

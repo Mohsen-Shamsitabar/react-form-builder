@@ -24,7 +24,7 @@ import {
   comparisonOperators,
   EFFECT_IDENTIFIER,
   fxTypes,
-} from "../../../constants";
+} from "../../../../../constants";
 import { calcEffectFieldValues } from "../../../utils";
 import { useEditModalItem } from "../../itemProvider";
 import { useEditorData } from "../editorDataCtx";

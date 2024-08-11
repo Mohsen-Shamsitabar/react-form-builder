@@ -10,7 +10,7 @@ import {
   fieldEffectActions,
   FN_IDENTIFIER,
   pageEffectActions,
-} from "../../constants";
+} from "../../../../constants";
 import { useEditModalItem } from "../itemProvider";
 
 export const useEffectData = (effectType: EffectTypes) => {

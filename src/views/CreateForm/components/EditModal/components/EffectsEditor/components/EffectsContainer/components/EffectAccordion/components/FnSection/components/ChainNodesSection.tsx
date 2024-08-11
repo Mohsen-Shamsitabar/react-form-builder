@@ -12,14 +12,14 @@ import {
 import * as React from "react";
 import { type SchemaID } from "services/schema/types";
 import { v4 as uuid } from "uuid";
+import { createEffectNameGenerator } from "views/CreateForm/components/EditModal/utils";
+import { ChoiceFormControl } from "views/CreateForm/components/form-controls";
 import {
   LOGICAL_FN_IDENTIFIER,
   logicalOperators,
   OPERATOR,
   SECOND_COMPARISON_FN_IDENTIFIER,
-} from "views/CreateForm/components/EditModal/constants";
-import { createEffectNameGenerator } from "views/CreateForm/components/EditModal/utils";
-import { ChoiceFormControl } from "views/CreateForm/components/form-controls";
+} from "views/CreateForm/constants";
 import {
   COMPARISON_NODE_GRIDSIZE,
   DIVIDER_GRIDSIZE,
