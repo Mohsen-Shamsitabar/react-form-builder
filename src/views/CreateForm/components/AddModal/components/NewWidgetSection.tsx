@@ -4,6 +4,7 @@ import {
   UI_WIDGET_TYPE_OPTIONS,
   WIDGET_TYPE_OPTIONS,
 } from "services/schema/constants";
+import { PROP_TYPE_NAME, WIDGET_TYPE_NAME } from "views/CreateForm/constants";
 import { Fieldset } from "views/CreateForm/utils";
 import { ChoiceFormControl } from "../../form-controls";
 import {
@@ -23,14 +24,11 @@ type PropTypes = UiPropTypes | FieldPropTypes;
 const NewWidgetSection = () => {
   const { watch, setValue } = useFormContext();
 
-  const WIDGET_TYPE_NAME = "widget-type";
-  const PROP_TYPE_NAME = "prop-type";
-
   const widgetType = watch(WIDGET_TYPE_NAME) as WidgetTypes | null;
   const propType = watch(PROP_TYPE_NAME) as PropTypes | null;
 
   const handleWidgetTypeChange = () => {
-    setValue("prop-type", "");
+    setValue(PROP_TYPE_NAME, "");
   };
 
   const renderPropTypeSelect = () => {
