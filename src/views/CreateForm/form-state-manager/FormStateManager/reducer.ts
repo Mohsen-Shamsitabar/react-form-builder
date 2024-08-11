@@ -1,3 +1,4 @@
+import { produce } from "immer";
 import type * as React from "react";
 import { type SchemaID } from "services/schema/types";
 import { filterObject } from "utils";
@@ -15,35 +16,37 @@ const reducer: React.Reducer<State, Action> = (state, action) => {
     case ActionType.ADD_PAGE: {
       const { page } = action.payload;
 
-      return {
-        ...state,
-        pages: {
-          byId: { ...state.pages.byId, page },
-          allIds: [...state.pages.allIds, page.id],
-        },
-      };
+      const newState = produce(state, draftState => {
+        draftState.pages.allIds.push(page.id);
+        draftState.pages.byId[page.id] = page;
+      });
+
+      return newState;
     }
     case ActionType.ADD_WIDGET: {
       const { widget } = action.payload;
 
-      return {
-        ...state,
-        widgets: {
-          byId: { ...state.widgets.byId, widget },
-          allIds: [...state.widgets.allIds, widget.id],
-        },
-      };
+      const newState = produce(state, draftState => {
+        draftState.widgets.byId[widget.id] = widget;
+        draftState.widgets.allIds.push(widget.id);
+
+        draftState.pages.byId[widget.pageId]?.widgets.push(widget.id);
+      });
+
+      return newState;
     }
     case ActionType.ADD_EFFECT: {
       const { effect } = action.payload;
 
-      return {
+      const newState: State = {
         ...state,
         effects: {
           byId: { ...state.effects.byId, effect },
           allIds: [...state.effects.allIds, effect.id],
         },
       };
+
+      return newState;
     }
     case ActionType.REMOVE_PAGE: {
       const { pageId } = action.payload;
@@ -62,22 +65,29 @@ const reducer: React.Reducer<State, Action> = (state, action) => {
         id => !deletedPage.effects?.includes(id),
       );
 
-      return {
-        pages: {
-          byId: filterObject(state.pages.byId, remainingPages),
-          allIds: remainingPages,
-        },
-        widgets: {
-          byId: filterObject(state.widgets.byId, remainingWidgets),
-          allIds: remainingWidgets,
-        },
-        effects: !deletedPage.effects
-          ? state.effects
-          : {
-              byId: filterObject(state.effects.byId, remainingEffects),
-              allIds: remainingEffects,
-            },
-      };
+      const newState = produce(state, draftState => {
+        draftState.pages.allIds = remainingPages;
+        draftState.pages.byId = filterObject(
+          draftState.pages.byId,
+          remainingPages,
+        );
+
+        draftState.widgets.allIds = remainingWidgets;
+        draftState.widgets.byId = filterObject(
+          draftState.widgets.byId,
+          remainingWidgets,
+        );
+
+        draftState.effects.allIds = remainingEffects;
+        if (typeof deletedPage.effects !== "undefined") {
+          draftState.effects.byId = filterObject(
+            draftState.effects.byId,
+            remainingEffects,
+          );
+        }
+      });
+
+      return newState;
     }
     case ActionType.REMOVE_WIDGET: {
       const { widgetId } = action.payload;
@@ -93,30 +103,31 @@ const reducer: React.Reducer<State, Action> = (state, action) => {
         id => id !== widgetId,
       );
 
-      effectedPage.widgets = remainingPageWidgets;
+      const newState = produce(state, draftState => {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        draftState.pages.byId[effectedPage.id]!.widgets = remainingPageWidgets;
 
-      return {
-        ...state,
-        pages: {
-          ...state.pages,
-          byId: { ...state.pages.byId, [effectedPage.id]: effectedPage },
-        },
-        widgets: {
-          byId: filterObject(state.widgets.byId, remainingWidgets),
-          allIds: remainingWidgets,
-        },
-      };
+        draftState.widgets.allIds = remainingWidgets;
+        draftState.widgets.byId = filterObject(
+          draftState.widgets.byId,
+          remainingWidgets,
+        );
+      });
+
+      return newState;
     }
     case ActionType.REMOVE_EFFECT: {
       const { effectId } = action.payload;
 
-      return {
+      const newState: State = {
         ...state,
         effects: {
           byId: filterObject(state.effects.byId, [effectId]),
           allIds: state.effects.allIds.filter(id => id !== effectId),
         },
       };
+
+      return newState;
     }
     default:
       return state;
