@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { produce } from "immer";
 import type * as React from "react";
 import { type SchemaID } from "services/schema/types";
@@ -104,9 +105,14 @@ const reducer: React.Reducer<State, Action> = (state, action) => {
       return newState;
     }
     case ActionType.EDIT_WIDGET: {
-      const { widgetId, newWidgetProps } = action.payload;
+      const { widget, newWidgetProps } = action.payload;
 
-      return state;
+      const newState = produce(state, draftState => {
+        draftState.widgets.byId[widget.id]!.properties.properties =
+          newWidgetProps;
+      });
+
+      return newState;
     }
     default:
       return state;

@@ -30,6 +30,7 @@ import {
   type TextUIWidgetProps,
 } from "services/schema/types";
 import { useFormStateManager } from "views/CreateForm/form-state-manager";
+import { createWidgetProps } from "views/CreateForm/transformers";
 import type { FormItem } from "views/CreateForm/types";
 import {
   getItemTitle,
@@ -202,6 +203,10 @@ const EditModal = (props: Props) => {
     [item],
   );
 
+  if (!formStateManager) return null;
+  const { editActions } = formStateManager;
+  const { editWidget } = editActions;
+
   const errors = form.formState.errors;
   const errorKeys = Object.keys(errors);
 
@@ -219,7 +224,13 @@ const EditModal = (props: Props) => {
   };
 
   const submitForm: SubmitHandler<FieldValues> = (data, _e) => {
-    console.log(data);
+    if (isPageNode(item)) {
+      return;
+    }
+
+    const newProps = createWidgetProps(data, item.properties.type);
+
+    editWidget(item, newProps);
   };
 
   const renderDialogContent = () => {
