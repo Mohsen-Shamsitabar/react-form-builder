@@ -35,19 +35,6 @@ const reducer: React.Reducer<State, Action> = (state, action) => {
 
       return newState;
     }
-    case ActionType.ADD_EFFECT: {
-      const { effect } = action.payload;
-
-      const newState: State = {
-        ...state,
-        effects: {
-          byId: { ...state.effects.byId, effect },
-          allIds: [...state.effects.allIds, effect.id],
-        },
-      };
-
-      return newState;
-    }
     case ActionType.REMOVE_PAGE: {
       const { pageId } = action.payload;
 
@@ -116,18 +103,10 @@ const reducer: React.Reducer<State, Action> = (state, action) => {
 
       return newState;
     }
-    case ActionType.REMOVE_EFFECT: {
-      const { effectId } = action.payload;
+    case ActionType.EDIT_WIDGET: {
+      const { widgetId, newWidgetProps } = action.payload;
 
-      const newState: State = {
-        ...state,
-        effects: {
-          byId: filterObject(state.effects.byId, [effectId]),
-          allIds: state.effects.allIds.filter(id => id !== effectId),
-        },
-      };
-
-      return newState;
+      return state;
     }
     default:
       return state;

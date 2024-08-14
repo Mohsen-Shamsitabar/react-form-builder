@@ -1,13 +1,13 @@
-import type { Effect, SchemaID } from "services/schema/types";
+import type { AllWidgetPropTypes, SchemaID } from "services/schema/types";
 import { type PageNode, type WidgetNode } from "../../types";
 
 export enum ActionType {
   ADD_PAGE,
   ADD_WIDGET,
-  ADD_EFFECT,
   REMOVE_PAGE,
   REMOVE_WIDGET,
-  REMOVE_EFFECT,
+  EDIT_PAGE,
+  EDIT_WIDGET,
 }
 
 export type Action =
@@ -20,10 +20,6 @@ export type Action =
       payload: { widget: WidgetNode };
     }
   | {
-      type: ActionType.ADD_EFFECT;
-      payload: { effect: Effect };
-    }
-  | {
       type: ActionType.REMOVE_PAGE;
       payload: { pageId: SchemaID };
     }
@@ -32,8 +28,12 @@ export type Action =
       payload: { widgetId: SchemaID };
     }
   | {
-      type: ActionType.REMOVE_EFFECT;
+      type: ActionType.EDIT_PAGE;
       payload: { effectId: SchemaID };
+    }
+  | {
+      type: ActionType.EDIT_WIDGET;
+      payload: { widget: WidgetNode; newWidgetProps: AllWidgetPropTypes };
     };
 
 export const createAddPageAction = (page: PageNode): Action => ({
@@ -46,11 +46,6 @@ export const createAddWidgetAction = (widget: WidgetNode): Action => ({
   payload: { widget },
 });
 
-export const createAddEffectAction = (effect: Effect): Action => ({
-  type: ActionType.ADD_EFFECT,
-  payload: { effect },
-});
-
 export const createRemovePageAction = (pageId: SchemaID): Action => ({
   type: ActionType.REMOVE_PAGE,
   payload: { pageId },
@@ -61,7 +56,10 @@ export const createRemoveWidgetAction = (widgetId: SchemaID): Action => ({
   payload: { widgetId },
 });
 
-export const createRemoveEffectAction = (effectId: SchemaID): Action => ({
-  type: ActionType.REMOVE_EFFECT,
-  payload: { effectId },
+export const createEditWidgetAction = (
+  widget: WidgetNode,
+  newWidgetProps: AllWidgetPropTypes,
+): Action => ({
+  type: ActionType.EDIT_WIDGET,
+  payload: { widget, newWidgetProps },
 });

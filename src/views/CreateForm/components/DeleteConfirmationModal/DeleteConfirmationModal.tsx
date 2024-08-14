@@ -24,7 +24,8 @@ const DeleteConfirmationModal = (props: ModalProps) => {
 
   if (!formStateManager) return null;
 
-  const { pageActions, widgetActions } = formStateManager;
+  const { removeActions } = formStateManager;
+  const { removePage, removeWidget } = removeActions;
 
   const title = `Deleting item (${getItemTitle(item)})`;
 
@@ -36,11 +37,11 @@ const DeleteConfirmationModal = (props: ModalProps) => {
     onClose();
 
     if (isPageNode(item)) {
-      pageActions.removePage(item.id);
+      removePage(item.id);
       return;
     }
 
-    widgetActions.removeWidget(item.id);
+    removeWidget(item.id);
   };
 
   return (

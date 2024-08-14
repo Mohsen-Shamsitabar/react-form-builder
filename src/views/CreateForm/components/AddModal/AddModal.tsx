@@ -42,9 +42,8 @@ const AddModal = (props: ModalProps) => {
   const formStateManager = useFormStateManager();
   if (!formStateManager) return null;
 
-  const { pageActions, widgetActions } = formStateManager;
-  const { addPage } = pageActions;
-  const { addWidget } = widgetActions;
+  const { addActions } = formStateManager;
+  const { addPage, addWidget } = addActions;
 
   const onSubmitClick = async () => {
     const isFormValid = await form.trigger();

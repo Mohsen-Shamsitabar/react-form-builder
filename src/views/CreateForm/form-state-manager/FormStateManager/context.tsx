@@ -1,28 +1,27 @@
 import * as React from "react";
-import type { Effect, SchemaID } from "services/schema/types";
+import type { AllWidgetPropTypes, SchemaID } from "services/schema/types";
 import type { PageNode, WidgetNode } from "../../types";
 import { type State } from "./reducer";
 
-type PageActions = {
+type AddActions = {
   addPage: (page: PageNode) => void;
-  removePage: (pageId: SchemaID) => void;
+  addWidget: (widget: WidgetNode) => void;
 };
 
-type WidgetActions = {
-  addWidget: (widget: WidgetNode) => void;
+type RemoveActions = {
+  removePage: (pageId: SchemaID) => void;
   removeWidget: (widgetId: SchemaID) => void;
 };
 
-type EffectActions = {
-  addEffect: (effect: Effect) => void;
-  removeEffect: (effectId: SchemaID) => void;
+type EditActions = {
+  editWidget: (widget: WidgetNode, newWidgetProps: AllWidgetPropTypes) => void;
 };
 
 export type ContextValue = {
   state: State;
-  pageActions: PageActions;
-  widgetActions: WidgetActions;
-  effectActions: EffectActions;
+  addActions: AddActions;
+  removeActions: RemoveActions;
+  editActions: EditActions;
 };
 
 const Context = React.createContext<ContextValue | null>(null);

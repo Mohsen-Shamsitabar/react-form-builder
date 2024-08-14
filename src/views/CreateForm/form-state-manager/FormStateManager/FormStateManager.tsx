@@ -1,15 +1,14 @@
 import * as React from "react";
-import { type Effect, type SchemaID } from "services/schema/types";
+import { type AllWidgetPropTypes, type SchemaID } from "services/schema/types";
 import {
   type CreateFormData,
   type PageNode,
   type WidgetNode,
 } from "../../types";
 import {
-  createAddEffectAction,
   createAddPageAction,
   createAddWidgetAction,
-  createRemoveEffectAction,
+  createEditWidgetAction,
   createRemovePageAction,
   createRemoveWidgetAction,
 } from "./actions";
@@ -29,22 +28,20 @@ const FormStateManager = (props: Props) => {
   const formStateManagerContext: ContextValue = React.useMemo(
     () => ({
       state,
-      pageActions: {
+      addActions: {
         addPage: (page: PageNode) => dispatch(createAddPageAction(page)),
-        removePage: (pageId: SchemaID) =>
-          dispatch(createRemovePageAction(pageId)),
-      },
-      widgetActions: {
         addWidget: (widget: WidgetNode) =>
           dispatch(createAddWidgetAction(widget)),
-
+      },
+      removeActions: {
+        removePage: (pageId: SchemaID) =>
+          dispatch(createRemovePageAction(pageId)),
         removeWidget: (widgetId: SchemaID) =>
           dispatch(createRemoveWidgetAction(widgetId)),
       },
-      effectActions: {
-        addEffect: (effect: Effect) => dispatch(createAddEffectAction(effect)),
-        removeEffect: (effectId: SchemaID) =>
-          dispatch(createRemoveEffectAction(effectId)),
+      editActions: {
+        editWidget: (widget: WidgetNode, newWidgetProps: AllWidgetPropTypes) =>
+          dispatch(createEditWidgetAction(widget, newWidgetProps)),
       },
     }),
     [state],
