@@ -4,6 +4,7 @@ import {
   UI_WIDGET_TYPE_OPTIONS,
   WIDGET_TYPE_OPTIONS,
 } from "services/schema/constants";
+import { type PropTypes, type WidgetTypes } from "services/schema/types";
 import { WIDGET_PROPTYPE_NAME, WIDGET_TYPE_NAME } from "views/CreateForm/names";
 import { Fieldset } from "views/CreateForm/utils";
 import { ChoiceFormControl } from "../../form-controls";
@@ -15,7 +16,6 @@ import {
   StringFieldSettings,
 } from "../../SettingsEditor";
 import TextUiSettings from "../../SettingsEditor/node-settings/TextUISettings";
-import type { PropTypes, WidgetTypes } from "./types";
 
 const NewWidgetSection = () => {
   const { watch, setValue } = useFormContext();

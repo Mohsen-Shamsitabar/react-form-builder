@@ -123,6 +123,24 @@ export type UIWidget = {
   properties: UIWidgets;
 };
 
+// ===========
+
+export type AllWidgetPropTypes =
+  | StringFieldWidgetProps
+  | NumberFieldWidgetProps
+  | BooleanFieldWidgetProps
+  | ChoiceFieldWidgetProps
+  | TextUIWidgetProps
+  | LinkUIWidgetProps
+  | null;
+
+export type WidgetTypes = "field" | "ui";
+export type FieldPropTypes = "string" | "boolean" | "choice" | "number";
+export type UiPropTypes = "text" | "link" | "divider";
+export type PropTypes = UiPropTypes | FieldPropTypes;
+
+// ======
+
 export type ComparisonFnParams = [SchemaID, string];
 
 export type ComparisonFn = [ComparisonTypes, ComparisonFnParams];
