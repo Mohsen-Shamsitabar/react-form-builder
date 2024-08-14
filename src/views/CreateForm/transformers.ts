@@ -1,11 +1,21 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { type FieldValues } from "react-hook-form";
+import {
+  type ComparisonTypes,
+  type LogicalTypes,
+} from "services/schema/constants";
 import {
   type AllWidgetPropTypes,
   type BooleanFieldWidgetProps,
   type ChoiceFieldWidgetProps,
   type ChoiceOption,
+  type ComparisonFnParams,
+  type Effect,
+  type FieldEffect,
+  type Fn,
   type LinkUIWidgetProps,
   type NumberFieldWidgetProps,
+  type PageEffect,
   type PropTypes,
   type SchemaID,
   type StringFieldWidgetProps,
@@ -24,6 +34,70 @@ import type {
   UIWidgetNode,
   WidgetNode,
 } from "./types";
+
+const getFnKeyNames = (dataKeyNames: string[], effectId: SchemaID) => {
+  const logicalFnOperatorName = dataKeyNames.find(
+    keyName =>
+      keyName.includes(effectId) &&
+      keyName.includes(names.LOGICAL_FN_IDENTIFIER),
+  );
+
+  const comparisonFnFieldIdName1 = dataKeyNames.find(
+    keyName =>
+      keyName.includes(effectId) &&
+      keyName.includes(names.FIRST_COMPARISON_FN_IDENTIFIER) &&
+      keyName.includes(names.FIELD_ID),
+  )!;
+  const comparisonFnOperatorName1 = dataKeyNames.find(
+    keyName =>
+      keyName.includes(effectId) &&
+      keyName.includes(names.FIRST_COMPARISON_FN_IDENTIFIER) &&
+      keyName.includes(names.OPERATOR),
+  )!;
+  const comparisonFnValueName1 = dataKeyNames.find(
+    keyName =>
+      keyName.includes(effectId) &&
+      keyName.includes(names.FIRST_COMPARISON_FN_IDENTIFIER) &&
+      keyName.includes(names.VALUE),
+  )!;
+
+  if (logicalFnOperatorName) {
+    const comparisonFnFieldIdName2 = dataKeyNames.find(
+      keyName =>
+        keyName.includes(effectId) &&
+        keyName.includes(names.FIRST_COMPARISON_FN_IDENTIFIER) &&
+        keyName.includes(names.FIELD_ID),
+    )!;
+    const comparisonFnOperatorName2 = dataKeyNames.find(
+      keyName =>
+        keyName.includes(effectId) &&
+        keyName.includes(names.FIRST_COMPARISON_FN_IDENTIFIER) &&
+        keyName.includes(names.OPERATOR),
+    )!;
+    const comparisonFnValueName2 = dataKeyNames.find(
+      keyName =>
+        keyName.includes(effectId) &&
+        keyName.includes(names.FIRST_COMPARISON_FN_IDENTIFIER) &&
+        keyName.includes(names.VALUE),
+    )!;
+
+    return {
+      logicalFnOperatorName,
+      comparisonFnFieldIdName1,
+      comparisonFnOperatorName1,
+      comparisonFnValueName1,
+      comparisonFnFieldIdName2,
+      comparisonFnOperatorName2,
+      comparisonFnValueName2,
+    };
+  }
+
+  return {
+    comparisonFnFieldIdName1,
+    comparisonFnOperatorName1,
+    comparisonFnValueName1,
+  };
+};
 
 export const createNewPage = (data: FieldValues): PageNode => {
   const title = data.title as string;
@@ -186,4 +260,98 @@ export const createNewWidget = (
       return newWidget;
     }
   }
+};
+
+export const createEditPageProps = (data: FieldValues, page: PageNode) => {
+  const pageTitle = data[names.TITLE] as string;
+
+  const dataKeys = Object.keys(data);
+
+  const effectIds = dataKeys
+    .filter(keyName => keyName.includes(names.EFFECT_TYPE))
+    .map(keyName => keyName.split(names.EFFECT_NAME_SEPERATOR)[0]!);
+
+  const effects: Effect[] = effectIds.map(effectId => {
+    const effectTypeName = dataKeys.find(
+      keyName =>
+        keyName.includes(effectId) && keyName.includes(names.EFFECT_TYPE),
+    )!;
+
+    const effectType = data[effectTypeName] as Effect["type"];
+
+    const actionTypeName = dataKeys.find(
+      keyName =>
+        keyName.includes(effectId) && keyName.includes(names.ACTION_TYPE),
+    )!;
+
+    const actionPayloadName = dataKeys.find(
+      keyName =>
+        keyName.includes(effectId) && keyName.includes(names.ACTION_PAYLOAD),
+    )!;
+
+    const {
+      comparisonFnFieldIdName1,
+      comparisonFnOperatorName1,
+      comparisonFnValueName1,
+      comparisonFnFieldIdName2,
+      comparisonFnOperatorName2,
+      comparisonFnValueName2,
+      logicalFnOperatorName,
+    } = getFnKeyNames(dataKeys, effectId);
+
+    const fn: Fn = logicalFnOperatorName
+      ? [
+          data[logicalFnOperatorName] as LogicalTypes,
+          [
+            [
+              data[comparisonFnOperatorName1] as ComparisonTypes,
+              [
+                data[comparisonFnFieldIdName1] as ComparisonFnParams["0"],
+                data[comparisonFnValueName1] as ComparisonFnParams["1"],
+              ],
+            ],
+            [
+              data[comparisonFnOperatorName2] as ComparisonTypes,
+              [
+                data[comparisonFnFieldIdName2] as ComparisonFnParams["0"],
+                data[comparisonFnValueName2] as ComparisonFnParams["1"],
+              ],
+            ],
+          ],
+        ]
+      : [
+          data[comparisonFnOperatorName1] as ComparisonTypes,
+          [
+            data[comparisonFnFieldIdName1] as ComparisonFnParams["0"],
+            data[comparisonFnValueName1] as ComparisonFnParams["1"],
+          ],
+        ];
+
+    const newEffect: Effect =
+      effectType === "field"
+        ? ({
+            id: effectId,
+            owner: page.id,
+            type: effectType,
+            action: {
+              type: data[actionTypeName] as Effect["action"]["type"],
+              payload: { widgetIds: data[actionPayloadName] as SchemaID[] },
+            },
+            fn,
+          } as FieldEffect)
+        : ({
+            id: effectId,
+            owner: page.id,
+            type: effectType,
+            action: {
+              type: data[actionTypeName] as Effect["action"]["type"],
+              payload: { pageId: data[actionPayloadName] as SchemaID },
+            },
+            fn,
+          } as PageEffect);
+
+    return newEffect;
+  });
+
+  return { pageTitle, effects };
 };

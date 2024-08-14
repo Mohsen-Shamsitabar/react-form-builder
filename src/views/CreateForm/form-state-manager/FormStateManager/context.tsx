@@ -1,5 +1,9 @@
 import * as React from "react";
-import type { AllWidgetPropTypes, SchemaID } from "services/schema/types";
+import type {
+  AllWidgetPropTypes,
+  Effect,
+  SchemaID,
+} from "services/schema/types";
 import type { PageNode, WidgetNode } from "../../types";
 import { type State } from "./reducer";
 
@@ -14,7 +18,8 @@ type RemoveActions = {
 };
 
 type EditActions = {
-  editWidget: (widget: WidgetNode, newWidgetProps: AllWidgetPropTypes) => void;
+  editWidget: (widgetId: SchemaID, newWidgetProps: AllWidgetPropTypes) => void;
+  editPage: (pageId: SchemaID, pageTitle: string, effects: Effect[]) => void;
 };
 
 export type ContextValue = {

@@ -105,11 +105,33 @@ const reducer: React.Reducer<State, Action> = (state, action) => {
       return newState;
     }
     case ActionType.EDIT_WIDGET: {
-      const { widget, newWidgetProps } = action.payload;
+      const { widgetId, newWidgetProps } = action.payload;
 
       const newState = produce(state, draftState => {
-        draftState.widgets.byId[widget.id]!.properties.properties =
+        draftState.widgets.byId[widgetId]!.properties.properties =
           newWidgetProps;
+      });
+
+      return newState;
+    }
+    case ActionType.EDIT_PAGE: {
+      const { pageId, pageTitle, effects } = action.payload;
+
+      const effectIds = effects.map(effect => effect.id);
+
+      const newState = produce(state, draftState => {
+        draftState.pages.byId[pageId]!.title = pageTitle;
+
+        if (effects.length === 0) return;
+
+        draftState.pages.byId[pageId]!.effects = effectIds;
+
+        draftState.effects.allIds = [...state.effects.allIds, ...effectIds];
+        effects.forEach(effect => {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          draftState.effects.byId[effect.id] = effect;
+        });
       });
 
       return newState;
