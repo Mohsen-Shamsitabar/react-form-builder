@@ -7,7 +7,7 @@ import {
 import { Box, Button, Stack } from "@mui/material";
 import { TreeItem, TreeView } from "@mui/x-tree-view";
 import * as React from "react";
-import { useCreateFormData } from "views/CreateForm/DataProvider";
+import { useFormStateManager } from "views/CreateForm/form-state-manager";
 import { useModalManager } from "views/CreateForm/modal-manager";
 import type { CreateFormData, PageNode } from "views/CreateForm/types";
 import { Trigger } from "./components";
@@ -48,7 +48,7 @@ const FormHierarchy = () => {
     });
   }, []);
 
-  const data = useCreateFormData();
+  const formStateManager = useFormStateManager();
   const modalManager = useModalManager();
   if (!modalManager) return null;
 
@@ -59,7 +59,9 @@ const FormHierarchy = () => {
     addModal.setParent(null);
   };
 
-  if (!data) return null;
+  if (!formStateManager) return null;
+
+  const { state } = formStateManager;
 
   return (
     <Box sx={sx.root}>
@@ -74,7 +76,7 @@ const FormHierarchy = () => {
           defaultCollapseIcon={<ExpandMoreIcon />}
           defaultExpandIcon={<ChevronRightIcon />}
         >
-          {renderTree(data)}
+          {renderTree(state)}
         </TreeView>
       </Stack>
     </Box>

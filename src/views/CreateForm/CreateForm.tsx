@@ -8,8 +8,8 @@ import {
   LogicalTypes,
   PageAction,
 } from "services/schema/constants";
-import { CreateFormDataProvider } from "./DataProvider";
 import { FormEditor, FormPreview, TabPanel } from "./components";
+import { FormStateManagerProvider } from "./form-state-manager";
 import { useDeleteModal, useEditModal } from "./hooks";
 import useAddModal from "./hooks/useAddModal";
 import { ModalManagerProvider } from "./modal-manager";
@@ -249,7 +249,7 @@ const CreateForm = () => {
   };
 
   return (
-    <CreateFormDataProvider data={data}>
+    <FormStateManagerProvider formData={data}>
       <Tabs
         sx={sx.tabsContainer}
         centered
@@ -292,7 +292,7 @@ const CreateForm = () => {
       {editModal.render()}
 
       {deleteModal.render()}
-    </CreateFormDataProvider>
+    </FormStateManagerProvider>
   );
 };
 

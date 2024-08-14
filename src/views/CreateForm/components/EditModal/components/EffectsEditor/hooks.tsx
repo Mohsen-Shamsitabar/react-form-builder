@@ -4,22 +4,25 @@ import {
   type EffectTypes,
   type SchemaID,
 } from "services/schema/types";
-import { useCreateFormData } from "views/CreateForm/DataProvider";
-import { isPageNode } from "views/CreateForm/utils";
 import {
   fieldEffectActions,
-  FN_IDENTIFIER,
   pageEffectActions,
-} from "../../constants";
+} from "views/CreateForm/constants";
+import { useFormStateManager } from "views/CreateForm/form-state-manager";
+import { FN_IDENTIFIER } from "views/CreateForm/names";
+import { isPageNode } from "views/CreateForm/utils";
 import { useEditModalItem } from "../itemProvider";
 
 export const useEffectData = (effectType: EffectTypes) => {
-  const data = useCreateFormData();
+  const formStateManager = useFormStateManager();
   const currentPage = useEditModalItem();
-  if (!data) return null;
+
+  if (!formStateManager) return null;
   if (!currentPage || !isPageNode(currentPage)) return null;
 
-  const selectablePages = data.pages.allIds.filter(
+  const { state } = formStateManager;
+
+  const selectablePages = state.pages.allIds.filter(
     pageId => pageId !== currentPage.id,
   );
 

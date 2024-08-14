@@ -19,12 +19,9 @@ import {
   type PageEffect,
 } from "services/schema/types";
 import { v4 as uuid } from "uuid";
+import { comparisonOperators, fxTypes } from "views/CreateForm/constants";
+import { EFFECT_IDENTIFIER } from "views/CreateForm/names";
 import { Fieldset, isPageNode } from "views/CreateForm/utils";
-import {
-  comparisonOperators,
-  EFFECT_IDENTIFIER,
-  fxTypes,
-} from "../../../constants";
 import { calcEffectFieldValues } from "../../../utils";
 import { useEditModalItem } from "../../itemProvider";
 import { useEditorData } from "../editorDataCtx";

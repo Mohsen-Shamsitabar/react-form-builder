@@ -16,7 +16,7 @@ import {
   FIRST_COMPARISON_FN_IDENTIFIER,
   LOGICAL_FN_IDENTIFIER,
   SECOND_COMPARISON_FN_IDENTIFIER,
-} from "views/CreateForm/components/EditModal/constants";
+} from "views/CreateForm/names";
 import { Fieldset } from "views/CreateForm/utils";
 import {
   ChainNodesSection,

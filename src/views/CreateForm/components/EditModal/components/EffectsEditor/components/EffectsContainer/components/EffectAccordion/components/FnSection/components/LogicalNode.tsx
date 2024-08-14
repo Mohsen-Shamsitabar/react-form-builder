@@ -1,11 +1,9 @@
 import { FormGroup } from "@mui/material";
-import {
-  OPERATOR,
-  logicalOperators,
-} from "views/CreateForm/components/EditModal/constants";
 import { type LogicalFnNodeProps } from "views/CreateForm/components/EditModal/types";
 import { createEffectNameGenerator } from "views/CreateForm/components/EditModal/utils";
 import { ChoiceFormControl } from "views/CreateForm/components/form-controls";
+import { logicalOperators } from "views/CreateForm/constants";
+import { OPERATOR } from "views/CreateForm/names";
 
 const LogicalNode = (props: LogicalFnNodeProps) => {
   const {

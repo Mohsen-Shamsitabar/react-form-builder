@@ -3,7 +3,7 @@ import { FormHelperText, IconButton, Stack, TextField } from "@mui/material";
 import * as React from "react";
 import { useFormContext } from "react-hook-form";
 import type { ChoiceOption } from "services/schema/types";
-import * as names from "../names";
+import * as names from "../../../../names";
 
 type Props = {
   options: ChoiceOption[];

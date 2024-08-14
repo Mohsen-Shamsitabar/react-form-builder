@@ -1,18 +1,14 @@
 import { FormGroup, Stack } from "@mui/material";
 import type { ChoiceOption } from "services/schema/types";
 import { useEditorData } from "views/CreateForm/components/EditModal/components/EffectsEditor/editorDataCtx";
-import {
-  comparisonOperators,
-  FIELD_ID,
-  OPERATOR,
-  VALUE,
-} from "views/CreateForm/components/EditModal/constants";
 import { type ComparisonFnNodeProps } from "views/CreateForm/components/EditModal/types";
 import { createEffectNameGenerator } from "views/CreateForm/components/EditModal/utils";
 import {
   ChoiceFormControl,
   StringFormControl,
 } from "views/CreateForm/components/form-controls";
+import { comparisonOperators } from "views/CreateForm/constants";
+import { FIELD_ID, OPERATOR, VALUE } from "views/CreateForm/names";
 
 const ComparisonNode = (props: ComparisonFnNodeProps) => {
   const {

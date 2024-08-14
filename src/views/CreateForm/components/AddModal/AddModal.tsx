@@ -13,6 +13,8 @@ import {
   type SubmitHandler,
   useForm,
 } from "react-hook-form";
+import { useFormStateManager } from "views/CreateForm/form-state-manager";
+import { createNewPage, createNewWidget } from "views/CreateForm/transformers";
 import type { PageNode } from "views/CreateForm/types";
 import { PagePropertySettings } from "../SettingsEditor";
 import { NewWidgetSection } from "./components";
@@ -37,6 +39,12 @@ const AddModal = (props: ModalProps) => {
     mode: "all",
   });
 
+  const formStateManager = useFormStateManager();
+  if (!formStateManager) return null;
+
+  const { addActions } = formStateManager;
+  const { addPage, addWidget } = addActions;
+
   const onSubmitClick = async () => {
     const isFormValid = await form.trigger();
 
@@ -53,12 +61,15 @@ const AddModal = (props: ModalProps) => {
   };
 
   const submitForm: SubmitHandler<FieldValues> = (data, _e) => {
-    console.log(data);
     if (!parent) {
-      console.log("PAGE ADDED TO FORM");
+      const newPage = createNewPage(data);
+      addPage(newPage);
+
       return;
     }
-    console.log(`WIDGET ADDED TO ${parent.id}`);
+
+    const newWidget = createNewWidget(data, parent.id);
+    addWidget(newWidget);
   };
 
   const renderDialogContent = () => {
