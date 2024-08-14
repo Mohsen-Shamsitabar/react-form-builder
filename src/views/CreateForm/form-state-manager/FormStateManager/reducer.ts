@@ -92,7 +92,6 @@ const reducer: React.Reducer<State, Action> = (state, action) => {
       );
 
       const newState = produce(state, draftState => {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         draftState.pages.byId[effectedPage.id]!.widgets = remainingPageWidgets;
 
         draftState.widgets.allIds = remainingWidgets;

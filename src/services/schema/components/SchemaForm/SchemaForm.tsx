@@ -43,8 +43,6 @@ const SchemaForm = (props: Props) => {
     visitedPage: SchemaID[],
     pageData: Record<SchemaID, FieldDatas>,
   ) => {
-    console.log({ visitedPage, pageData });
-
     const formData = visitedPage.reduce(
       (flattenData, visitedPageId) => ({
         ...flattenData,
@@ -52,8 +50,6 @@ const SchemaForm = (props: Props) => {
       }),
       {},
     );
-
-    console.log({ formData });
   };
 
   const onNextPage: SubmitHandler<FieldDatas> = (formValues, _e) => {
