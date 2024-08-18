@@ -21,7 +21,7 @@ import {
   type StringFieldWidgetProps,
   type TextUIWidgetProps,
 } from "services/schema/types";
-import { v4 as uuid } from "uuid";
+import { generateId } from "./components/EditModal/utils";
 import * as names from "./names";
 import {
   PAGE_IDENTIFIER,
@@ -103,7 +103,7 @@ export const createNewPage = (data: FieldValues): PageNode => {
   const title = data.title as string;
 
   const newPage: PageNode = {
-    id: `${PAGE_IDENTIFIER}${uuid()}`,
+    id: `${PAGE_IDENTIFIER}${generateId()}`,
     type: "page",
     title,
     widgets: [],
@@ -221,7 +221,7 @@ export const createNewWidget = (
 ): WidgetNode => {
   const widgetType = data[names.WIDGET_TYPE_NAME] as WidgetNode["type"];
 
-  const id = `${WIDGET_IDENTIFIER}${uuid()}`;
+  const id = `${WIDGET_IDENTIFIER}${generateId()}`;
 
   // eslint-disable-next-line default-case
   switch (widgetType) {

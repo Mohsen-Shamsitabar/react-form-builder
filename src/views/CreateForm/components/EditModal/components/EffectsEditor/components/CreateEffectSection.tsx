@@ -18,12 +18,11 @@ import {
   type FieldEffect,
   type PageEffect,
 } from "services/schema/types";
-import { v4 as uuid } from "uuid";
 import { comparisonOperators, fxTypes } from "views/CreateForm/constants";
 import { EFFECT_IDENTIFIER } from "views/CreateForm/names";
 import { Fieldset, isPageNode } from "views/CreateForm/utils";
 import { useEditModalItem } from "../../../itemProvider";
-import { generateEffectFieldValues } from "../../../utils";
+import { generateEffectFieldValues, generateId } from "../../../utils";
 import { useEffectEditorData } from "../effectEditorDataContext";
 import { useEffectActionOptions } from "../hooks";
 
@@ -80,7 +79,7 @@ const CreateEffectSection = () => {
     const newEffect: Effect =
       effectType === "field"
         ? ({
-            id: `${EFFECT_IDENTIFIER}${uuid()}`,
+            id: `${EFFECT_IDENTIFIER}${generateId()}`,
             owner: currentPage.id,
             type: effectType,
             action: {
@@ -90,7 +89,7 @@ const CreateEffectSection = () => {
             fn: [fnOperator, [fnWidget, fnValue]],
           } as FieldEffect)
         : ({
-            id: `${EFFECT_IDENTIFIER}${uuid()}`,
+            id: `${EFFECT_IDENTIFIER}${generateId()}`,
             owner: currentPage.id,
             type: effectType,
             action: {
