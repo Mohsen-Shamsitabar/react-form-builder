@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
+import { nanoid } from "nanoid";
 import { type FieldValues } from "react-hook-form";
 import { type ComparisonTypes } from "services/schema/constants";
 import type {
@@ -13,7 +14,6 @@ import type {
   SchemaID,
 } from "services/schema/types";
 import { isLogicalFn } from "services/schema/utils";
-import { v4 as uuid } from "uuid";
 import {
   ACTION_PAYLOAD,
   ACTION_TYPE,
@@ -28,7 +28,7 @@ import {
 } from "views/CreateForm/names";
 import { type FieldNames } from "./types";
 
-export const generateId = (): string => uuid();
+export const generateId = (): string => nanoid();
 
 export const createEffectNameGenerator =
   (effectId: SchemaID, fnId?: SchemaID) => (fieldName: FieldNames) => {

@@ -11,8 +11,10 @@ import {
 } from "@mui/material";
 import * as React from "react";
 import { type SchemaID } from "services/schema/types";
-import { v4 as uuid } from "uuid";
-import { createEffectNameGenerator } from "views/CreateForm/components/EditModal/utils";
+import {
+  createEffectNameGenerator,
+  generateId,
+} from "views/CreateForm/components/EditModal/utils";
 import { ChoiceFormControl } from "views/CreateForm/components/form-controls";
 import { logicalOperators } from "views/CreateForm/constants";
 import {
@@ -39,7 +41,7 @@ const ChainNodesSection = (props: Props) => {
   const [logicalOperator, setLogicalOperator] = React.useState("");
 
   const logicalFnId = React.useMemo(
-    () => `${LOGICAL_FN_IDENTIFIER}${uuid()}`,
+    () => `${LOGICAL_FN_IDENTIFIER}${generateId()}`,
     [],
   );
 
@@ -48,7 +50,7 @@ const ChainNodesSection = (props: Props) => {
   }, []);
 
   const comparisonFnId = React.useMemo(
-    () => `${SECOND_COMPARISON_FN_IDENTIFIER}${uuid()}`,
+    () => `${SECOND_COMPARISON_FN_IDENTIFIER}${generateId()}`,
     [],
   );
 
