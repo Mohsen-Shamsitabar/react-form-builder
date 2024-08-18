@@ -12,7 +12,10 @@ import {
   EFFECT_TYPE,
 } from "views/CreateForm/names";
 import { Fieldset } from "views/CreateForm/utils";
-import { useEffectData, useEffectFieldNames } from "../../../../../hooks";
+import {
+  useEffectActionOptions,
+  useEffectFieldNames,
+} from "../../../../../hooks";
 
 type Props = {
   effect: Effect;
@@ -32,7 +35,7 @@ const ActionSection = (props: Props) => {
   const { setValue } = useFormContext();
   const { effectFieldNames } = useEffectFieldNames(effect.id);
 
-  const actionOptions = useEffectData(effectType);
+  const actionOptions = useEffectActionOptions(effectType);
   if (!actionOptions) return null;
 
   const { payloadOptions, typeOptions } = actionOptions;

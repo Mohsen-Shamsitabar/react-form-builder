@@ -43,7 +43,7 @@ import { SettingsEditor } from "../SettingsEditor";
 import { EffectsEditor, PageTabContainer } from "./components";
 import { EditModalItemProvider } from "./itemProvider";
 import { type TabState } from "./types";
-import { calcEffectFieldValues } from "./utils";
+import { generateEffectFieldValues } from "./utils";
 
 type Props = {
   item: FormItem;
@@ -78,7 +78,7 @@ const EditModal = (props: Props) => {
       if (!effects) return pageDefaultValues;
 
       effects.forEach(effect => {
-        const effectDefaultValues = calcEffectFieldValues(effect);
+        const effectDefaultValues = generateEffectFieldValues(effect);
 
         pageDefaultValues = { ...pageDefaultValues, ...effectDefaultValues };
       });

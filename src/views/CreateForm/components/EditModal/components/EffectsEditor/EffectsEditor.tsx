@@ -7,7 +7,7 @@ import type { PageNode } from "views/CreateForm/types";
 import { isFieldWidgetNode } from "views/CreateForm/utils";
 import { getEffectsFromFormValues } from "../../utils";
 import { CreateEffectSection, EffectsContainer } from "./components";
-import { EditorDataProvider } from "./editorDataCtx";
+import { EffectEditorDataProvider } from "./effectEditorDataContext";
 
 type Props = {
   page: PageNode;
@@ -20,10 +20,10 @@ const EffectsEditor = (props: Props) => {
 
   const { getValues } = useFormContext();
 
-  const allFieldNames = getValues();
+  const fieldValues = getValues();
 
   const [allEffects, setAllEffects] = React.useState(
-    getEffectsFromFormValues(page.id, allFieldNames),
+    getEffectsFromFormValues(page.id, fieldValues),
   );
 
   if (!formStateManager) return null;
@@ -52,8 +52,8 @@ const EffectsEditor = (props: Props) => {
       marginTop={2}
       marginBottom={2}
     >
-      <EditorDataProvider
-        editorData={{
+      <EffectEditorDataProvider
+        effectEditorData={{
           allEffects,
           setAllEffects,
           allFieldWidgets,
@@ -62,7 +62,7 @@ const EffectsEditor = (props: Props) => {
         <CreateEffectSection />
 
         {renderEffectsContainer()}
-      </EditorDataProvider>
+      </EffectEditorDataProvider>
     </Stack>
   );
 };

@@ -13,7 +13,7 @@ import { FN_IDENTIFIER } from "views/CreateForm/names";
 import { isPageNode } from "views/CreateForm/utils";
 import { useEditModalItem } from "../../itemProvider";
 
-export const useEffectData = (effectType: EffectTypes) => {
+export const useEffectActionOptions = (effectType: EffectTypes) => {
   const formStateManager = useFormStateManager();
   const currentPage = useEditModalItem();
 
