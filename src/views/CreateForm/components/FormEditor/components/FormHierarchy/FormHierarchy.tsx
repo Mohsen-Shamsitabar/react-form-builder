@@ -56,7 +56,7 @@ const FormHierarchy = () => {
 
   const handleAddNewPage = () => {
     addModal.open();
-    addModal.setParent(null);
+    addModal.setItem({ type: "page" });
   };
 
   if (!formStateManager) return null;

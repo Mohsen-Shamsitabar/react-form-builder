@@ -1,10 +1,9 @@
 import * as React from "react";
 import { AddModal } from "../components";
-import type { PageNode } from "../types";
-import type { AddModalController } from "./types";
+import type { AddModalController, AddTarget } from "./types";
 
 const useAddModal = (): AddModalController => {
-  const [parent, setParent] = React.useState<PageNode | null>(null);
+  const [item, setItem] = React.useState<AddTarget | null>(null);
   const [isOpen, setIsOpen] = React.useState(false);
 
   const close = React.useCallback(() => {
@@ -16,23 +15,22 @@ const useAddModal = (): AddModalController => {
   }, []);
 
   const render = React.useCallback(() => {
-    // if (!parent) return null;
-    if (!isOpen) return null;
+    if (!item) return null;
 
     return (
       <AddModal
-        parent={parent}
+        item={item}
         onClose={close}
         open={isOpen}
         onCloseFinish={() => {
-          if (!isOpen) setParent(null);
+          if (!isOpen) setItem(null);
         }}
       />
     );
-  }, [close, isOpen, parent]);
+  }, [close, isOpen, item]);
 
   return {
-    setParent,
+    setItem,
     close,
     open,
     render,

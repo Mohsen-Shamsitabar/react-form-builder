@@ -14,24 +14,25 @@ import {
   useForm,
 } from "react-hook-form";
 import { useFormStateManager } from "views/CreateForm/form-state-manager";
+import { type AddTarget } from "views/CreateForm/hooks/types";
 import { createNewPage, createNewWidget } from "views/CreateForm/transformers";
-import type { PageNode } from "views/CreateForm/types";
 import { PagePropertySettings } from "../SettingsEditor";
 import { NewWidgetSection } from "./components";
 
 type ModalProps = {
-  parent: PageNode | null;
+  item: AddTarget;
   open: boolean;
   onClose: () => void;
   onCloseFinish: () => void;
 };
 
 const AddModal = (props: ModalProps) => {
-  const { onClose, onCloseFinish, open, parent } = props;
+  const { onClose, onCloseFinish, open, item } = props;
 
-  const title = !parent
-    ? "Adding a new page to form"
-    : `Adding a new widget to ${parent.title}`;
+  const title =
+    item.type === "page"
+      ? "Adding a new page to form"
+      : `Adding a new widget to ${item.parent.title}`;
 
   const btnRef = React.useRef<HTMLButtonElement | null>(null);
 
@@ -61,19 +62,19 @@ const AddModal = (props: ModalProps) => {
   };
 
   const submitForm: SubmitHandler<FieldValues> = (data, _e) => {
-    if (!parent) {
+    if (item.type === "page") {
       const newPage = createNewPage(data);
       addPage(newPage);
 
       return;
     }
 
-    const newWidget = createNewWidget(data, parent.id);
+    const newWidget = createNewWidget(data, item.parent.id);
     addWidget(newWidget);
   };
 
   const renderDialogContent = () => {
-    if (!parent) {
+    if (item.type === "page") {
       return <PagePropertySettings />;
     }
 

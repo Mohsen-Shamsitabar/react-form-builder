@@ -8,5 +8,7 @@ export type ModalController = {
 };
 
 export type AddModalController = Omit<ModalController, "setItem"> & {
-  setParent: React.Dispatch<React.SetStateAction<PageNode | null>>;
+  setItem: React.Dispatch<React.SetStateAction<AddTarget | null>>;
 };
+
+export type AddTarget = { type: "page" } | { type: "widget"; parent: PageNode };

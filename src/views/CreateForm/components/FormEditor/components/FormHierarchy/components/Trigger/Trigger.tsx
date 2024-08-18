@@ -32,7 +32,7 @@ const Trigger = (props: TriggerProps) => {
     event.stopPropagation();
 
     addModal.open();
-    addModal.setParent(item as PageNode);
+    addModal.setItem({ type: "widget", parent: item as PageNode });
   };
 
   const handleDeleteClick = (
