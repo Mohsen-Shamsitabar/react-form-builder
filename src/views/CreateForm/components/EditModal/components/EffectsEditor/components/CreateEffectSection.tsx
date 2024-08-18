@@ -22,10 +22,10 @@ import { v4 as uuid } from "uuid";
 import { comparisonOperators, fxTypes } from "views/CreateForm/constants";
 import { EFFECT_IDENTIFIER } from "views/CreateForm/names";
 import { Fieldset, isPageNode } from "views/CreateForm/utils";
-import { calcEffectFieldValues } from "../../../utils";
-import { useEditModalItem } from "../../itemProvider";
-import { useEditorData } from "../editorDataCtx";
-import { useEffectData } from "../hooks";
+import { useEditModalItem } from "../../../itemProvider";
+import { generateEffectFieldValues } from "../../../utils";
+import { useEffectEditorData } from "../effectEditorDataContext";
+import { useEffectActionOptions } from "../hooks";
 
 const CreateEffectSection = () => {
   const [effectType, setEffectType] = React.useState<string>("");
@@ -57,15 +57,15 @@ const CreateEffectSection = () => {
     );
   }, [actionPayload, actionType, effectType, fnOperator, fnValue, fnWidget]);
 
-  const editorData = useEditorData();
-  const effectData = useEffectData(effectType as EffectTypes);
-  const currentPage = useEditModalItem();
   const form = useFormContext();
-  if (!editorData || !effectData || !form) return null;
+  const effectEditorData = useEffectEditorData();
+  const effectActionOptions = useEffectActionOptions(effectType as EffectTypes);
+  const currentPage = useEditModalItem();
+  if (!effectEditorData || !effectActionOptions) return null;
   if (!currentPage || !isPageNode(currentPage)) return null;
 
-  const { payloadOptions, typeOptions } = effectData;
-  const { allEffects, setAllEffects, allFieldWidgets } = editorData;
+  const { payloadOptions, typeOptions } = effectActionOptions;
+  const { allEffects, setAllEffects, allFieldWidgets } = effectEditorData;
   const { setValue } = form;
 
   const handleEffectTypeChange = (event: SelectChangeEvent<string>) => {
@@ -100,7 +100,7 @@ const CreateEffectSection = () => {
             fn: [fnOperator, [fnWidget, fnValue]],
           } as PageEffect);
 
-    const newEffectFieldValues = calcEffectFieldValues(newEffect);
+    const newEffectFieldValues = generateEffectFieldValues(newEffect);
 
     Object.keys(newEffectFieldValues).forEach(name =>
       setValue(name, newEffectFieldValues[name]),
@@ -115,7 +115,13 @@ const CreateEffectSection = () => {
 
     return (
       <>
-        <FormControl margin="dense" error={!actionType} size="small" fullWidth>
+        <FormControl
+          margin="dense"
+          error={!actionType}
+          size="small"
+          fullWidth
+          required
+        >
           <InputLabel id="action-type-select-label">Action Type</InputLabel>
 
           <Select
@@ -137,6 +143,7 @@ const CreateEffectSection = () => {
           error={!actionPayload.length}
           size="small"
           fullWidth
+          required
         >
           <InputLabel id="action-payload-select-label">
             Action Payload
@@ -162,7 +169,13 @@ const CreateEffectSection = () => {
           alignItems={"center"}
           justifyContent={"space-between"}
         >
-          <FormControl margin="dense" error={!fnWidget} size="small" fullWidth>
+          <FormControl
+            margin="dense"
+            error={!fnWidget}
+            size="small"
+            fullWidth
+            required
+          >
             <InputLabel id="condition-widget-select-label">Widget</InputLabel>
 
             <Select
@@ -184,6 +197,7 @@ const CreateEffectSection = () => {
             error={!fnOperator}
             size="small"
             fullWidth
+            required
           >
             <InputLabel id="condition-operator-select-label">
               Operator
@@ -206,11 +220,12 @@ const CreateEffectSection = () => {
           <TextField
             margin="dense"
             error={!fnValue}
-            fullWidth
             size="small"
             value={fnValue}
             label="Expected Value"
             onChange={event => setFnValue(event.target.value)}
+            fullWidth
+            required
           />
         </Stack>
 

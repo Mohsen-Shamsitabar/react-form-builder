@@ -11,29 +11,29 @@ import {
   Typography,
 } from "@mui/material";
 import { useFormContext } from "react-hook-form";
-import type { Effect, SchemaID } from "services/schema/types";
-import { useEditorData } from "../../../../../editorDataCtx";
+import type { Effect } from "services/schema/types";
+import { useEffectEditorData } from "../../../../../effectEditorDataContext";
 import { useEffectFieldNames } from "../../../../../hooks";
 
 type Props = {
   effect: Effect;
-  expandedAccordion: SchemaID | null;
+  expanded: boolean;
 };
 
 const AccordionHeader = (props: Props) => {
-  const { effect, expandedAccordion } = props;
+  const { effect, expanded } = props;
 
   const { unregister } = useFormContext();
 
   const { effectErrors, effectFieldNames } = useEffectFieldNames(effect.id);
 
-  const editorData = useEditorData();
-  if (!editorData) return null;
+  const effectEditorData = useEffectEditorData();
+  if (!effectEditorData) return null;
 
-  const { allEffects, setAllEffects } = editorData;
+  const { allEffects, setAllEffects } = effectEditorData;
 
   const renderExpandIcon = () => {
-    if (expandedAccordion === effect.id) return <ExpandLessIcon />;
+    if (expanded) return <ExpandLessIcon />;
 
     return <ExpandMoreIcon />;
   };

@@ -11,13 +11,15 @@ type Props = {
 const EffectAccordion = (props: Props) => {
   const { effect, expandedAccordion, onAccordionSelect } = props;
 
+  const expanded = expandedAccordion === effect.id;
+
   return (
     <Accordion
-      expanded={expandedAccordion === effect.id}
+      expanded={expanded}
       onChange={onAccordionSelect}
-      // TransitionProps={{ unmountOnExit: true }}
+      TransitionProps={{ unmountOnExit: true }}
     >
-      <AccordionHeader effect={effect} expandedAccordion={expandedAccordion} />
+      <AccordionHeader effect={effect} expanded={expanded} />
 
       <AccordionDetails>
         <ActionSection effect={effect} />

@@ -1,25 +1,30 @@
 import * as React from "react";
 import type { Effect, SchemaID } from "services/schema/types";
 
-type EditorData = {
+type EffectEditorData = {
   allEffects: Effect[];
   setAllEffects: React.Dispatch<React.SetStateAction<Effect[]>>;
   allFieldWidgets: SchemaID[];
 };
 
-const Context = React.createContext<EditorData | null>(null);
+const Context = React.createContext<EffectEditorData | null>(null);
 
 type ProviderProps = {
   children: React.ReactNode;
-  editorData: EditorData;
+  effectEditorData: EffectEditorData;
 };
 
 const Provider = (props: ProviderProps) => {
-  const { children, editorData } = props;
+  const { children, effectEditorData } = props;
 
-  return <Context.Provider value={editorData}>{children}</Context.Provider>;
+  return (
+    <Context.Provider value={effectEditorData}>{children}</Context.Provider>
+  );
 };
 
 const useContext = () => React.useContext(Context);
 
-export { Provider as EditorDataProvider, useContext as useEditorData };
+export {
+  Provider as EffectEditorDataProvider,
+  useContext as useEffectEditorData,
+};

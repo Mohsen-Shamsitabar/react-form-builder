@@ -1,7 +1,5 @@
 import { type SystemSX } from "types";
 
-export const root: SystemSX = {};
-
 export const tabsContainer: SystemSX = theme => ({
   borderBottom: `2px solid ${theme.palette.divider}`,
   width: "100%",
@@ -11,5 +9,3 @@ export const tabsContainer: SystemSX = theme => ({
   top: 0,
   zIndex: theme.zIndex.appBar,
 });
-
-export const tabsPanelContainer: SystemSX = {};

@@ -28,7 +28,16 @@ import {
 } from "views/CreateForm/names";
 import { type FieldNames } from "./types";
 
-export const calcFnFieldValues = (
+export const generateId = (): string => uuid();
+
+export const createEffectNameGenerator =
+  (effectId: SchemaID, fnId?: SchemaID) => (fieldName: FieldNames) => {
+    if (!fnId) return `${effectId}${EFFECT_NAME_SEPERATOR}${fieldName}`;
+
+    return `${effectId}${EFFECT_NAME_SEPERATOR}${fnId}${EFFECT_NAME_SEPERATOR}${fieldName}`;
+  };
+
+export const generateFnFieldValues = (
   fn: Fn,
   effectId: SchemaID,
 ): Record<string, string> => {
@@ -37,11 +46,11 @@ export const calcFnFieldValues = (
   const mainOperator = fn[0];
 
   if (isLogicalFn(mainOperator)) {
-    const logicalFnId = `${LOGICAL_FN_IDENTIFIER}${uuid()}`;
-
+    const logicalFnId = `${LOGICAL_FN_IDENTIFIER}`;
     const [fn1, fn2] = fn[1] as LogicalFnParams;
-    const fn1Id = `${FIRST_COMPARISON_FN_IDENTIFIER}${uuid()}`;
-    const fn2Id = `${SECOND_COMPARISON_FN_IDENTIFIER}${uuid()}`;
+
+    const fn1Id = `${FIRST_COMPARISON_FN_IDENTIFIER}`;
+    const fn2Id = `${SECOND_COMPARISON_FN_IDENTIFIER}`;
     const operator1 = fn1[0] as ComparisonTypes;
     const operator2 = fn2[0] as ComparisonTypes;
     const [fieldId1, value1] = fn1[1] as ComparisonFnParams;
@@ -74,7 +83,7 @@ export const calcFnFieldValues = (
   }
 
   const [fieldId, value] = fn[1] as ComparisonFnParams;
-  const comparisonFnId = `${FIRST_COMPARISON_FN_IDENTIFIER}${uuid()}`;
+  const comparisonFnId = `${FIRST_COMPARISON_FN_IDENTIFIER}${generateId()}`;
 
   const generateComparisonFnName = createEffectNameGenerator(
     effectId,
@@ -88,7 +97,7 @@ export const calcFnFieldValues = (
   return result;
 };
 
-export const calcEffectFieldValues = (effect: Effect) => {
+export const generateEffectFieldValues = (effect: Effect) => {
   const generateEffectName = createEffectNameGenerator(effect.id);
 
   const effectDefaultValues = {
@@ -100,297 +109,139 @@ export const calcEffectFieldValues = (effect: Effect) => {
         : effect.action.payload.pageId,
   };
 
-  const fnDefaultValues = calcFnFieldValues(effect.fn, effect.id);
+  const fnDefaultValues = generateFnFieldValues(effect.fn, effect.id);
 
   return { ...effectDefaultValues, ...fnDefaultValues };
 };
 
-export const createEffectNameGenerator =
-  (effectId: SchemaID, fnId?: SchemaID) => (fieldName: FieldNames) => {
-    if (!fnId) return `${effectId}${EFFECT_NAME_SEPERATOR}${fieldName}`;
-
-    return `${effectId}${EFFECT_NAME_SEPERATOR}${fnId}${EFFECT_NAME_SEPERATOR}${fieldName}`;
-  };
-
-export const getEffectsFromFormValues = (
-  pageId: SchemaID,
+const getFnFromFormValues = (
   fieldValues: FieldValues,
-): Effect[] => {
-  const formValuesKeys = Object.keys(fieldValues);
-
-  const effectIds = formValuesKeys
-    .filter(fieldName => fieldName.includes(EFFECT_TYPE))
-    .map(fieldName => fieldName.split(EFFECT_NAME_SEPERATOR)[0]!);
-
-  return effectIds.map(effectId => {
-    const effectTypeKey = formValuesKeys.find(
-      fieldName =>
-        fieldName.includes(effectId) && fieldName.includes(EFFECT_TYPE),
-    )!;
-
-    const actionTypeKey = formValuesKeys.find(
-      fieldName =>
-        fieldName.includes(effectId) && fieldName.includes(ACTION_TYPE),
-    )!;
-
-    const actionPayloadKey = formValuesKeys.find(
-      fieldName =>
-        fieldName.includes(effectId) && fieldName.includes(ACTION_PAYLOAD),
-    )!;
-
-    const logicalFnKey = formValuesKeys.find(
+  fieldValuesKeys: string[] = Object.keys(fieldValues),
+  effectId: SchemaID,
+  logicalFnKey?: string,
+) => {
+  if (logicalFnKey) {
+    const comparisonFn1FieldIdKey = fieldValuesKeys.find(
       fieldName =>
         fieldName.includes(effectId) &&
-        fieldName.includes(LOGICAL_FN_IDENTIFIER),
-    );
+        fieldName.includes(FIRST_COMPARISON_FN_IDENTIFIER) &&
+        fieldName.includes(FIELD_ID),
+    )!;
+    const comparisonFn1OperatorKey = fieldValuesKeys.find(
+      fieldName =>
+        fieldName.includes(effectId) &&
+        fieldName.includes(FIRST_COMPARISON_FN_IDENTIFIER) &&
+        fieldName.includes(OPERATOR),
+    )!;
+    const comparisonFn1ValueKey = fieldValuesKeys.find(
+      fieldName =>
+        fieldName.includes(effectId) &&
+        fieldName.includes(FIRST_COMPARISON_FN_IDENTIFIER) &&
+        fieldName.includes(VALUE),
+    )!;
 
-    const getFn = logicalFnKey
-      ? () => {
-          const comparisonFn1FieldIdKey = formValuesKeys.find(
-            fieldName =>
-              fieldName.includes(effectId) &&
-              fieldName.includes(FIRST_COMPARISON_FN_IDENTIFIER) &&
-              fieldName.includes(FIELD_ID),
-          )!;
-          const comparisonFn1OperatorKey = formValuesKeys.find(
-            fieldName =>
-              fieldName.includes(effectId) &&
-              fieldName.includes(FIRST_COMPARISON_FN_IDENTIFIER) &&
-              fieldName.includes(OPERATOR),
-          )!;
-          const comparisonFn1ValueKey = formValuesKeys.find(
-            fieldName =>
-              fieldName.includes(effectId) &&
-              fieldName.includes(FIRST_COMPARISON_FN_IDENTIFIER) &&
-              fieldName.includes(VALUE),
-          )!;
+    const comparisonFn1 = [
+      fieldValues[comparisonFn1OperatorKey] as ComparisonTypes,
+      [
+        fieldValues[comparisonFn1FieldIdKey],
+        fieldValues[comparisonFn1ValueKey],
+      ],
+    ] as ComparisonFn;
 
-          const comparisonFn1 = [
-            fieldValues[comparisonFn1OperatorKey] as ComparisonTypes,
-            [
-              fieldValues[comparisonFn1FieldIdKey],
-              fieldValues[comparisonFn1ValueKey],
-            ],
-          ] as ComparisonFn;
+    const comparisonFn2FieldIdKey = fieldValuesKeys.find(
+      fieldName =>
+        fieldName.includes(effectId) &&
+        fieldName.includes(SECOND_COMPARISON_FN_IDENTIFIER) &&
+        fieldName.includes(FIELD_ID),
+    )!;
+    const comparisonFn2OperatorKey = fieldValuesKeys.find(
+      fieldName =>
+        fieldName.includes(effectId) &&
+        fieldName.includes(SECOND_COMPARISON_FN_IDENTIFIER) &&
+        fieldName.includes(OPERATOR),
+    )!;
+    const comparisonFn2ValueKey = fieldValuesKeys.find(
+      fieldName =>
+        fieldName.includes(effectId) &&
+        fieldName.includes(SECOND_COMPARISON_FN_IDENTIFIER) &&
+        fieldName.includes(VALUE),
+    )!;
 
-          const comparisonFn2FieldIdKey = formValuesKeys.find(
-            fieldName =>
-              fieldName.includes(effectId) &&
-              fieldName.includes(SECOND_COMPARISON_FN_IDENTIFIER) &&
-              fieldName.includes(FIELD_ID),
-          )!;
-          const comparisonFn2OperatorKey = formValuesKeys.find(
-            fieldName =>
-              fieldName.includes(effectId) &&
-              fieldName.includes(SECOND_COMPARISON_FN_IDENTIFIER) &&
-              fieldName.includes(OPERATOR),
-          )!;
-          const comparisonFn2ValueKey = formValuesKeys.find(
-            fieldName =>
-              fieldName.includes(effectId) &&
-              fieldName.includes(SECOND_COMPARISON_FN_IDENTIFIER) &&
-              fieldName.includes(VALUE),
-          )!;
+    const comparisonFn2 = [
+      fieldValues[comparisonFn2OperatorKey],
+      [
+        fieldValues[comparisonFn2FieldIdKey],
+        fieldValues[comparisonFn2ValueKey],
+      ],
+    ] as ComparisonFn;
 
-          const comparisonFn2 = [
-            fieldValues[comparisonFn2OperatorKey],
-            [
-              fieldValues[comparisonFn2FieldIdKey],
-              fieldValues[comparisonFn2ValueKey],
-            ],
-          ] as ComparisonFn;
+    const logicalFn = [
+      fieldValues[logicalFnKey],
+      [comparisonFn1, comparisonFn2],
+    ] as LogicalFn;
 
-          const logicalFn = [
-            fieldValues[logicalFnKey],
-            [comparisonFn1, comparisonFn2],
-          ] as LogicalFn;
+    return logicalFn;
+  }
 
-          return logicalFn;
-        }
-      : () => {
-          const comparisonFnFieldIdKey = formValuesKeys.find(
-            fieldName =>
-              fieldName.includes(effectId) &&
-              fieldName.includes(FIRST_COMPARISON_FN_IDENTIFIER) &&
-              fieldName.includes(FIELD_ID),
-          )!;
-          const comparisonFnOperatorKey = formValuesKeys.find(
-            fieldName =>
-              fieldName.includes(effectId) &&
-              fieldName.includes(FIRST_COMPARISON_FN_IDENTIFIER) &&
-              fieldName.includes(OPERATOR),
-          )!;
-          const comparisonFnValueKey = formValuesKeys.find(
-            fieldName =>
-              fieldName.includes(effectId) &&
-              fieldName.includes(FIRST_COMPARISON_FN_IDENTIFIER) &&
-              fieldName.includes(VALUE),
-          )!;
+  const comparisonFnFieldIdKey = fieldValuesKeys.find(
+    fieldName =>
+      fieldName.includes(effectId) &&
+      fieldName.includes(FIRST_COMPARISON_FN_IDENTIFIER) &&
+      fieldName.includes(FIELD_ID),
+  )!;
+  const comparisonFnOperatorKey = fieldValuesKeys.find(
+    fieldName =>
+      fieldName.includes(effectId) &&
+      fieldName.includes(FIRST_COMPARISON_FN_IDENTIFIER) &&
+      fieldName.includes(OPERATOR),
+  )!;
+  const comparisonFnValueKey = fieldValuesKeys.find(
+    fieldName =>
+      fieldName.includes(effectId) &&
+      fieldName.includes(FIRST_COMPARISON_FN_IDENTIFIER) &&
+      fieldName.includes(VALUE),
+  )!;
 
-          const comparisonFn = [
-            fieldValues[comparisonFnOperatorKey],
-            [
-              fieldValues[comparisonFnFieldIdKey],
-              fieldValues[comparisonFnValueKey],
-            ],
-          ] as ComparisonFn;
+  const comparisonFn = [
+    fieldValues[comparisonFnOperatorKey],
+    [fieldValues[comparisonFnFieldIdKey], fieldValues[comparisonFnValueKey]],
+  ] as ComparisonFn;
 
-          return comparisonFn;
-        };
-
-    const fn = getFn();
-
-    const effect: Effect =
-      fieldValues[effectTypeKey] === "field"
-        ? ({
-            id: effectId,
-            owner: pageId,
-            type: "field",
-            action: {
-              type: fieldValues[actionTypeKey] as unknown,
-              payload: {
-                widgetIds: fieldValues[actionPayloadKey] as unknown,
-              },
-            },
-            fn,
-          } as FieldEffect)
-        : ({
-            id: effectId,
-            owner: pageId,
-            type: "page",
-            action: {
-              type: fieldValues[actionTypeKey] as unknown,
-              payload: { pageId: fieldValues[actionPayloadKey] as unknown },
-            },
-            fn,
-          } as PageEffect);
-
-    return effect;
-  });
+  return comparisonFn;
 };
 
 export const getEffectFromFormValues = (
   pageId: SchemaID,
   effectId: SchemaID,
   fieldValues: FieldValues,
+  fieldValuesKeys: string[] = Object.keys(fieldValues),
 ) => {
-  const formValuesKeys = Object.keys(fieldValues);
-
-  const effectTypeKey = formValuesKeys.find(
+  const effectTypeKey = fieldValuesKeys.find(
     fieldName =>
       fieldName.includes(effectId) && fieldName.includes(EFFECT_TYPE),
   )!;
 
-  const actionTypeKey = formValuesKeys.find(
+  const actionTypeKey = fieldValuesKeys.find(
     fieldName =>
       fieldName.includes(effectId) && fieldName.includes(ACTION_TYPE),
   )!;
 
-  const actionPayloadKey = formValuesKeys.find(
+  const actionPayloadKey = fieldValuesKeys.find(
     fieldName =>
       fieldName.includes(effectId) && fieldName.includes(ACTION_PAYLOAD),
   )!;
 
-  const logicalFnKey = formValuesKeys.find(
+  const logicalFnKey = fieldValuesKeys.find(
     fieldName =>
       fieldName.includes(effectId) && fieldName.includes(LOGICAL_FN_IDENTIFIER),
   );
 
-  const getFn = logicalFnKey
-    ? () => {
-        const comparisonFn1FieldIdKey = formValuesKeys.find(
-          fieldName =>
-            fieldName.includes(effectId) &&
-            fieldName.includes(FIRST_COMPARISON_FN_IDENTIFIER) &&
-            fieldName.includes(FIELD_ID),
-        )!;
-        const comparisonFn1OperatorKey = formValuesKeys.find(
-          fieldName =>
-            fieldName.includes(effectId) &&
-            fieldName.includes(FIRST_COMPARISON_FN_IDENTIFIER) &&
-            fieldName.includes(OPERATOR),
-        )!;
-        const comparisonFn1ValueKey = formValuesKeys.find(
-          fieldName =>
-            fieldName.includes(effectId) &&
-            fieldName.includes(FIRST_COMPARISON_FN_IDENTIFIER) &&
-            fieldName.includes(VALUE),
-        )!;
-
-        const comparisonFn1 = [
-          fieldValues[comparisonFn1OperatorKey] as ComparisonTypes,
-          [
-            fieldValues[comparisonFn1FieldIdKey],
-            fieldValues[comparisonFn1ValueKey],
-          ],
-        ] as ComparisonFn;
-
-        const comparisonFn2FieldIdKey = formValuesKeys.find(
-          fieldName =>
-            fieldName.includes(effectId) &&
-            fieldName.includes(SECOND_COMPARISON_FN_IDENTIFIER) &&
-            fieldName.includes(FIELD_ID),
-        )!;
-        const comparisonFn2OperatorKey = formValuesKeys.find(
-          fieldName =>
-            fieldName.includes(effectId) &&
-            fieldName.includes(SECOND_COMPARISON_FN_IDENTIFIER) &&
-            fieldName.includes(OPERATOR),
-        )!;
-        const comparisonFn2ValueKey = formValuesKeys.find(
-          fieldName =>
-            fieldName.includes(effectId) &&
-            fieldName.includes(SECOND_COMPARISON_FN_IDENTIFIER) &&
-            fieldName.includes(VALUE),
-        )!;
-
-        const comparisonFn2 = [
-          fieldValues[comparisonFn2OperatorKey],
-          [
-            fieldValues[comparisonFn2FieldIdKey],
-            fieldValues[comparisonFn2ValueKey],
-          ],
-        ] as ComparisonFn;
-
-        const logicalFn = [
-          fieldValues[logicalFnKey],
-          [comparisonFn1, comparisonFn2],
-        ] as LogicalFn;
-
-        return logicalFn;
-      }
-    : () => {
-        const comparisonFnFieldIdKey = formValuesKeys.find(
-          fieldName =>
-            fieldName.includes(effectId) &&
-            fieldName.includes(FIRST_COMPARISON_FN_IDENTIFIER) &&
-            fieldName.includes(FIELD_ID),
-        )!;
-        const comparisonFnOperatorKey = formValuesKeys.find(
-          fieldName =>
-            fieldName.includes(effectId) &&
-            fieldName.includes(FIRST_COMPARISON_FN_IDENTIFIER) &&
-            fieldName.includes(OPERATOR),
-        )!;
-        const comparisonFnValueKey = formValuesKeys.find(
-          fieldName =>
-            fieldName.includes(effectId) &&
-            fieldName.includes(FIRST_COMPARISON_FN_IDENTIFIER) &&
-            fieldName.includes(VALUE),
-        )!;
-
-        const comparisonFn = [
-          fieldValues[comparisonFnOperatorKey],
-          [
-            fieldValues[comparisonFnFieldIdKey],
-            fieldValues[comparisonFnValueKey],
-          ],
-        ] as ComparisonFn;
-
-        return comparisonFn;
-      };
-
-  const fn = getFn();
+  const fn = getFnFromFormValues(
+    fieldValues,
+    fieldValuesKeys,
+    effectId,
+    logicalFnKey,
+  );
 
   const effect: Effect =
     fieldValues[effectTypeKey] === "field"
@@ -418,4 +269,19 @@ export const getEffectFromFormValues = (
         } as PageEffect);
 
   return effect;
+};
+
+export const getEffectsFromFormValues = (
+  pageId: SchemaID,
+  fieldValues: FieldValues,
+): Effect[] => {
+  const fieldValuesKeys = Object.keys(fieldValues);
+
+  const effectIds = fieldValuesKeys
+    .filter(fieldName => fieldName.includes(EFFECT_TYPE))
+    .map(fieldName => fieldName.split(EFFECT_NAME_SEPERATOR)[0]!);
+
+  return effectIds.map(effectId =>
+    getEffectFromFormValues(pageId, effectId, fieldValues, fieldValuesKeys),
+  );
 };

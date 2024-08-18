@@ -1,17 +1,15 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
+
 import {
   AutoAwesome as AutoAwesomeIcon,
   Settings as SettingsIcon,
 } from "@mui/icons-material";
 import {
-  Box,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
-  Tab,
-  Tabs,
 } from "@mui/material";
 import * as React from "react";
 import {
@@ -42,17 +40,10 @@ import {
   renderChip,
 } from "views/CreateForm/utils";
 import { SettingsEditor } from "../SettingsEditor";
-import { TabPanel } from "./components";
-import { EditModalItemProvider } from "./components/itemProvider";
-import * as sx from "./styles";
-import { calcEffectFieldValues } from "./utils";
-
-type TabName = "effects" | "settings";
-
-type TabState = {
-  name: TabName;
-  icon: JSX.Element;
-};
+import { EffectsEditor, PageTabContainer } from "./components";
+import { EditModalItemProvider } from "./itemProvider";
+import { type TabState } from "./types";
+import { generateEffectFieldValues } from "./utils";
 
 type Props = {
   item: FormItem;
@@ -87,7 +78,7 @@ const EditModal = (props: Props) => {
       if (!effects) return pageDefaultValues;
 
       effects.forEach(effect => {
-        const effectDefaultValues = calcEffectFieldValues(effect);
+        const effectDefaultValues = generateEffectFieldValues(effect);
 
         pageDefaultValues = { ...pageDefaultValues, ...effectDefaultValues };
       });
@@ -193,9 +184,6 @@ const EditModal = (props: Props) => {
     }
   }, [item, formStateManager]);
 
-  const [currentActiveTab, setCurrentActiveTab] =
-    React.useState<TabName>("settings");
-
   const form = useForm({
     mode: "all",
     defaultValues,
@@ -210,14 +198,10 @@ const EditModal = (props: Props) => {
   const { editActions } = formStateManager;
   const { editWidget, editPage } = editActions;
 
-  const errors = form.formState.errors;
-  const errorKeys = Object.keys(errors);
-
-  const handleTabChange = (_e: React.SyntheticEvent, newTab: TabName) => {
-    setCurrentActiveTab(newTab);
-  };
-
   const onSubmitClick = () => {
+    const errors = form.formState.errors;
+    const errorKeys = Object.keys(errors);
+
     if (!errorKeys.length) {
       btnRef.current?.click();
       onClose();
@@ -246,45 +230,16 @@ const EditModal = (props: Props) => {
         {
           name: "settings",
           icon: <SettingsIcon fontSize="small" />,
+          tabContent: <SettingsEditor item={item} />,
         },
         {
           name: "effects",
           icon: <AutoAwesomeIcon fontSize="small" />,
+          tabContent: <EffectsEditor page={item} />,
         },
       ];
 
-      return (
-        <>
-          <Tabs
-            centered
-            sx={sx.tabsContainer}
-            value={currentActiveTab}
-            onChange={handleTabChange}
-          >
-            {tabs.map(tab => (
-              <Tab
-                key={tab.name}
-                value={tab.name}
-                label={tab.name}
-                aria-controls={`tabpanel-${tab.name}`}
-                icon={tab.icon}
-                disabled={errorKeys.length !== 0}
-              />
-            ))}
-          </Tabs>
-
-          <Box sx={sx.tabsPanelContainer}>
-            {tabs.map(tab => (
-              <TabPanel
-                key={tab.name}
-                item={item}
-                tabName={tab.name}
-                tabState={currentActiveTab}
-              />
-            ))}
-          </Box>
-        </>
-      );
+      return <PageTabContainer tabs={tabs} />;
     }
 
     return <SettingsEditor item={item} />;
