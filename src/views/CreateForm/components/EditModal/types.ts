@@ -8,7 +8,12 @@ import {
   type VALUE,
 } from "views/CreateForm/names";
 
-export type TabState = "effects" | "settings";
+export type TabName = "effects" | "settings";
+export type TabState = {
+  name: TabName;
+  icon: JSX.Element;
+  tabContent: JSX.Element;
+};
 
 export type EffectFieldNames =
   | typeof EFFECT_TYPE

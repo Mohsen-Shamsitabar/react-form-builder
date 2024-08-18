@@ -22,8 +22,8 @@ import { v4 as uuid } from "uuid";
 import { comparisonOperators, fxTypes } from "views/CreateForm/constants";
 import { EFFECT_IDENTIFIER } from "views/CreateForm/names";
 import { Fieldset, isPageNode } from "views/CreateForm/utils";
+import { useEditModalItem } from "../../../itemProvider";
 import { calcEffectFieldValues } from "../../../utils";
-import { useEditModalItem } from "../../itemProvider";
 import { useEditorData } from "../editorDataCtx";
 import { useEffectData } from "../hooks";
 

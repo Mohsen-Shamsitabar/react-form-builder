@@ -1,2 +1,2 @@
 export { default as EffectsEditor } from "./EffectsEditor";
-export { default as TabPanel } from "./TabPanel";
+export { default as PageTabContainer } from "./PageTabContainer";
