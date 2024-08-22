@@ -117,7 +117,6 @@ const StringFieldSettings = (props: WidgetSettingsProps) => {
           minLength={minLength}
           multiline={multiline}
           shouldUnregister={shouldUnregister}
-          required
         />
       </Box>
 

@@ -35,8 +35,6 @@ const ChoiceFieldSettings = (props: WidgetSettingsProps) => {
   const options =
     (watch(names.OPTIONS) as ChoiceFieldWidgetProps["options"]) ?? [];
 
-  // const required = watch("required") as ChoiceFieldWidgetProps["required"];
-
   const maxRequired = watch(
     names.MAX_REQUIRED,
   ) as ChoiceFieldWidgetProps["maxRequired"];
@@ -63,12 +61,16 @@ const ChoiceFieldSettings = (props: WidgetSettingsProps) => {
       names.DEFAULT_VALUE,
     ) as ChoiceFieldWidgetProps["defaultValue"];
 
+    if (!defaultValue) return;
+
     if (typeof defaultValue === "string" && defaultValue === value) {
       setValue(names.DEFAULT_VALUE, "");
+      return;
     }
 
     if (typeof defaultValue !== "string" && defaultValue.includes(value)) {
       setValue(names.DEFAULT_VALUE, []);
+      return;
     }
   };
 
@@ -193,8 +195,6 @@ const ChoiceFieldSettings = (props: WidgetSettingsProps) => {
           label="Initial field value"
           options={options}
           multiSelect={multiSelect}
-          // required={required}
-          required
           maxRequired={maxRequired}
           minRequired={minRequired}
           shouldUnregister={shouldUnregister}

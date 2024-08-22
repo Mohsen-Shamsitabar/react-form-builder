@@ -211,8 +211,12 @@ const EditModal = (props: Props) => {
   };
 
   const submitForm: SubmitHandler<FieldValues> = (data, _e) => {
+    console.log(data);
+
     if (isPageNode(item)) {
       const { pageTitle, effects } = createEditPageProps(data, item);
+
+      console.log(effects);
 
       editPage(item.id, pageTitle, effects);
 
@@ -220,6 +224,8 @@ const EditModal = (props: Props) => {
     }
 
     const newProps = createWidgetProps(data, item.properties.type);
+
+    console.log(newProps);
 
     editWidget(item.id, newProps);
   };

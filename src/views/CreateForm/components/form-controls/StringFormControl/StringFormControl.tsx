@@ -86,7 +86,7 @@ const StringFormControl = (props: Props) => {
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
-    const newValue = event.target.value;
+    const newValue = event.target.value.trimStart();
 
     field.onChange(newValue);
 

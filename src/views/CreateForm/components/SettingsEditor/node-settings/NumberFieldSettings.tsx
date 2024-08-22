@@ -91,7 +91,6 @@ const NumberFieldSettings = (props: WidgetSettingsProps) => {
           min={min}
           max={max}
           shouldUnregister={shouldUnregister}
-          required
         />
       </Box>
 
