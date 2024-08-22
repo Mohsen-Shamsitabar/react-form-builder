@@ -43,7 +43,7 @@ const StringFormControl = (props: Props) => {
 
   const { control, getValues } = useFormContext();
 
-  const defaultValue = (getValues(name) as unknown) ?? defaultValueProp;
+  const defaultValue = (getValues(name) as string) ?? defaultValueProp;
 
   const { field, fieldState } = useController({
     name,
@@ -62,12 +62,6 @@ const StringFormControl = (props: Props) => {
     maxLength,
     minLength,
   });
-
-  // const revalidate = () => {
-  //   void trigger(name);
-  // };
-
-  // React.useEffect(revalidate, [name, trigger, type, minLength, maxLength]);
 
   const renderDescription = () => {
     if (!description) return null;
@@ -92,13 +86,11 @@ const StringFormControl = (props: Props) => {
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
-    field.onChange(event);
+    const newValue = event.target.value;
 
-    if (onChange) {
-      const newValue = event.target.value;
+    field.onChange(newValue);
 
-      onChange(newValue);
-    }
+    if (onChange) onChange(newValue);
   };
 
   if (!description) {

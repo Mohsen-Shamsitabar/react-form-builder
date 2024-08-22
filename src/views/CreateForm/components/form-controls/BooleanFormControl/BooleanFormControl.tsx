@@ -42,10 +42,12 @@ const BooleanFormControl = (props: Props) => {
 
   const errorMessage = useErrorMessage(fieldState);
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    field.onChange(event);
+  const handleChange = () => {
+    const newValue = !field.value;
 
-    if (onChange) onChange(!field.value);
+    field.onChange(newValue);
+
+    if (onChange) onChange(newValue);
   };
 
   const renderHelperText = () => {

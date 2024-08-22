@@ -54,22 +54,13 @@ const NumberFormControl = (props: Props) => {
 
   const errorMessage = useErrorMessage(fieldState, { max, min });
 
-  // const revalidate = () => {
-  //   void trigger(name);
-  // };
-
-  // React.useEffect(revalidate, [name, trigger, min, max]);
-
   const handleChange: React.ChangeEventHandler<
     HTMLInputElement | HTMLTextAreaElement
   > = event => {
-    field.onChange(event);
+    const newValue = event.target.value;
+    field.onChange(newValue);
 
-    if (onChange) {
-      const newValue = Number(event.target.value);
-
-      onChange(newValue);
-    }
+    if (onChange) onChange(Number(newValue));
   };
 
   const renderDescription = () => {

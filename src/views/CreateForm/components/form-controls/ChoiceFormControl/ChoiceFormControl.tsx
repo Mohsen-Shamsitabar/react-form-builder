@@ -91,28 +91,14 @@ const ChoiceFormControl = (props: Props) => {
     minRequired,
   });
 
-  // const revalidate = () => {
-  //   void trigger(name);
-  // };
-
-  // React.useEffect(revalidate, [
-  //   name,
-  //   trigger,
-  //   maxRequired,
-  //   minRequired,
-  //   multiSelect,
-  //   required,
-  // ]);
-
   const handleChange = (event: SelectChangeEvent<string | string[]>) => {
-    field.onChange(event);
+    const newValue = event.target.value;
 
-    if (onChange) {
-      const newValue = event.target.value;
+    field.onChange(newValue);
 
+    if (onChange)
       // @ts-expect-error weird ts error!
       onChange(newValue);
-    }
   };
 
   const renderDescription = () => {
