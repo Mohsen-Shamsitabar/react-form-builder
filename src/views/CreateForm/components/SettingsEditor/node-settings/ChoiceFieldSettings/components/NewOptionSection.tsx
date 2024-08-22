@@ -3,13 +3,13 @@ import { FormHelperText, IconButton, Stack, TextField } from "@mui/material";
 import * as React from "react";
 import { useFormContext } from "react-hook-form";
 import type { ChoiceOption } from "services/schema/types";
-import * as names from "../../../../names";
+import * as names from "views/CreateForm/names";
 
 type Props = {
   options: ChoiceOption[];
 };
 
-const CreateOptionSection = (props: Props) => {
+const NewOptionSection = (props: Props) => {
   const { options } = props;
 
   const { setValue } = useFormContext();
@@ -62,7 +62,7 @@ const CreateOptionSection = (props: Props) => {
 
   return (
     <>
-      <Stack direction="row" alignItems="center" justifyContent="space-between">
+      <Stack direction="row" justifyContent="space-between">
         <TextField
           label="Label"
           type="text"
@@ -92,4 +92,4 @@ const CreateOptionSection = (props: Props) => {
   );
 };
 
-export default CreateOptionSection;
+export default NewOptionSection;
