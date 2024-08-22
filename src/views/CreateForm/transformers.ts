@@ -35,6 +35,12 @@ import type {
   WidgetNode,
 } from "./types";
 
+const stringToNumber = (string: string) => {
+  if (string === "") return undefined;
+
+  return Number(string);
+};
+
 const getFnKeyNames = (dataKeyNames: string[], effectId: SchemaID) => {
   const logicalFnOperatorName = dataKeyNames.find(
     keyName =>
@@ -128,15 +134,8 @@ export const createWidgetProps = (
         placeholder: data[names.PLACEHOLDER] as string,
         multiline: data[names.MULTILINE] as boolean,
         required: data[names.REQUIRED] as boolean,
-        maxLength:
-          (data[names.MAX_LENGTH] as string).length === 0
-            ? undefined
-            : Number(data[names.MAX_LENGTH]),
-
-        minLength:
-          (data[names.MIN_LENGTH] as string).length === 0
-            ? undefined
-            : Number(data[names.MIN_LENGTH]),
+        maxLength: stringToNumber(data[names.MAX_LENGTH] as string),
+        minLength: stringToNumber(data[names.MIN_LENGTH] as string),
       };
 
       return stringProps;
@@ -148,15 +147,8 @@ export const createWidgetProps = (
         description: data[names.DESCRIPTION] as string,
         placeholder: data[names.PLACEHOLDER] as string,
         required: data[names.REQUIRED] as boolean,
-        max:
-          (data[names.MAX] as string).length === 0
-            ? undefined
-            : Number(data[names.MAX]),
-
-        min:
-          (data[names.MIN] as string).length === 0
-            ? undefined
-            : Number(data[names.MIN]),
+        max: stringToNumber(data[names.MAX] as string),
+        min: stringToNumber(data[names.MIN] as string),
       };
 
       return numberProps;
@@ -180,15 +172,8 @@ export const createWidgetProps = (
         multiSelect: data[names.MULTISELECT] as boolean,
         shuffleOptions: data[names.SHUFFLE_OPTIONS] as boolean,
         options: data[names.OPTIONS] as ChoiceOption[],
-        maxRequired:
-          (data[names.MAX_REQUIRED] as string).length === 0
-            ? undefined
-            : Number(data[names.MAX_REQUIRED]),
-
-        minRequired:
-          (data[names.MIN_REQUIRED] as string).length === 0
-            ? undefined
-            : Number(data[names.MIN_REQUIRED]),
+        maxRequired: stringToNumber(data[names.MAX_REQUIRED] as string),
+        minRequired: stringToNumber(data[names.MIN_REQUIRED] as string),
       };
 
       return choiceProps;
