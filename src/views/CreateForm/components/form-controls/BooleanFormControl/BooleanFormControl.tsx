@@ -1,6 +1,7 @@
 import {
   FormControl,
   FormControlLabel,
+  type FormControlProps,
   FormHelperText,
   Switch,
 } from "@mui/material";
@@ -14,6 +15,7 @@ type Props = Omit<BooleanFieldWidgetProps, "description" | "defaultChecked"> & {
   onChange?: (value: boolean) => void;
   shouldUnregister?: boolean;
   defaultChecked?: boolean;
+  size?: FormControlProps["size"];
 };
 
 const BooleanFormControl = (props: Props) => {
@@ -24,6 +26,7 @@ const BooleanFormControl = (props: Props) => {
     defaultChecked = false,
     required = false,
     shouldUnregister = false,
+    size = "medium",
   } = props;
 
   const { control, getValues } = useFormContext();
@@ -62,6 +65,7 @@ const BooleanFormControl = (props: Props) => {
       fullWidth
       sx={sx.formControl}
       error={Boolean(errorMessage)}
+      size={size}
     >
       <FormControlLabel
         sx={sx.switchInput}

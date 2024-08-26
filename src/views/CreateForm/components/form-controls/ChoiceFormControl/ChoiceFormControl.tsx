@@ -7,6 +7,7 @@ import {
   MenuItem,
   Select,
   Typography,
+  type FormControlProps,
   type SelectChangeEvent,
   type SelectProps,
 } from "@mui/material";
@@ -18,7 +19,7 @@ import { useErrorMessage } from "./hooks";
 type Props = Omit<ChoiceFieldWidgetProps, "shuffleOptions" | "defaultValue"> & {
   name: string;
   varinet?: SelectProps["variant"];
-  size?: SelectProps["size"];
+  size?: FormControlProps["size"];
   fullWidth?: boolean;
   shouldUnregister?: boolean;
 } & (

@@ -1,10 +1,10 @@
 import {
   FormControl,
+  type FormControlProps,
   FormHelperText,
   FormLabel,
   OutlinedInput,
   TextField,
-  type TextFieldProps,
   Typography,
 } from "@mui/material";
 import * as React from "react";
@@ -19,7 +19,7 @@ type Props = Omit<StringFieldWidgetProps, "type" | "defaultValue"> & {
   name: string;
   type?: StringFieldWidgetProps["type"];
   defaultValue?: string;
-  size?: TextFieldProps["size"];
+  size?: FormControlProps["size"];
   shouldUnregister?: boolean;
 };
 

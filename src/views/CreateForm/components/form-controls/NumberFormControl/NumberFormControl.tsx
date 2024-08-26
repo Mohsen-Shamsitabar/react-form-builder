@@ -1,5 +1,6 @@
 import {
   FormControl,
+  type FormControlProps,
   FormHelperText,
   FormLabel,
   OutlinedInput,
@@ -17,6 +18,7 @@ type Props = Omit<NumberFieldWidgetProps, "defaultValue"> & {
   defaultValue?: number;
   onChange?: (newValue: number) => void;
   shouldUnregister?: boolean;
+  size?: FormControlProps["size"];
 };
 
 const NumberFormControl = (props: Props) => {
@@ -31,6 +33,7 @@ const NumberFormControl = (props: Props) => {
     defaultValue: defaultValueProp = "",
     required = false,
     shouldUnregister = false,
+    size = "medium",
   } = props;
 
   const numberRegExp = /^-?[0-9]\d*(\.\d+)?$/;
@@ -90,8 +93,11 @@ const NumberFormControl = (props: Props) => {
         sx={sx.formControl}
         fullWidth
         error={Boolean(errorMessage)}
+        size={size}
       >
         <TextField
+          required={required}
+          size={size}
           error={Boolean(errorMessage)}
           {...field}
           sx={sx.input}
@@ -112,6 +118,7 @@ const NumberFormControl = (props: Props) => {
       sx={sx.formControl}
       fullWidth
       error={Boolean(errorMessage)}
+      size={size}
     >
       <FormLabel htmlFor={`field-${name}`} id={`field-${name}-label`}>
         {label}
@@ -120,6 +127,8 @@ const NumberFormControl = (props: Props) => {
       {renderDescription()}
 
       <OutlinedInput
+        required={required}
+        size={size}
         error={Boolean(errorMessage)}
         {...field}
         sx={sx.input}
