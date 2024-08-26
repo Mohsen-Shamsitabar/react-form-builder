@@ -18,13 +18,13 @@ import {
   type FieldEffect,
   type PageEffect,
 } from "services/schema/types";
-import { comparisonOperators, fxTypes } from "views/CreateForm/constants";
+import { fxTypes } from "views/CreateForm/constants";
 import { EFFECT_IDENTIFIER } from "views/CreateForm/names";
 import { Fieldset, isPageNode } from "views/CreateForm/utils";
 import { useEditModalItem } from "../../../itemProvider";
 import { generateEffectFieldValues, generateId } from "../../../utils";
 import { useEffectEditorData } from "../effectEditorDataContext";
-import { useEffectActionOptions } from "../hooks";
+import { useEffectActionOptions, useFieldComparisonOptions } from "../hooks";
 
 const CreateEffectSection = () => {
   const [effectType, setEffectType] = React.useState<string>("");
@@ -35,6 +35,8 @@ const CreateEffectSection = () => {
   const [fnWidget, setFnWidget] = React.useState<string>("");
   const [fnOperator, setFnOperator] = React.useState<string>("");
   const [fnValue, setFnValue] = React.useState<string>("");
+
+  const fieldComparisonOptions = useFieldComparisonOptions(fnWidget);
 
   const resetStates = React.useCallback(() => {
     setEffectType("");
@@ -73,6 +75,13 @@ const CreateEffectSection = () => {
     setEffectType(newEffectType);
     setActionType("");
     setActionPayload(newEffectType === "field" ? [] : "");
+  };
+
+  const handleFieldWidgetChange = (event: SelectChangeEvent<string>) => {
+    const newFnWidget = event.target.value;
+
+    setFnWidget(newFnWidget);
+    setFnOperator("");
   };
 
   const handleAddClick = () => {
@@ -175,13 +184,15 @@ const CreateEffectSection = () => {
             fullWidth
             required
           >
-            <InputLabel id="condition-widget-select-label">Widget</InputLabel>
+            <InputLabel id="condition-widget-select-label">
+              Field Widget
+            </InputLabel>
 
             <Select
               labelId="condition-widget-select-label"
-              label="Widget"
+              label="Field Widget"
               value={fnWidget}
-              onChange={event => setFnWidget(event.target.value)}
+              onChange={handleFieldWidgetChange}
             >
               {allFieldWidgetOptions.map(option => (
                 <MenuItem key={option.value} value={option.value}>
@@ -208,7 +219,7 @@ const CreateEffectSection = () => {
               value={fnOperator}
               onChange={event => setFnOperator(event.target.value)}
             >
-              {comparisonOperators.map(option => (
+              {fieldComparisonOptions.map(option => (
                 <MenuItem key={option.value} value={option.value}>
                   {option.label}
                 </MenuItem>

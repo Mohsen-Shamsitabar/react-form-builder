@@ -224,7 +224,7 @@ export const data: CreateFormData = {
           LogicalTypes.AND,
           [
             [ComparisonTypes.EQ, ["WIDGET_F4", "1"]],
-            [ComparisonTypes.IN, ["WIDGET_F3", "female"]],
+            [ComparisonTypes.NIN, ["WIDGET_F3", "female"]],
           ],
         ],
         action: {

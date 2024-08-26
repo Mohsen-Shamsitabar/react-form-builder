@@ -1,15 +1,18 @@
 import { useFormContext } from "react-hook-form";
+import { ComparisonTypes } from "services/schema/constants";
 import {
   type ChoiceOption,
   type EffectTypes,
   type SchemaID,
 } from "services/schema/types";
 import {
+  comparisonOperators,
   fieldEffectActions,
   pageEffectActions,
 } from "views/CreateForm/constants";
 import { useFormStateManager } from "views/CreateForm/form-state-manager";
 import { FN_IDENTIFIER } from "views/CreateForm/names";
+import { type FieldWidgetNode } from "views/CreateForm/types";
 import { isPageNode } from "views/CreateForm/utils";
 import { useEditModalItem } from "../../itemProvider";
 
@@ -62,4 +65,51 @@ export const useEffectFieldNames = (effectId: SchemaID) => {
   );
 
   return { effectFieldNames, fnFieldNames, effectErrors };
+};
+
+export const useFieldComparisonOptions = (fieldId: SchemaID) => {
+  const formStateManager = useFormStateManager();
+
+  if (!fieldId || !formStateManager) {
+    return comparisonOperators;
+  }
+
+  const { state } = formStateManager;
+
+  const widget = state.widgets.byId[fieldId] as FieldWidgetNode;
+
+  const widgetType = widget.properties.type;
+
+  switch (widgetType) {
+    case "string": {
+      return comparisonOperators.filter(
+        option =>
+          option.value === ComparisonTypes.EQ ||
+          option.value === ComparisonTypes.NEQ,
+      );
+    }
+    case "number": {
+      return comparisonOperators.filter(
+        option =>
+          option.value !== ComparisonTypes.IN &&
+          option.value !== ComparisonTypes.NIN,
+      );
+    }
+    case "boolean": {
+      return comparisonOperators.filter(
+        option =>
+          option.value === ComparisonTypes.EQ ||
+          option.value === ComparisonTypes.NEQ,
+      );
+    }
+    case "choice": {
+      return comparisonOperators.filter(
+        option =>
+          option.value === ComparisonTypes.IN ||
+          option.value === ComparisonTypes.NIN,
+      );
+    }
+    default:
+      return comparisonOperators;
+  }
 };

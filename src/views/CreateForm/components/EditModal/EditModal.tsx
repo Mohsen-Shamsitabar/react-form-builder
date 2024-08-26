@@ -194,6 +194,10 @@ const EditModal = (props: Props) => {
     [item],
   );
 
+  const { formState } = form;
+  const errors = formState.errors;
+  const errorKeys = Object.keys(errors);
+
   if (!formStateManager) return null;
   const { editActions } = formStateManager;
   const { editWidget, editPage } = editActions;
@@ -201,13 +205,11 @@ const EditModal = (props: Props) => {
   const onSubmitClick = async () => {
     const isFormValid = await form.trigger();
 
-    if (isFormValid) {
+    if (isFormValid && errorKeys.length === 0) {
       btnRef.current?.click();
       onClose();
     } else {
-      const errors = form.formState.errors;
-      const errorKeys = Object.keys(errors);
-      throw new Error("Your form has errors:\n" + `${errorKeys.join(", ")}`);
+      throw new Error("Your form has errors!");
     }
   };
 
@@ -288,7 +290,12 @@ const EditModal = (props: Props) => {
                 Decline
               </Button>
 
-              <Button type="submit" variant="contained" onClick={onSubmitClick}>
+              <Button
+                type="submit"
+                variant="contained"
+                disabled={errorKeys.length !== 0}
+                onClick={onSubmitClick}
+              >
                 Accept
               </Button>
             </DialogActions>
