@@ -141,7 +141,9 @@ export type PropTypes = UiPropTypes | FieldPropTypes;
 
 // ======
 
-export type ComparisonFnParams = [SchemaID, string];
+export type ValueType = unknown;
+
+export type ComparisonFnParams = [SchemaID, ValueType];
 
 export type ComparisonFn = [ComparisonTypes, ComparisonFnParams];
 
