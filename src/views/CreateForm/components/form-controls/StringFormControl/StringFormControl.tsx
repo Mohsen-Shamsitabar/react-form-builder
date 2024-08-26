@@ -11,6 +11,7 @@ import * as React from "react";
 import { useController, useFormContext } from "react-hook-form";
 import type { StringFieldWidgetProps } from "services/schema/types";
 import * as sx from "../../commonStyles";
+import { formatString } from "../../formatInput";
 import { useErrorMessage } from "./hooks";
 
 type Props = Omit<StringFieldWidgetProps, "type" | "defaultValue"> & {
@@ -86,7 +87,7 @@ const StringFormControl = (props: Props) => {
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
-    const newValue = event.target.value.trimStart();
+    const newValue = formatString(event.target.value);
 
     field.onChange(newValue);
 
