@@ -198,14 +198,15 @@ const EditModal = (props: Props) => {
   const { editActions } = formStateManager;
   const { editWidget, editPage } = editActions;
 
-  const onSubmitClick = () => {
-    const errors = form.formState.errors;
-    const errorKeys = Object.keys(errors);
+  const onSubmitClick = async () => {
+    const isFormValid = await form.trigger();
 
-    if (!errorKeys.length) {
+    if (isFormValid) {
       btnRef.current?.click();
       onClose();
     } else {
+      const errors = form.formState.errors;
+      const errorKeys = Object.keys(errors);
       throw new Error("Your form has errors:\n" + `${errorKeys.join(", ")}`);
     }
   };
