@@ -1,10 +1,10 @@
 import * as React from "react";
-import type { Effect, SchemaID } from "services/schema/types";
+import type { ChoiceOption, Effect } from "services/schema/types";
 
 type EffectEditorData = {
   allEffects: Effect[];
   setAllEffects: React.Dispatch<React.SetStateAction<Effect[]>>;
-  allFieldWidgets: SchemaID[];
+  allFieldWidgetOptions: ChoiceOption[];
 };
 
 const Context = React.createContext<EffectEditorData | null>(null);

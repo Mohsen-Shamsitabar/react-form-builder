@@ -1,5 +1,4 @@
 import { FormGroup, Stack } from "@mui/material";
-import type { ChoiceOption } from "services/schema/types";
 import { useEffectEditorData } from "views/CreateForm/components/EditModal/components/EffectsEditor/effectEditorDataContext";
 import { type ComparisonFnNodeProps } from "views/CreateForm/components/EditModal/types";
 import { createEffectNameGenerator } from "views/CreateForm/components/EditModal/utils";
@@ -39,11 +38,7 @@ const ComparisonNode = (props: ComparisonFnNodeProps) => {
   const effectEditorData = useEffectEditorData();
   if (!effectEditorData) return null;
 
-  const { allFieldWidgets } = effectEditorData;
-
-  const allFieldWidgetsOptions: ChoiceOption[] = allFieldWidgets.map(
-    widgetId => ({ label: widgetId, value: widgetId }),
-  );
+  const { allFieldWidgetOptions } = effectEditorData;
 
   return (
     <FormGroup>
@@ -51,10 +46,10 @@ const ComparisonNode = (props: ComparisonFnNodeProps) => {
         <ChoiceFormControl
           size="small"
           name={fieldIdEffectName}
-          label={"Field Id"}
+          label={"Field"}
           multiSelect={false}
           defaultValue={fieldId}
-          options={allFieldWidgetsOptions}
+          options={allFieldWidgetOptions}
           required={required}
           shouldUnregister={shouldUnregister}
         />

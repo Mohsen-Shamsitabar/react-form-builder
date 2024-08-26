@@ -64,7 +64,7 @@ const CreateEffectSection = () => {
   if (!currentPage || !isPageNode(currentPage)) return null;
 
   const { payloadOptions, typeOptions } = effectActionOptions;
-  const { allEffects, setAllEffects, allFieldWidgets } = effectEditorData;
+  const { allEffects, setAllEffects, allFieldWidgetOptions } = effectEditorData;
   const { setValue } = form;
 
   const handleEffectTypeChange = (event: SelectChangeEvent<string>) => {
@@ -183,9 +183,9 @@ const CreateEffectSection = () => {
               value={fnWidget}
               onChange={event => setFnWidget(event.target.value)}
             >
-              {allFieldWidgets.map(widgetId => (
-                <MenuItem key={widgetId} value={widgetId}>
-                  {widgetId}
+              {allFieldWidgetOptions.map(option => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
                 </MenuItem>
               ))}
             </Select>
