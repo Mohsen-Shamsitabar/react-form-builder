@@ -141,6 +141,15 @@ export type PropTypes = UiPropTypes | FieldPropTypes;
 
 // ======
 
+/*
+  NOTE FOR VALUETYPE:
+  
+  string for stringFieldValue
+  number for numberFieldValue
+  boolean for booleanFieldValue
+  string[] for choiceFieldValue
+*/
+
 export type ValueType = unknown;
 
 export type ComparisonFnParams = [SchemaID, ValueType];
