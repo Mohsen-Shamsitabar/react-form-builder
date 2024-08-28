@@ -178,7 +178,7 @@ export const data: CreateFormData = {
         id: "EFFECT_2",
         owner: "PAGE_1",
         type: "field",
-        fn: [ComparisonTypes.EQ, ["WIDGET_F2", "true"]],
+        fn: [ComparisonTypes.EQ, ["WIDGET_F2", true]],
         action: {
           type: FieldAction.HIDE_WIDGETS,
           payload: { widgetIds: ["WIDGET_F1", "WIDGET_U1"] },
@@ -208,7 +208,7 @@ export const data: CreateFormData = {
           LogicalTypes.AND,
           [
             [ComparisonTypes.EQ, ["WIDGET_F4", "1"]],
-            [ComparisonTypes.IN, ["WIDGET_F3", "female"]],
+            [ComparisonTypes.IN, ["WIDGET_F3", ["female"]]],
           ],
         ],
         action: {
@@ -224,7 +224,7 @@ export const data: CreateFormData = {
           LogicalTypes.AND,
           [
             [ComparisonTypes.EQ, ["WIDGET_F4", "1"]],
-            [ComparisonTypes.NIN, ["WIDGET_F3", "female"]],
+            [ComparisonTypes.NIN, ["WIDGET_F3", ["female"]]],
           ],
         ],
         action: {
