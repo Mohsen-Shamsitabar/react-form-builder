@@ -93,19 +93,19 @@ const getFnKeyNames = (dataKeyNames: string[], effectId: SchemaID) => {
     const comparisonFnFieldIdName2 = dataKeyNames.find(
       keyName =>
         keyName.includes(effectId) &&
-        keyName.includes(names.FIRST_COMPARISON_FN_IDENTIFIER) &&
+        keyName.includes(names.SECOND_COMPARISON_FN_IDENTIFIER) &&
         keyName.includes(names.FIELD_ID),
     )!;
     const comparisonFnOperatorName2 = dataKeyNames.find(
       keyName =>
         keyName.includes(effectId) &&
-        keyName.includes(names.FIRST_COMPARISON_FN_IDENTIFIER) &&
+        keyName.includes(names.SECOND_COMPARISON_FN_IDENTIFIER) &&
         keyName.includes(names.OPERATOR),
     )!;
     const comparisonFnValueName2 = dataKeyNames.find(
       keyName =>
         keyName.includes(effectId) &&
-        keyName.includes(names.FIRST_COMPARISON_FN_IDENTIFIER) &&
+        keyName.includes(names.SECOND_COMPARISON_FN_IDENTIFIER) &&
         keyName.includes(names.VALUE),
     )!;
 
