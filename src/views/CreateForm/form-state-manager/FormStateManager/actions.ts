@@ -1,4 +1,4 @@
-import type { AllWidgetPropTypes } from "services/schema/types";
+import type { AllWidgetPropTypes, Effect } from "services/schema/types";
 import { type PageNode, type WidgetNode } from "../../types";
 
 export enum ActionType {
@@ -39,7 +39,7 @@ export type Action =
       payload: {
         pageId: PageNode["id"];
         pageTitle: PageNode["title"];
-        effects: PageNode["effects"];
+        effects?: Effect[];
       };
     };
 
@@ -76,7 +76,7 @@ export const createEditWidgetAction = (
 export const createEditPageAction = (
   pageId: PageNode["id"],
   pageTitle: PageNode["title"],
-  effects: PageNode["effects"],
+  effects?: Effect[],
 ): Action => ({
   type: ActionType.EDIT_PAGE,
   payload: { pageId, pageTitle, effects },

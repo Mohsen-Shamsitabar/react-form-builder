@@ -1,5 +1,5 @@
 import * as React from "react";
-import type { AllWidgetPropTypes } from "services/schema/types";
+import type { AllWidgetPropTypes, Effect } from "services/schema/types";
 import type { PageNode, WidgetNode } from "../../types";
 import { type State } from "./reducer";
 
@@ -21,7 +21,7 @@ type EditActions = {
   editPage: (
     pageId: PageNode["id"],
     pageTitle: PageNode["title"],
-    effects: PageNode["effects"],
+    effects?: Effect[],
   ) => void;
 };
 
