@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { FormGroup, Stack } from "@mui/material";
+import * as React from "react";
 import { useFormContext } from "react-hook-form";
 import { type SchemaID } from "services/schema/types";
 import { useEffectEditorData } from "views/CreateForm/components/EditModal/components/EffectsEditor/effectEditorDataContext";
@@ -6,10 +8,14 @@ import { useFieldComparisonOptions } from "views/CreateForm/components/EditModal
 import { type ComparisonFnNodeProps } from "views/CreateForm/components/EditModal/types";
 import { createEffectNameGenerator } from "views/CreateForm/components/EditModal/utils";
 import {
+  BooleanFormControl,
   ChoiceFormControl,
+  NumberFormControl,
   StringFormControl,
 } from "views/CreateForm/components/form-controls";
+import { useFormStateManager } from "views/CreateForm/form-state-manager";
 import { FIELD_ID, OPERATOR, VALUE } from "views/CreateForm/names";
+import { isFieldWidgetNode } from "views/CreateForm/utils";
 
 const ComparisonNode = (props: ComparisonFnNodeProps) => {
   const {
@@ -46,15 +52,124 @@ const ComparisonNode = (props: ComparisonFnNodeProps) => {
 
   const fieldComparisonOptions = useFieldComparisonOptions(fieldId);
 
-  const effectEditorData = useEffectEditorData();
-  if (!effectEditorData || !fieldComparisonOptions) return null;
+  React.useEffect(() => {
+    void trigger();
+  }, [fieldId, trigger]);
 
-  const handleFieldIdChange = () => {
-    setValue(operatorEffectName, "");
-    void trigger([operatorEffectName]);
-  };
+  const effectEditorData = useEffectEditorData();
+  const formStateManager = useFormStateManager();
+  if (!effectEditorData || !fieldComparisonOptions || !formStateManager) {
+    return null;
+  }
 
   const { allFieldWidgetOptions } = effectEditorData;
+
+  const { state } = formStateManager;
+
+  const handleFieldIdChange = (newFieldId: SchemaID) => {
+    const widget = state.widgets.byId[newFieldId]!;
+
+    if (!isFieldWidgetNode(widget)) return;
+
+    setValue(operatorEffectName, "");
+    // void trigger();
+
+    switch (widget.properties.type) {
+      case "string": {
+        setValue(valueEffectName, "");
+        break;
+      }
+      case "number": {
+        setValue(valueEffectName, "");
+        break;
+      }
+      case "boolean": {
+        setValue(valueEffectName, false);
+        break;
+      }
+      case "choice": {
+        setValue(valueEffectName, []);
+        break;
+      }
+      default:
+        return;
+    }
+  };
+
+  const renderValueInput = () => {
+    if (!fieldId) {
+      return (
+        <StringFormControl
+          size="small"
+          name={valueEffectName}
+          label={"Expected Value"}
+          defaultValue={value as string}
+          required={required}
+          shouldUnregister={shouldUnregister}
+        />
+      );
+    }
+
+    const widget = state.widgets.byId[fieldId]!;
+
+    if (!isFieldWidgetNode(widget)) return null;
+
+    switch (widget.properties.type) {
+      case "string": {
+        return (
+          <StringFormControl
+            size="small"
+            name={valueEffectName}
+            label={"Expected Value"}
+            defaultValue={value as string}
+            required={required}
+            shouldUnregister={shouldUnregister}
+          />
+        );
+      }
+      case "number": {
+        return (
+          <NumberFormControl
+            size="small"
+            name={valueEffectName}
+            label={"Expected Value"}
+            defaultValue={value as number}
+            required={required}
+            shouldUnregister={shouldUnregister}
+          />
+        );
+      }
+      case "boolean": {
+        return (
+          <BooleanFormControl
+            size="small"
+            name={valueEffectName}
+            label={"Expected Value"}
+            defaultChecked={value as boolean}
+            shouldUnregister={shouldUnregister}
+          />
+        );
+      }
+      case "choice": {
+        const options = [...widget.properties.properties.options];
+
+        return (
+          <ChoiceFormControl
+            size="small"
+            name={valueEffectName}
+            label={"Expected Value"}
+            defaultValue={value as string[]}
+            shouldUnregister={shouldUnregister}
+            multiSelect
+            options={options}
+            required={required}
+          />
+        );
+      }
+      default:
+        return null;
+    }
+  };
 
   return (
     <FormGroup>
@@ -82,14 +197,7 @@ const ComparisonNode = (props: ComparisonFnNodeProps) => {
           shouldUnregister={shouldUnregister}
         />
 
-        <StringFormControl
-          size="small"
-          name={valueEffectName}
-          label={"Expected Value"}
-          defaultValue={value}
-          required={required}
-          shouldUnregister={shouldUnregister}
-        />
+        {renderValueInput()}
       </Stack>
     </FormGroup>
   );
