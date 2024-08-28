@@ -1,8 +1,4 @@
-import type {
-  AllWidgetPropTypes,
-  Effect,
-  SchemaID,
-} from "services/schema/types";
+import type { AllWidgetPropTypes } from "services/schema/types";
 import { type PageNode, type WidgetNode } from "../../types";
 
 export enum ActionType {
@@ -25,19 +21,26 @@ export type Action =
     }
   | {
       type: ActionType.REMOVE_PAGE;
-      payload: { pageId: SchemaID };
+      payload: { pageId: PageNode["id"] };
     }
   | {
       type: ActionType.REMOVE_WIDGET;
-      payload: { widgetId: SchemaID };
+      payload: { widgetId: WidgetNode["id"] };
     }
   | {
       type: ActionType.EDIT_WIDGET;
-      payload: { widgetId: SchemaID; newWidgetProps: AllWidgetPropTypes };
+      payload: {
+        widgetId: WidgetNode["id"];
+        newWidgetProps: AllWidgetPropTypes;
+      };
     }
   | {
       type: ActionType.EDIT_PAGE;
-      payload: { pageId: SchemaID; pageTitle: string; effects: Effect[] };
+      payload: {
+        pageId: PageNode["id"];
+        pageTitle: PageNode["title"];
+        effects: PageNode["effects"];
+      };
     };
 
 export const createAddPageAction = (page: PageNode): Action => ({
@@ -50,18 +53,20 @@ export const createAddWidgetAction = (widget: WidgetNode): Action => ({
   payload: { widget },
 });
 
-export const createRemovePageAction = (pageId: SchemaID): Action => ({
+export const createRemovePageAction = (pageId: PageNode["id"]): Action => ({
   type: ActionType.REMOVE_PAGE,
   payload: { pageId },
 });
 
-export const createRemoveWidgetAction = (widgetId: SchemaID): Action => ({
+export const createRemoveWidgetAction = (
+  widgetId: WidgetNode["id"],
+): Action => ({
   type: ActionType.REMOVE_WIDGET,
   payload: { widgetId },
 });
 
 export const createEditWidgetAction = (
-  widgetId: SchemaID,
+  widgetId: WidgetNode["id"],
   newWidgetProps: AllWidgetPropTypes,
 ): Action => ({
   type: ActionType.EDIT_WIDGET,
@@ -69,9 +74,9 @@ export const createEditWidgetAction = (
 });
 
 export const createEditPageAction = (
-  pageId: SchemaID,
-  pageTitle: string,
-  effects: Effect[],
+  pageId: PageNode["id"],
+  pageTitle: PageNode["title"],
+  effects: PageNode["effects"],
 ): Action => ({
   type: ActionType.EDIT_PAGE,
   payload: { pageId, pageTitle, effects },
