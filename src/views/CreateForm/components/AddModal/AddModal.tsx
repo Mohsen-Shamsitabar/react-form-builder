@@ -40,6 +40,10 @@ const AddModal = (props: ModalProps) => {
     mode: "all",
   });
 
+  const { formState } = form;
+  const errors = formState.errors;
+  const errorKeys = Object.keys(errors);
+
   const formStateManager = useFormStateManager();
   if (!formStateManager) return null;
 
@@ -53,11 +57,7 @@ const AddModal = (props: ModalProps) => {
       btnRef.current?.click();
       onClose();
     } else {
-      const { errors } = form.formState;
-
-      throw new Error(
-        "Your form has errors: " + Object.keys(errors).join(", "),
-      );
+      throw new Error("Your form has errors!");
     }
   };
 
@@ -111,7 +111,11 @@ const AddModal = (props: ModalProps) => {
             Decline
           </Button>
 
-          <Button variant="contained" onClick={onSubmitClick}>
+          <Button
+            variant="contained"
+            onClick={onSubmitClick}
+            disabled={errorKeys.length !== 0}
+          >
             Accept
           </Button>
         </DialogActions>
