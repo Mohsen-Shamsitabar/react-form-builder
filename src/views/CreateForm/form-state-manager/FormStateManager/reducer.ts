@@ -2,7 +2,7 @@
 import { produce } from "immer";
 import type * as React from "react";
 import { type SchemaID } from "services/schema/types";
-import { filterObject, mergeArray } from "utils";
+import { filterObject } from "utils";
 import {
   type CreateFormData,
   type PageNode,
@@ -114,27 +114,53 @@ const reducer: React.Reducer<State, Action> = (state, action) => {
       return newState;
     }
     case ActionType.EDIT_PAGE: {
-      const { pageId, pageTitle, effects: newEffects } = action.payload;
+      const { pageId, pageTitle, effects } = action.payload;
 
-      const newEffectIds = newEffects.map(effect => effect.id);
+      const oldPage = state.pages.byId[pageId]!;
+
+      const remainingEffectIds: SchemaID[] = state.effects.allIds.filter(
+        id => !oldPage.effects?.includes(id),
+      );
+
+      if (!effects) {
+        const newState = produce(state, draftState => {
+          draftState.pages.byId[pageId]!.title = pageTitle;
+
+          draftState.pages.byId[pageId]!.effects = undefined;
+
+          draftState.effects.allIds = remainingEffectIds;
+          draftState.effects.byId = filterObject(
+            draftState.effects.byId,
+            remainingEffectIds,
+          );
+        });
+
+        return newState;
+      }
+
+      const effectIds = effects.map(effect => effect.id);
+
+      const newEffectIds = remainingEffectIds.concat(effectIds);
+
+      const remainingEffects = filterObject(
+        state.effects.byId,
+        remainingEffectIds,
+      );
+
+      effects.forEach(effect => {
+        remainingEffects[effect.id] = effect;
+      });
 
       const newState = produce(state, draftState => {
         draftState.pages.byId[pageId]!.title = pageTitle;
 
-        if (newEffects.length === 0) return;
+        draftState.pages.byId[pageId]!.effects = effectIds;
 
-        draftState.pages.byId[pageId]!.effects = newEffectIds;
+        draftState.effects.allIds = newEffectIds;
 
-        draftState.effects.allIds = mergeArray(
-          state.effects.allIds,
-          newEffectIds,
-        );
-
-        newEffects.forEach(effect => {
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          draftState.effects.byId[effect.id] = effect;
-        });
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        draftState.effects.byId = remainingEffects;
       });
 
       return newState;
