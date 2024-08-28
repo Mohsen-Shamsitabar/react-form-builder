@@ -271,7 +271,13 @@ export const createNewWidget = (
   }
 };
 
-export const createEditPageProps = (data: FieldValues, page: PageNode) => {
+export const createEditPageProps = (
+  data: FieldValues,
+  page: PageNode,
+): {
+  pageTitle: PageNode["title"];
+  effects?: Effect[];
+} => {
   const pageTitle = data[names.TITLE] as string;
 
   const dataKeys = Object.keys(data);
@@ -280,7 +286,11 @@ export const createEditPageProps = (data: FieldValues, page: PageNode) => {
     .filter(keyName => keyName.includes(names.EFFECT_TYPE))
     .map(keyName => keyName.split(names.EFFECT_NAME_SEPERATOR)[0]!);
 
-  const effects: Effect[] = effectIds.map(effectId => {
+  if (!effectIds.length) {
+    return { pageTitle, effects: undefined };
+  }
+
+  const effects = effectIds.map(effectId => {
     const effectTypeName = dataKeys.find(
       keyName =>
         keyName.includes(effectId) && keyName.includes(names.EFFECT_TYPE),

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 
 import {
@@ -21,7 +22,6 @@ import {
 import {
   type BooleanFieldWidgetProps,
   type ChoiceFieldWidgetProps,
-  type Effect,
   type LinkUIWidgetProps,
   type NumberFieldWidgetProps,
   type StringFieldWidgetProps,
@@ -67,12 +67,12 @@ const EditModal = (props: Props) => {
         };
       }
 
-      const { state: data } = formStateManager;
+      const { state } = formStateManager;
 
       let pageDefaultValues = { title: item.title };
 
       const effects = item.effects?.map(
-        effectId => data.effects.byId[effectId] as Effect,
+        effectId => state.effects.byId[effectId]!,
       );
 
       if (!effects) return pageDefaultValues;
@@ -182,7 +182,8 @@ const EditModal = (props: Props) => {
       default:
         return {};
     }
-  }, [item, formStateManager]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const form = useForm({
     mode: "all",
@@ -219,7 +220,7 @@ const EditModal = (props: Props) => {
     if (isPageNode(item)) {
       const { pageTitle, effects } = createEditPageProps(data, item);
 
-      console.log(effects);
+      console.log({ pageTitle, effects });
 
       editPage(item.id, pageTitle, effects);
 
