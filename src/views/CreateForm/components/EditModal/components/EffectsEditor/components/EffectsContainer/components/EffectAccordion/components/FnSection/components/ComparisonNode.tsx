@@ -58,7 +58,7 @@ const ComparisonNode = (props: ComparisonFnNodeProps) => {
 
   const effectEditorData = useEffectEditorData();
   const formStateManager = useFormStateManager();
-  if (!effectEditorData || !fieldComparisonOptions || !formStateManager) {
+  if (!effectEditorData || !formStateManager) {
     return null;
   }
 
@@ -72,24 +72,23 @@ const ComparisonNode = (props: ComparisonFnNodeProps) => {
     if (!isFieldWidgetNode(widget)) return;
 
     setValue(operatorEffectName, "");
-    // void trigger();
 
     switch (widget.properties.type) {
       case "string": {
         setValue(valueEffectName, "");
-        break;
+        return;
       }
       case "number": {
         setValue(valueEffectName, "");
-        break;
+        return;
       }
       case "boolean": {
         setValue(valueEffectName, false);
-        break;
+        return;
       }
       case "choice": {
         setValue(valueEffectName, []);
-        break;
+        return;
       }
       default:
         return;

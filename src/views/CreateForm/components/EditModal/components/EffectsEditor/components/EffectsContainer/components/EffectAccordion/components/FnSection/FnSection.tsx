@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Button, Divider, Grid, Stack } from "@mui/material";
-import * as React from "react";
+import { produce } from "immer";
 import { useFormContext } from "react-hook-form";
 import { type ComparisonTypes } from "services/schema/constants";
 import {
@@ -10,6 +10,7 @@ import {
   type SchemaID,
 } from "services/schema/types";
 import { isLogicalFn } from "services/schema/utils";
+import { useEffectEditorData } from "views/CreateForm/components/EditModal/components/EffectsEditor/effectEditorDataContext";
 import { useEffectFieldNames } from "views/CreateForm/components/EditModal/components/EffectsEditor/hooks";
 import {
   EFFECT_NAME_SEPERATOR,
@@ -36,13 +37,16 @@ type FnFieldsetProps = {
 };
 
 const FnSection = (props: FnFieldsetProps) => {
-  const { fn: fnProp, effectId } = props;
-
-  const [fn, setFn] = React.useState(fnProp);
+  const { fn, effectId } = props;
 
   const { unregister } = useFormContext();
 
   const { fnFieldNames } = useEffectFieldNames(effectId);
+
+  const effectEditorData = useEffectEditorData();
+  if (!effectEditorData) return null;
+
+  const { setAllEffects, allEffects } = effectEditorData;
 
   const operator = fn[0];
 
@@ -74,7 +78,16 @@ const FnSection = (props: FnFieldsetProps) => {
 
     const handleLogicalFnDelete = () => {
       unregister(logicalFnFieldName);
-      setFn(fn1);
+
+      const newEffects = produce(allEffects, effectsDraft => {
+        const editedEffectIdx = effectsDraft.findIndex(
+          effect => effect.id === effectId,
+        )!;
+
+        effectsDraft[editedEffectIdx]!.fn = fn1;
+      });
+
+      setAllEffects(newEffects);
 
       fnFieldNames.forEach(name => {
         if (!name.includes(fn2Id)) return;
