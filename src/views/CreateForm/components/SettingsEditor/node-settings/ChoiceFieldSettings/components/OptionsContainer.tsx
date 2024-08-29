@@ -34,7 +34,9 @@ const OptionsContainer = (props: Props) => {
       return;
     }
 
-    clearErrors(names.OPTIONS);
+    if (errorKeys.includes(names.OPTIONS)) {
+      clearErrors(names.OPTIONS);
+    }
   }, [clearErrors, errorKeys, options, setError]);
 
   const makeHandleOptionDelete = (value: string) => () => {
