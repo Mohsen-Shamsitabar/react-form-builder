@@ -16,18 +16,26 @@ type Props = {
 const OptionsContainer = (props: Props) => {
   const { options } = props;
 
-  const { setValue, getValues, setError, clearErrors } = useFormContext();
+  const { setValue, getValues, setError, clearErrors, formState } =
+    useFormContext();
+
+  const { errors } = formState;
+  const errorKeys = Object.keys(errors);
 
   React.useEffect(() => {
     if (options.length === 0) {
-      setError(names.OPTIONS, {
-        message: "NO OPTIONS PROVIDED, PLEASE CREATE OPTIONS!",
-      });
+      if (!errorKeys.includes(names.OPTIONS)) {
+        setError(names.OPTIONS, {
+          message: "NO OPTIONS PROVIDED, PLEASE CREATE OPTIONS!",
+        });
+        return;
+      }
+
       return;
     }
 
     clearErrors(names.OPTIONS);
-  }, [clearErrors, options, setError]);
+  }, [clearErrors, errorKeys, options, setError]);
 
   const makeHandleOptionDelete = (value: string) => () => {
     const newOptions = options.filter(option => option.value !== value);
