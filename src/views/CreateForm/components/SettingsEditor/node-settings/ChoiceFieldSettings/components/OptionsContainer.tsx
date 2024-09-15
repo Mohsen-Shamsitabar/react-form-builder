@@ -64,7 +64,7 @@ const OptionsContainer = (props: Props) => {
     if (options.length === 0) {
       return (
         <FormHelperText error>
-          NO OPTIONS PROVIDED, PLEASE CREATE OPTIONS!
+          *NO OPTIONS PROVIDED, PLEASE CREATE OPTIONS!
         </FormHelperText>
       );
     }
