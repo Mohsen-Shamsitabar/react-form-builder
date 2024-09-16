@@ -15,8 +15,9 @@ import { formatString } from "../../formatInput";
 import { useErrorMessage } from "./hooks";
 
 type Props = Omit<StringFieldWidgetProps, "type" | "defaultValue"> & {
-  onChange?: (newValue: string) => void;
   name: string;
+  pattern?: RegExp;
+  onChange?: (newValue: string) => void;
   type?: StringFieldWidgetProps["type"];
   defaultValue?: string;
   size?: FormControlProps["size"];
@@ -38,6 +39,7 @@ const StringFormControl = (props: Props) => {
     type = "text",
     size = "medium",
     shouldUnregister = false,
+    pattern,
   } = props;
 
   const emailRegExp = /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/;
@@ -55,7 +57,7 @@ const StringFormControl = (props: Props) => {
       required,
       maxLength,
       minLength,
-      pattern: type === "email" ? emailRegExp : undefined,
+      pattern: type === "email" ? emailRegExp : pattern,
     },
   });
 
