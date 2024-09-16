@@ -188,7 +188,6 @@ const ChoiceFormControl = (props: Props) => {
       </InputLabel>
 
       <Select
-        sx={sx.input}
         error={Boolean(errorMessage)}
         {...field}
         multiple={multiSelect}

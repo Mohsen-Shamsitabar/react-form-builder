@@ -280,7 +280,7 @@ const EditModal = (props: Props) => {
               {renderChip(item)}
             </DialogTitle>
 
-            <DialogContent sx={{ paddingTop: 0 }} dividers>
+            <DialogContent sx={{ paddingTop: 0, overflowX: "hidden" }} dividers>
               {renderDialogContent()}
             </DialogContent>
 

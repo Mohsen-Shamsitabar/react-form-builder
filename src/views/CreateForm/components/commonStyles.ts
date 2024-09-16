@@ -7,6 +7,8 @@ export const fieldset: SystemSX = theme => ({
   borderRadius: theme.shape.borderRadius * 0.25,
   margin: theme.spacing(2, 0, 0),
   width: "100%",
+  minWidth: "unset",
+  boxSizing: "border-box",
 });
 
 export const fieldsetLegend: SystemSX = theme => ({
