@@ -123,7 +123,7 @@ const ChoiceFormControl = (props: Props) => {
   };
 
   const renderEmptyOption = () => {
-    if (required) return null;
+    if (required || multiSelect) return null;
 
     return (
       <MenuItem value="">
@@ -188,6 +188,7 @@ const ChoiceFormControl = (props: Props) => {
       </InputLabel>
 
       <Select
+        sx={sx.input}
         error={Boolean(errorMessage)}
         {...field}
         multiple={multiSelect}
