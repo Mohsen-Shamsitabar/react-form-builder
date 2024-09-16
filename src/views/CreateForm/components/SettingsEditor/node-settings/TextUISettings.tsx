@@ -1,6 +1,6 @@
-import { Box, Stack, Typography } from "@mui/material";
+import { Stack } from "@mui/material";
+import { Fieldset } from "views/CreateForm/utils";
 import * as names from "../../../names";
-import * as sx from "../../commonStyles";
 import { ChoiceFormControl, StringFormControl } from "../../form-controls";
 import { type WidgetSettingsProps } from "./types";
 
@@ -9,15 +9,7 @@ const TextUiSettings = (props: WidgetSettingsProps) => {
 
   return (
     <Stack direction="column" alignItems="center">
-      <Box sx={sx.fieldset} component="fieldset">
-        <Typography
-          sx={sx.fieldsetLegend}
-          component="legend"
-          variant="subtitle2"
-        >
-          Base Information
-        </Typography>
-
+      <Fieldset title="Base Information">
         {/* ===== TEXT ===== */}
         <StringFormControl
           name={names.TEXT}
@@ -40,7 +32,7 @@ const TextUiSettings = (props: WidgetSettingsProps) => {
           shouldUnregister={shouldUnregister}
           required
         />
-      </Box>
+      </Fieldset>
     </Stack>
   );
 };

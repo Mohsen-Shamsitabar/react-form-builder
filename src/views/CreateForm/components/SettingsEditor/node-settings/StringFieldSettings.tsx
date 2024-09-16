@@ -1,8 +1,8 @@
-import { Box, Stack, Typography } from "@mui/material";
+import { Stack } from "@mui/material";
 import { useFormContext } from "react-hook-form";
 import { type StringFieldWidgetProps } from "services/schema/types";
+import { Fieldset } from "views/CreateForm/utils";
 import * as names from "../../../names";
-import * as sx from "../../commonStyles";
 import {
   BooleanFormControl,
   ChoiceFormControl,
@@ -31,15 +31,7 @@ const StringFieldSettings = (props: WidgetSettingsProps) => {
 
   return (
     <Stack direction="column">
-      <Box sx={sx.fieldset} component="fieldset">
-        <Typography
-          sx={sx.fieldsetLegend}
-          component="legend"
-          variant="subtitle2"
-        >
-          Base Information
-        </Typography>
-
+      <Fieldset title="Base Information">
         {/* ===== LABEL ===== */}
         <StringFormControl
           name={names.LABEL}
@@ -88,17 +80,9 @@ const StringFieldSettings = (props: WidgetSettingsProps) => {
           label="Is this field required"
           shouldUnregister={shouldUnregister}
         />
-      </Box>
+      </Fieldset>
 
-      <Box sx={sx.fieldset} component="fieldset">
-        <Typography
-          sx={sx.fieldsetLegend}
-          component="legend"
-          variant="subtitle2"
-        >
-          Value Information
-        </Typography>
-
+      <Fieldset title="Value Information">
         {/* ===== MULTILINE ===== */}
         <BooleanFormControl
           name={names.MULTILINE}
@@ -118,17 +102,9 @@ const StringFieldSettings = (props: WidgetSettingsProps) => {
           multiline={multiline}
           shouldUnregister={shouldUnregister}
         />
-      </Box>
+      </Fieldset>
 
-      <Box sx={sx.fieldset} component="fieldset">
-        <Typography
-          sx={sx.fieldsetLegend}
-          component="legend"
-          variant="subtitle2"
-        >
-          Advanced Information
-        </Typography>
-
+      <Fieldset title="Advanced Information">
         {/* ===== MAX-LENGTH ===== */}
         <NumberFormControl
           name={names.MAX_LENGTH}
@@ -146,7 +122,7 @@ const StringFieldSettings = (props: WidgetSettingsProps) => {
           placeholder="Enter a number for minimum character count"
           shouldUnregister={shouldUnregister}
         />
-      </Box>
+      </Fieldset>
     </Stack>
   );
 };

@@ -1,23 +1,19 @@
-import { Box, Stack, Typography } from "@mui/material";
+import { Stack } from "@mui/material";
+import { Fieldset } from "views/CreateForm/utils";
 import * as names from "../../../names";
-import * as sx from "../../commonStyles";
 import { StringFormControl } from "../../form-controls";
 import { type WidgetSettingsProps } from "./types";
 
 const LinkUISettings = (props: WidgetSettingsProps) => {
   const { shouldUnregister = false } = props;
 
+  const linkPattern =
+    // eslint-disable-next-line no-useless-escape
+    /(([a-z]+:\/\/)?(([a-z0-9\-]+\.)+([a-z]{2}|aero|arpa|biz|com|coop|edu|gov|info|int|jobs|mil|museum|name|nato|net|org|pro|travel|local|internal))(:[0-9]{1,5})?(\/[a-z0-9_\-\.~]+)*(\/([a-z0-9_\-\.]*)(\?[a-z0-9+_\-\.%=&amp;]*)?)?(#[a-zA-Z0-9!$&'()*+.=-_~:@/?]*)?)(\s+|$)/gi;
+
   return (
     <Stack direction="column" alignItems="center">
-      <Box sx={sx.fieldset} component="fieldset">
-        <Typography
-          sx={sx.fieldsetLegend}
-          component="legend"
-          variant="subtitle2"
-        >
-          Base Information
-        </Typography>
-
+      <Fieldset title="Base Information">
         {/* ===== LINK_TEXT ===== */}
         <StringFormControl
           name={names.TEXT}
@@ -36,8 +32,9 @@ const LinkUISettings = (props: WidgetSettingsProps) => {
           description="The destination of the link."
           required
           shouldUnregister={shouldUnregister}
+          pattern={linkPattern}
         />
-      </Box>
+      </Fieldset>
     </Stack>
   );
 };

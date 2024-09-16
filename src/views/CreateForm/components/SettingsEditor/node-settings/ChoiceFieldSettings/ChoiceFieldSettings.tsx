@@ -1,4 +1,4 @@
-import { Box, Divider, FormControl, Stack, Typography } from "@mui/material";
+import { Divider, FormControl, Stack } from "@mui/material";
 import { useFormContext } from "react-hook-form";
 import { type ChoiceFieldWidgetProps } from "services/schema/types";
 import { Fieldset } from "views/CreateForm/utils";
@@ -44,16 +44,8 @@ const ChoiceFieldSettings = (props: WidgetSettingsProps) => {
   };
 
   return (
-    <Stack direction="column" alignItems="center">
-      <Box sx={sx.fieldset} component="fieldset">
-        <Typography
-          sx={sx.fieldsetLegend}
-          component="legend"
-          variant="subtitle2"
-        >
-          Base Information
-        </Typography>
-
+    <Stack direction="column" alignItems="center" overflow={"hidden"}>
+      <Fieldset title="Base Information">
         {/* ===== LABEL ===== */}
         <StringFormControl
           name={names.LABEL}
@@ -78,17 +70,9 @@ const ChoiceFieldSettings = (props: WidgetSettingsProps) => {
           label="Is this field required"
           shouldUnregister={shouldUnregister}
         />
-      </Box>
+      </Fieldset>
 
-      <Box sx={sx.fieldset} component="fieldset">
-        <Typography
-          sx={sx.fieldsetLegend}
-          component="legend"
-          variant="subtitle2"
-        >
-          Value Information
-        </Typography>
-
+      <Fieldset title="Value Information">
         {/* ===== MULTISELECT ===== */}
         <BooleanFormControl
           name={names.MULTISELECT}
@@ -118,17 +102,9 @@ const ChoiceFieldSettings = (props: WidgetSettingsProps) => {
           minRequired={minRequired}
           shouldUnregister={shouldUnregister}
         />
-      </Box>
+      </Fieldset>
 
-      <Box sx={sx.fieldset} component="fieldset">
-        <Typography
-          sx={sx.fieldsetLegend}
-          component="legend"
-          variant="subtitle2"
-        >
-          Advanced Information
-        </Typography>
-
+      <Fieldset title="Advanced Information">
         {/* ===== MAX-LENGTH ===== */}
         <NumberFormControl
           name={names.MAX_REQUIRED}
@@ -153,7 +129,7 @@ const ChoiceFieldSettings = (props: WidgetSettingsProps) => {
           label="Should this field shuffle its options"
           shouldUnregister={shouldUnregister}
         />
-      </Box>
+      </Fieldset>
     </Stack>
   );
 };
