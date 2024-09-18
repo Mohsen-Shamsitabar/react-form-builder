@@ -1,12 +1,15 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import {
   Button,
   FormControl,
+  FormControlLabel,
   FormGroup,
   FormHelperText,
   InputLabel,
   MenuItem,
   Select,
   Stack,
+  Switch,
   TextField,
   type SelectChangeEvent,
 } from "@mui/material";
@@ -17,14 +20,20 @@ import {
   type EffectTypes,
   type FieldEffect,
   type PageEffect,
+  type ValueType,
 } from "services/schema/types";
-import { comparisonOperators, fxTypes } from "views/CreateForm/constants";
+import { fxTypes } from "views/CreateForm/constants";
+import { useFormStateManager } from "views/CreateForm/form-state-manager";
 import { EFFECT_IDENTIFIER } from "views/CreateForm/names";
-import { Fieldset, isPageNode } from "views/CreateForm/utils";
+import {
+  Fieldset,
+  isFieldWidgetNode,
+  isPageNode,
+} from "views/CreateForm/utils";
 import { useEditModalItem } from "../../../itemProvider";
 import { generateEffectFieldValues, generateId } from "../../../utils";
 import { useEffectEditorData } from "../effectEditorDataContext";
-import { useEffectActionOptions } from "../hooks";
+import { useEffectActionOptions, useFieldComparisonOptions } from "../hooks";
 
 const CreateEffectSection = () => {
   const [effectType, setEffectType] = React.useState<string>("");
@@ -32,17 +41,22 @@ const CreateEffectSection = () => {
   const [actionPayload, setActionPayload] = React.useState<string | string[]>(
     "",
   );
-  const [fnWidget, setFnWidget] = React.useState<string>("");
-  const [fnOperator, setFnOperator] = React.useState<string>("");
-  const [fnValue, setFnValue] = React.useState<string>("");
+  const [fieldId, setFieldId] = React.useState<string>("");
+  const [operator, setOperator] = React.useState<string>("");
+  const [expectedValue, setExpectedValue] = React.useState<ValueType>("");
+  const [expectedValueErrorMessage, setExpectedValueErrorMessage] =
+    React.useState<string>("");
+
+  const fieldComparisonOptions = useFieldComparisonOptions(fieldId);
 
   const resetStates = React.useCallback(() => {
     setEffectType("");
     setActionType("");
     setActionPayload("");
-    setFnWidget("");
-    setFnOperator("");
-    setFnValue("");
+    setFieldId("");
+    setOperator("");
+    setExpectedValue("");
+    setExpectedValueErrorMessage("");
   }, []);
 
   const hasError = React.useMemo(() => {
@@ -50,22 +64,35 @@ const CreateEffectSection = () => {
       !effectType ||
       !actionType ||
       !actionPayload ||
-      !fnWidget ||
-      !fnOperator ||
-      !fnValue
+      !fieldId ||
+      !operator ||
+      (expectedValue as string | string[]).length === 0 ||
+      Boolean(expectedValueErrorMessage)
     );
-  }, [actionPayload, actionType, effectType, fnOperator, fnValue, fnWidget]);
+  }, [
+    effectType,
+    actionType,
+    actionPayload,
+    fieldId,
+    operator,
+    expectedValue,
+    expectedValueErrorMessage,
+  ]);
 
   const form = useFormContext();
+  const formStateManager = useFormStateManager();
   const effectEditorData = useEffectEditorData();
   const effectActionOptions = useEffectActionOptions(effectType as EffectTypes);
   const currentPage = useEditModalItem();
+
   if (!effectEditorData || !effectActionOptions) return null;
   if (!currentPage || !isPageNode(currentPage)) return null;
+  if (!formStateManager) return null;
 
   const { payloadOptions, typeOptions } = effectActionOptions;
-  const { allEffects, setAllEffects, allFieldWidgets } = effectEditorData;
+  const { allEffects, setAllEffects, allFieldWidgetOptions } = effectEditorData;
   const { setValue } = form;
+  const { state } = formStateManager;
 
   const handleEffectTypeChange = (event: SelectChangeEvent<string>) => {
     const newEffectType = event.target.value;
@@ -73,6 +100,38 @@ const CreateEffectSection = () => {
     setEffectType(newEffectType);
     setActionType("");
     setActionPayload(newEffectType === "field" ? [] : "");
+  };
+
+  const handleFieldWidgetChange = (event: SelectChangeEvent<string>) => {
+    const newFieldId = event.target.value;
+
+    const widget = state.widgets.byId[newFieldId]!;
+    if (!isFieldWidgetNode(widget)) return;
+
+    setFieldId(newFieldId);
+    setOperator("");
+    setExpectedValueErrorMessage("");
+
+    switch (widget.properties.type) {
+      case "string": {
+        setExpectedValue("");
+        return;
+      }
+      case "number": {
+        setExpectedValue("");
+        return;
+      }
+      case "boolean": {
+        setExpectedValue(false);
+        return;
+      }
+      case "choice": {
+        setExpectedValue([]);
+        return;
+      }
+      default:
+        return;
+    }
   };
 
   const handleAddClick = () => {
@@ -86,7 +145,7 @@ const CreateEffectSection = () => {
               type: actionType,
               payload: { widgetIds: actionPayload },
             },
-            fn: [fnOperator, [fnWidget, fnValue]],
+            fn: [operator, [fieldId, expectedValue]],
           } as FieldEffect)
         : ({
             id: `${EFFECT_IDENTIFIER}${generateId()}`,
@@ -96,7 +155,7 @@ const CreateEffectSection = () => {
               type: actionType,
               payload: { pageId: actionPayload },
             },
-            fn: [fnOperator, [fnWidget, fnValue]],
+            fn: [operator, [fieldId, expectedValue]],
           } as PageEffect);
 
     const newEffectFieldValues = generateEffectFieldValues(newEffect);
@@ -107,6 +166,143 @@ const CreateEffectSection = () => {
 
     setAllEffects(allEffects.concat(newEffect));
     resetStates();
+  };
+
+  const renderExpectedValueInput = () => {
+    const handleDefaultInputChange = (
+      event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    ) => {
+      if (!fieldId) return;
+
+      const widget = state.widgets.byId[fieldId]!;
+      if (!isFieldWidgetNode(widget)) return;
+
+      switch (widget.properties.type) {
+        case "string": {
+          const newValue = event.target.value.trimStart();
+
+          setExpectedValue(newValue);
+          return;
+        }
+        case "number": {
+          const numberRegExp = /^-?[0-9]\d*(\.\d+)?$/;
+          const newValue = event.target.value;
+
+          if (!numberRegExp.test(newValue) && newValue !== "") {
+            setExpectedValueErrorMessage(
+              "ExpectedValue only takes numbers based on the widget you selected!",
+            );
+          } else {
+            setExpectedValueErrorMessage("");
+          }
+
+          setExpectedValue(newValue);
+          return;
+        }
+        default:
+          return;
+      }
+    };
+
+    const defaultInput = (
+      <FormControl fullWidth required size="small">
+        <TextField
+          margin="dense"
+          error={Boolean(expectedValueErrorMessage) || !expectedValue}
+          size="small"
+          value={expectedValue}
+          label="Expected Value"
+          onChange={handleDefaultInputChange}
+          fullWidth
+          required
+        />
+      </FormControl>
+    );
+
+    if (!fieldId) {
+      return defaultInput;
+    }
+
+    const widget = state.widgets.byId[fieldId]!;
+
+    if (!isFieldWidgetNode(widget)) return null;
+
+    switch (widget.properties.type) {
+      case "boolean": {
+        const handleValueChange = (
+          _event: React.ChangeEvent<HTMLInputElement>,
+          checked: boolean,
+        ) => {
+          setExpectedValue(checked);
+
+          return;
+        };
+
+        return (
+          <FormControl margin="dense" fullWidth size="small">
+            <FormControlLabel
+              sx={{ justifyContent: "space-between", margin: 0 }}
+              id={`expected-value-field-label`}
+              label="Expected Value"
+              labelPlacement="start"
+              control={
+                <Switch
+                  onChange={handleValueChange}
+                  checked={expectedValue as boolean}
+                  inputProps={{
+                    role: "switch",
+                    "aria-labelledby": `expected-value-field-label`,
+                  }}
+                />
+              }
+            />
+          </FormControl>
+        );
+      }
+      case "choice": {
+        const options = [...widget.properties.properties.options];
+
+        const handleValueChange = (event: SelectChangeEvent<unknown>) => {
+          const newValue = event.target.value;
+
+          setExpectedValue(newValue);
+        };
+
+        return (
+          <FormControl
+            error={(expectedValue as string[]).length === 0}
+            margin="dense"
+            required
+            fullWidth
+            size={"small"}
+          >
+            <InputLabel
+              htmlFor={"expected-value-field"}
+              id={"expected-value-field-label"}
+            >
+              Expected Value
+            </InputLabel>
+
+            <Select
+              id={"expected-value-field"}
+              labelId={"expected-value-field-label"}
+              label={"Expected Value"}
+              onChange={handleValueChange}
+              value={expectedValue as string[]}
+              multiple
+            >
+              {options.map(option => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        );
+      }
+      default:
+        return defaultInput;
+    }
   };
 
   const renderEffectFields = () => {
@@ -170,22 +366,24 @@ const CreateEffectSection = () => {
         >
           <FormControl
             margin="dense"
-            error={!fnWidget}
+            error={!fieldId}
             size="small"
             fullWidth
             required
           >
-            <InputLabel id="condition-widget-select-label">Widget</InputLabel>
+            <InputLabel id="condition-widget-select-label">
+              Field Widget
+            </InputLabel>
 
             <Select
               labelId="condition-widget-select-label"
-              label="Widget"
-              value={fnWidget}
-              onChange={event => setFnWidget(event.target.value)}
+              label="Field Widget"
+              value={fieldId}
+              onChange={handleFieldWidgetChange}
             >
-              {allFieldWidgets.map(widgetId => (
-                <MenuItem key={widgetId} value={widgetId}>
-                  {widgetId}
+              {allFieldWidgetOptions.map(option => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
                 </MenuItem>
               ))}
             </Select>
@@ -193,7 +391,7 @@ const CreateEffectSection = () => {
 
           <FormControl
             margin="dense"
-            error={!fnOperator}
+            error={!operator}
             size="small"
             fullWidth
             required
@@ -205,10 +403,10 @@ const CreateEffectSection = () => {
             <Select
               labelId="condition-operator-select-label"
               label="Operator"
-              value={fnOperator}
-              onChange={event => setFnOperator(event.target.value)}
+              value={operator}
+              onChange={event => setOperator(event.target.value)}
             >
-              {comparisonOperators.map(option => (
+              {fieldComparisonOptions.map(option => (
                 <MenuItem key={option.value} value={option.value}>
                   {option.label}
                 </MenuItem>
@@ -216,16 +414,7 @@ const CreateEffectSection = () => {
             </Select>
           </FormControl>
 
-          <TextField
-            margin="dense"
-            error={!fnValue}
-            size="small"
-            value={fnValue}
-            label="Expected Value"
-            onChange={event => setFnValue(event.target.value)}
-            fullWidth
-            required
-          />
+          {renderExpectedValueInput()}
         </Stack>
 
         <Stack
@@ -257,6 +446,10 @@ const CreateEffectSection = () => {
 
         {hasError && (
           <FormHelperText error>All fields need to be filled!</FormHelperText>
+        )}
+
+        {expectedValueErrorMessage && (
+          <FormHelperText error>{expectedValueErrorMessage}</FormHelperText>
         )}
       </>
     );

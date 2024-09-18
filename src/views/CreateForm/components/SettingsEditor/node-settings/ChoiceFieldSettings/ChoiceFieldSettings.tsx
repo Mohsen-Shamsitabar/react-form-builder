@@ -1,16 +1,7 @@
-import { Delete as DeleteIcon } from "@mui/icons-material";
-import {
-  Box,
-  Divider,
-  FormControl,
-  FormGroup,
-  IconButton,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Divider, FormControl, Stack } from "@mui/material";
 import { useFormContext } from "react-hook-form";
 import { type ChoiceFieldWidgetProps } from "services/schema/types";
+import { Fieldset } from "views/CreateForm/utils";
 import * as names from "../../../../names";
 import * as sx from "../../../commonStyles";
 import {
@@ -20,13 +11,12 @@ import {
   StringFormControl,
 } from "../../../form-controls";
 import { type WidgetSettingsProps } from "../types";
-import CreateOptionSection from "./CreateOptionSection";
-import * as choiceSx from "./styles";
+import { NewOptionSection, OptionsContainer } from "./components";
 
 const ChoiceFieldSettings = (props: WidgetSettingsProps) => {
   const { shouldUnregister = false } = props;
 
-  const { watch, setValue, getValues } = useFormContext();
+  const { watch, setValue } = useFormContext();
 
   const multiSelect = watch(
     names.MULTISELECT,
@@ -34,8 +24,6 @@ const ChoiceFieldSettings = (props: WidgetSettingsProps) => {
 
   const options =
     (watch(names.OPTIONS) as ChoiceFieldWidgetProps["options"]) ?? [];
-
-  // const required = watch("required") as ChoiceFieldWidgetProps["required"];
 
   const maxRequired = watch(
     names.MAX_REQUIRED,
@@ -55,70 +43,9 @@ const ChoiceFieldSettings = (props: WidgetSettingsProps) => {
     }
   };
 
-  const makeHandleOptionDelete = (value: string) => () => {
-    const newOptions = options.filter(option => option.value !== value);
-    setValue(names.OPTIONS, newOptions);
-
-    const defaultValue = getValues(
-      names.DEFAULT_VALUE,
-    ) as ChoiceFieldWidgetProps["defaultValue"];
-
-    if (typeof defaultValue === "string" && defaultValue === value) {
-      setValue(names.DEFAULT_VALUE, "");
-    }
-
-    if (typeof defaultValue !== "string" && defaultValue.includes(value)) {
-      setValue(names.DEFAULT_VALUE, []);
-    }
-  };
-
-  const renderOptions = () => {
-    return options.map(option => (
-      <Stack
-        key={option.value}
-        sx={choiceSx.choiceOption}
-        direction="row"
-        alignItems="center"
-        justifyContent="space-between"
-      >
-        <TextField
-          value={option.label}
-          size="small"
-          label="Label"
-          type="text"
-          placeholder="Option label"
-          aria-readonly
-          inputProps={{ readOnly: true }}
-        />
-
-        <TextField
-          value={option.value}
-          size="small"
-          label="Value"
-          type="text"
-          placeholder="Option Value"
-          aria-readonly
-          inputProps={{ readOnly: true }}
-        />
-
-        <IconButton onClick={makeHandleOptionDelete(option.value)}>
-          <DeleteIcon fontSize="small" />
-        </IconButton>
-      </Stack>
-    ));
-  };
-
   return (
-    <Stack direction="column" alignItems="center">
-      <Box sx={sx.fieldset} component="fieldset">
-        <Typography
-          sx={sx.fieldsetLegend}
-          component="legend"
-          variant="subtitle2"
-        >
-          Base Information
-        </Typography>
-
+    <Stack direction="column" alignItems="center" overflow={"hidden"}>
+      <Fieldset title="Base Information">
         {/* ===== LABEL ===== */}
         <StringFormControl
           name={names.LABEL}
@@ -143,17 +70,9 @@ const ChoiceFieldSettings = (props: WidgetSettingsProps) => {
           label="Is this field required"
           shouldUnregister={shouldUnregister}
         />
-      </Box>
+      </Fieldset>
 
-      <Box sx={sx.fieldset} component="fieldset">
-        <Typography
-          sx={sx.fieldsetLegend}
-          component="legend"
-          variant="subtitle2"
-        >
-          Value Information
-        </Typography>
-
+      <Fieldset title="Value Information">
         {/* ===== MULTISELECT ===== */}
         <BooleanFormControl
           name={names.MULTISELECT}
@@ -164,27 +83,13 @@ const ChoiceFieldSettings = (props: WidgetSettingsProps) => {
 
         {/* ===== OPTIONS ===== */}
         <FormControl sx={sx.formControl} fullWidth>
-          <Box sx={sx.fieldset} component="fieldset">
-            <Typography
-              sx={sx.fieldsetLegend}
-              component="legend"
-              variant="subtitle2"
-            >
-              Options
-            </Typography>
-
-            <FormGroup>
-              <CreateOptionSection options={options} />
-            </FormGroup>
+          <Fieldset title={"Options"}>
+            <NewOptionSection key={options.length} options={options} />
 
             <Divider sx={sx.divider} />
 
-            <FormGroup>
-              <Stack direction="column" justifyContent="center">
-                {renderOptions()}
-              </Stack>
-            </FormGroup>
-          </Box>
+            <OptionsContainer options={options} />
+          </Fieldset>
         </FormControl>
 
         {/* ===== DEFAULT-VALUE ===== */}
@@ -193,23 +98,13 @@ const ChoiceFieldSettings = (props: WidgetSettingsProps) => {
           label="Initial field value"
           options={options}
           multiSelect={multiSelect}
-          // required={required}
-          required
           maxRequired={maxRequired}
           minRequired={minRequired}
           shouldUnregister={shouldUnregister}
         />
-      </Box>
+      </Fieldset>
 
-      <Box sx={sx.fieldset} component="fieldset">
-        <Typography
-          sx={sx.fieldsetLegend}
-          component="legend"
-          variant="subtitle2"
-        >
-          Advanced Information
-        </Typography>
-
+      <Fieldset title="Advanced Information">
         {/* ===== MAX-LENGTH ===== */}
         <NumberFormControl
           name={names.MAX_REQUIRED}
@@ -234,7 +129,7 @@ const ChoiceFieldSettings = (props: WidgetSettingsProps) => {
           label="Should this field shuffle its options"
           shouldUnregister={shouldUnregister}
         />
-      </Box>
+      </Fieldset>
     </Stack>
   );
 };

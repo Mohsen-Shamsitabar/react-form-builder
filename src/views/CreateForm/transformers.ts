@@ -41,6 +41,28 @@ const stringToNumber = (string: string) => {
   return Number(string);
 };
 
+const formatString = (string: string) => string.trim();
+
+const formatOptionalString = (string: string) => {
+  const newString = formatString(string);
+
+  if (newString === "") return undefined;
+
+  return newString;
+};
+
+const formatChoice = (choice: string | string[]) => {
+  if (typeof choice === "string") {
+    if (choice === "") return undefined;
+
+    return choice;
+  }
+
+  if (choice.length === 0) return undefined;
+
+  return choice;
+};
+
 const getFnKeyNames = (dataKeyNames: string[], effectId: SchemaID) => {
   const logicalFnOperatorName = dataKeyNames.find(
     keyName =>
@@ -71,19 +93,19 @@ const getFnKeyNames = (dataKeyNames: string[], effectId: SchemaID) => {
     const comparisonFnFieldIdName2 = dataKeyNames.find(
       keyName =>
         keyName.includes(effectId) &&
-        keyName.includes(names.FIRST_COMPARISON_FN_IDENTIFIER) &&
+        keyName.includes(names.SECOND_COMPARISON_FN_IDENTIFIER) &&
         keyName.includes(names.FIELD_ID),
     )!;
     const comparisonFnOperatorName2 = dataKeyNames.find(
       keyName =>
         keyName.includes(effectId) &&
-        keyName.includes(names.FIRST_COMPARISON_FN_IDENTIFIER) &&
+        keyName.includes(names.SECOND_COMPARISON_FN_IDENTIFIER) &&
         keyName.includes(names.OPERATOR),
     )!;
     const comparisonFnValueName2 = dataKeyNames.find(
       keyName =>
         keyName.includes(effectId) &&
-        keyName.includes(names.FIRST_COMPARISON_FN_IDENTIFIER) &&
+        keyName.includes(names.SECOND_COMPARISON_FN_IDENTIFIER) &&
         keyName.includes(names.VALUE),
     )!;
 
@@ -127,11 +149,11 @@ export const createWidgetProps = (
   switch (propType) {
     case "string": {
       const stringProps: StringFieldWidgetProps = {
-        label: data[names.LABEL] as string,
+        label: formatString(data[names.LABEL] as string),
         type: data[names.INPUT_TYPE] as StringFieldWidgetProps["type"],
-        defaultValue: data[names.DEFAULT_VALUE] as string,
-        description: data[names.DESCRIPTION] as string,
-        placeholder: data[names.PLACEHOLDER] as string,
+        defaultValue: formatOptionalString(data[names.DEFAULT_VALUE] as string),
+        description: formatOptionalString(data[names.DESCRIPTION] as string),
+        placeholder: formatOptionalString(data[names.PLACEHOLDER] as string),
         multiline: data[names.MULTILINE] as boolean,
         required: data[names.REQUIRED] as boolean,
         maxLength: stringToNumber(data[names.MAX_LENGTH] as string),
@@ -142,10 +164,10 @@ export const createWidgetProps = (
     }
     case "number": {
       const numberProps: NumberFieldWidgetProps = {
-        label: data[names.LABEL] as string,
-        defaultValue: Number(data[names.DEFAULT_VALUE]),
-        description: data[names.DESCRIPTION] as string,
-        placeholder: data[names.PLACEHOLDER] as string,
+        label: formatString(data[names.LABEL] as string),
+        defaultValue: stringToNumber(data[names.DEFAULT_VALUE] as string),
+        description: formatOptionalString(data[names.DESCRIPTION] as string),
+        placeholder: formatOptionalString(data[names.PLACEHOLDER] as string),
         required: data[names.REQUIRED] as boolean,
         max: stringToNumber(data[names.MAX] as string),
         min: stringToNumber(data[names.MIN] as string),
@@ -155,9 +177,9 @@ export const createWidgetProps = (
     }
     case "boolean": {
       const booleanProps: BooleanFieldWidgetProps = {
-        label: data[names.LABEL] as string,
+        label: formatString(data[names.LABEL] as string),
+        description: formatOptionalString(data[names.DESCRIPTION] as string),
         defaultChecked: data[names.DEFAULT_CHECKED] as boolean,
-        description: data[names.DESCRIPTION] as string,
         required: data[names.REQUIRED] as boolean,
       };
 
@@ -165,9 +187,11 @@ export const createWidgetProps = (
     }
     case "choice": {
       const choiceProps: ChoiceFieldWidgetProps = {
-        label: data[names.LABEL] as string,
-        defaultValue: data[names.DEFAULT_CHECKED] as string | string[],
-        description: data[names.DESCRIPTION] as string,
+        label: formatString(data[names.LABEL] as string),
+        defaultValue: formatChoice(
+          data[names.DEFAULT_VALUE] as string | string[],
+        ),
+        description: formatOptionalString(data[names.DESCRIPTION] as string),
         required: data[names.REQUIRED] as boolean,
         multiSelect: data[names.MULTISELECT] as boolean,
         shuffleOptions: data[names.SHUFFLE_OPTIONS] as boolean,
@@ -247,7 +271,13 @@ export const createNewWidget = (
   }
 };
 
-export const createEditPageProps = (data: FieldValues, page: PageNode) => {
+export const createEditPageProps = (
+  data: FieldValues,
+  page: PageNode,
+): {
+  pageTitle: PageNode["title"];
+  effects?: Effect[];
+} => {
   const pageTitle = data[names.TITLE] as string;
 
   const dataKeys = Object.keys(data);
@@ -256,7 +286,11 @@ export const createEditPageProps = (data: FieldValues, page: PageNode) => {
     .filter(keyName => keyName.includes(names.EFFECT_TYPE))
     .map(keyName => keyName.split(names.EFFECT_NAME_SEPERATOR)[0]!);
 
-  const effects: Effect[] = effectIds.map(effectId => {
+  if (!effectIds.length) {
+    return { pageTitle, effects: undefined };
+  }
+
+  const effects = effectIds.map(effectId => {
     const effectTypeName = dataKeys.find(
       keyName =>
         keyName.includes(effectId) && keyName.includes(names.EFFECT_TYPE),

@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { FormGroup } from "@mui/material";
-import * as React from "react";
 import { useFormContext } from "react-hook-form";
-import { FieldAction } from "services/schema/constants";
 import { type Effect, type EffectTypes } from "services/schema/types";
 import { ChoiceFormControl } from "views/CreateForm/components/form-controls";
 import { fxTypes } from "views/CreateForm/constants";
@@ -24,25 +22,14 @@ type Props = {
 const ActionSection = (props: Props) => {
   const { effect } = props;
 
-  const [effectType, setEffectType] = React.useState<EffectTypes>(effect.type);
-
-  const [actionPayload, setActionPayload] = React.useState<string | string[]>(
-    effect.action.type === FieldAction.HIDE_WIDGETS
-      ? effect.action.payload.widgetIds
-      : effect.action.payload.pageId,
-  );
-
-  const { setValue } = useFormContext();
+  const { setValue, watch, trigger } = useFormContext();
   const { effectFieldNames } = useEffectFieldNames(effect.id);
-
-  const actionOptions = useEffectActionOptions(effectType);
-  if (!actionOptions) return null;
-
-  const { payloadOptions, typeOptions } = actionOptions;
 
   const effectTypeFieldName = effectFieldNames.find(key =>
     key.includes(EFFECT_TYPE),
   )!;
+
+  const effectType = (watch(effectTypeFieldName) as EffectTypes) ?? effect.type;
 
   const actionTypeFieldName = effectFieldNames.find(key =>
     key.includes(ACTION_TYPE),
@@ -52,8 +39,9 @@ const ActionSection = (props: Props) => {
     key.includes(ACTION_PAYLOAD),
   )!;
 
-  const handleEffectTypeChange = (newEffectType: string | string[]) => {
+  const handleEffectTypeChange = (newEffectType: string) => {
     setValue(actionTypeFieldName, "");
+    setValue(effectTypeFieldName, newEffectType);
 
     if ((newEffectType as EffectTypes) === "field") {
       setValue(actionPayloadFieldName, []);
@@ -61,9 +49,13 @@ const ActionSection = (props: Props) => {
       setValue(actionPayloadFieldName, "");
     }
 
-    setEffectType(newEffectType as EffectTypes);
-    setActionPayload(newEffectType === "field" ? [] : "");
+    void trigger([actionTypeFieldName, actionPayloadFieldName]);
   };
+
+  const actionOptions = useEffectActionOptions(effectType);
+  if (!actionOptions) return null;
+
+  const { payloadOptions, typeOptions } = actionOptions;
 
   return (
     <>
@@ -93,11 +85,8 @@ const ActionSection = (props: Props) => {
             name={actionPayloadFieldName}
             label={"Action Payload"}
             size="small"
-            multiSelect={(typeof actionPayload !== "string") as false}
+            multiSelect={effectType === "field"}
             options={payloadOptions}
-            onChange={(newActionPayload: string | string[]) =>
-              setActionPayload(newActionPayload)
-            }
             required
           />
         </FormGroup>

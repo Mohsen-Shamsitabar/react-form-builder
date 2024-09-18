@@ -1,6 +1,6 @@
-import { Box, Stack, Typography } from "@mui/material";
+import { Stack } from "@mui/material";
+import { Fieldset } from "views/CreateForm/utils";
 import * as names from "../../../names";
-import * as sx from "../../commonStyles";
 import { BooleanFormControl, StringFormControl } from "../../form-controls";
 import { type WidgetSettingsProps } from "./types";
 
@@ -9,15 +9,7 @@ const BooleanFieldSettings = (props: WidgetSettingsProps) => {
 
   return (
     <Stack direction="column" alignItems="center">
-      <Box sx={sx.fieldset} component="fieldset">
-        <Typography
-          sx={sx.fieldsetLegend}
-          component="legend"
-          variant="subtitle2"
-        >
-          Base Information
-        </Typography>
-
+      <Fieldset title="Base Information">
         {/* ===== LABEL ===== */}
         <StringFormControl
           name={names.LABEL}
@@ -42,24 +34,16 @@ const BooleanFieldSettings = (props: WidgetSettingsProps) => {
           label="Is this field required"
           shouldUnregister={shouldUnregister}
         />
-      </Box>
+      </Fieldset>
 
-      <Box sx={sx.fieldset} component="fieldset">
-        <Typography
-          sx={sx.fieldsetLegend}
-          component="legend"
-          variant="subtitle2"
-        >
-          Value Information
-        </Typography>
-
+      <Fieldset title="Value Information">
         {/* ===== DEFAULT-CHECKED ===== */}
         <BooleanFormControl
           name={names.DEFAULT_CHECKED}
           label="Is this field chekced"
           shouldUnregister={shouldUnregister}
         />
-      </Box>
+      </Fieldset>
     </Stack>
   );
 };

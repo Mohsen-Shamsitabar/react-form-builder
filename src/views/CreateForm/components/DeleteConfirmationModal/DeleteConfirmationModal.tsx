@@ -33,6 +33,9 @@ const DeleteConfirmationModal = (props: ModalProps) => {
     ? "Are you sure you want to delete this page with all its widgets?"
     : "Are you sure you want to delete this widget?";
 
+  const note =
+    "*All effects that are connected to this item, will get deleted!";
+
   const handleAcceptClick = () => {
     onClose();
 
@@ -57,6 +60,10 @@ const DeleteConfirmationModal = (props: ModalProps) => {
 
       <DialogContent>
         <DialogContentText>{description}</DialogContentText>
+
+        <DialogContentText variant="body2" color="error">
+          {note}
+        </DialogContentText>
       </DialogContent>
 
       <DialogActions sx={theme => ({ color: theme.palette.action.active })}>

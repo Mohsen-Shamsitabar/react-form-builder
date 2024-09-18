@@ -7,6 +7,7 @@ import {
   MenuItem,
   Select,
   Typography,
+  type FormControlProps,
   type SelectChangeEvent,
   type SelectProps,
 } from "@mui/material";
@@ -18,7 +19,7 @@ import { useErrorMessage } from "./hooks";
 type Props = Omit<ChoiceFieldWidgetProps, "shuffleOptions" | "defaultValue"> & {
   name: string;
   varinet?: SelectProps["variant"];
-  size?: SelectProps["size"];
+  size?: FormControlProps["size"];
   fullWidth?: boolean;
   shouldUnregister?: boolean;
 } & (
@@ -121,6 +122,23 @@ const ChoiceFormControl = (props: Props) => {
     return <FormHelperText>{errorMessage}</FormHelperText>;
   };
 
+  const renderEmptyOption = () => {
+    if (required || multiSelect) return null;
+
+    return (
+      <MenuItem value="">
+        <em>None</em>
+      </MenuItem>
+    );
+  };
+
+  const renderOptions = () =>
+    options.map(option => (
+      <MenuItem key={option.value} value={option.value}>
+        {option.label}
+      </MenuItem>
+    ));
+
   if (description) {
     return (
       <FormControl
@@ -147,11 +165,9 @@ const ChoiceFormControl = (props: Props) => {
           onChange={handleChange}
           variant={varinet}
         >
-          {options.map(option => (
-            <MenuItem key={option.value} value={option.value}>
-              {option.label}
-            </MenuItem>
-          ))}
+          {renderEmptyOption()}
+
+          {renderOptions()}
         </Select>
 
         {renderHelperText()}
@@ -181,11 +197,9 @@ const ChoiceFormControl = (props: Props) => {
         onChange={handleChange}
         variant={varinet}
       >
-        {options.map(option => (
-          <MenuItem key={option.value} value={option.value}>
-            {option.label}
-          </MenuItem>
-        ))}
+        {renderEmptyOption()}
+
+        {renderOptions()}
       </Select>
 
       {renderHelperText()}

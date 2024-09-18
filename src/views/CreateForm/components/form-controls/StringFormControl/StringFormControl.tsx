@@ -1,24 +1,26 @@
 import {
   FormControl,
+  type FormControlProps,
   FormHelperText,
   FormLabel,
   OutlinedInput,
   TextField,
-  type TextFieldProps,
   Typography,
 } from "@mui/material";
 import * as React from "react";
 import { useController, useFormContext } from "react-hook-form";
 import type { StringFieldWidgetProps } from "services/schema/types";
 import * as sx from "../../commonStyles";
+import { formatString } from "../../formatInput";
 import { useErrorMessage } from "./hooks";
 
 type Props = Omit<StringFieldWidgetProps, "type" | "defaultValue"> & {
-  onChange?: (newValue: string) => void;
   name: string;
+  pattern?: RegExp;
+  onChange?: (newValue: string) => void;
   type?: StringFieldWidgetProps["type"];
   defaultValue?: string;
-  size?: TextFieldProps["size"];
+  size?: FormControlProps["size"];
   shouldUnregister?: boolean;
 };
 
@@ -37,6 +39,7 @@ const StringFormControl = (props: Props) => {
     type = "text",
     size = "medium",
     shouldUnregister = false,
+    pattern,
   } = props;
 
   const emailRegExp = /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/;
@@ -54,7 +57,7 @@ const StringFormControl = (props: Props) => {
       required,
       maxLength,
       minLength,
-      pattern: type === "email" ? emailRegExp : undefined,
+      pattern: type === "email" ? emailRegExp : pattern,
     },
   });
 
@@ -86,7 +89,7 @@ const StringFormControl = (props: Props) => {
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
-    const newValue = event.target.value;
+    const newValue = formatString(event.target.value);
 
     field.onChange(newValue);
 

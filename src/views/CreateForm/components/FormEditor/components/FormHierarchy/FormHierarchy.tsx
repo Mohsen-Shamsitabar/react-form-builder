@@ -20,14 +20,31 @@ const FormHierarchy = () => {
     const renderWidgets = (page: PageNode) => {
       const { widgets: pageWidgets } = page;
 
+      const widgetCounter: Record<string, number> = {};
+
       return pageWidgets?.map(widgetId => {
         const widget = widgets.byId[widgetId]!;
+        const widgetType = widget.properties.type;
+
+        const counterKeys = Object.keys(widgetCounter);
+
+        if (counterKeys.includes(widgetType)) {
+          widgetCounter[widgetType] = widgetCounter[widgetType]! + 1;
+        } else {
+          widgetCounter[widgetType] = 1;
+        }
 
         return (
           <TreeItem
             nodeId={widget.id}
             key={widget.id}
-            label={<Trigger item={widget} />}
+            label={
+              <Trigger
+                key={widget.id}
+                item={widget}
+                widgetCount={widgetCounter[widgetType]}
+              />
+            }
           />
         );
       });

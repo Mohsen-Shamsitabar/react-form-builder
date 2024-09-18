@@ -1,8 +1,8 @@
-import { Box, Stack, Typography } from "@mui/material";
+import { Stack } from "@mui/material";
 import { useFormContext } from "react-hook-form";
 import { type NumberFieldWidgetProps } from "services/schema/types";
+import { Fieldset } from "views/CreateForm/utils";
 import * as names from "../../../names";
-import * as sx from "../../commonStyles";
 import {
   BooleanFormControl,
   NumberFormControl,
@@ -27,15 +27,7 @@ const NumberFieldSettings = (props: WidgetSettingsProps) => {
 
   return (
     <Stack direction="column" alignItems="center">
-      <Box sx={sx.fieldset} component="fieldset">
-        <Typography
-          sx={sx.fieldsetLegend}
-          component="legend"
-          variant="subtitle2"
-        >
-          Base Information
-        </Typography>
-
+      <Fieldset title="Base Information">
         {/* ===== LABEL ===== */}
         <StringFormControl
           name={names.LABEL}
@@ -71,17 +63,9 @@ const NumberFieldSettings = (props: WidgetSettingsProps) => {
           label="Is this field required"
           shouldUnregister={shouldUnregister}
         />
-      </Box>
+      </Fieldset>
 
-      <Box sx={sx.fieldset} component="fieldset">
-        <Typography
-          sx={sx.fieldsetLegend}
-          component="legend"
-          variant="subtitle2"
-        >
-          Value Information
-        </Typography>
-
+      <Fieldset title="Value Information">
         {/* ===== DEFAULT-VALUE ===== */}
         <NumberFormControl
           name={names.DEFAULT_VALUE}
@@ -91,19 +75,10 @@ const NumberFieldSettings = (props: WidgetSettingsProps) => {
           min={min}
           max={max}
           shouldUnregister={shouldUnregister}
-          required
         />
-      </Box>
+      </Fieldset>
 
-      <Box sx={sx.fieldset} component="fieldset">
-        <Typography
-          sx={sx.fieldsetLegend}
-          component="legend"
-          variant="subtitle2"
-        >
-          Advanced Information
-        </Typography>
-
+      <Fieldset title="Advanced Information">
         {/* ===== MAX ===== */}
         <NumberFormControl
           name={names.MAX}
@@ -121,7 +96,7 @@ const NumberFieldSettings = (props: WidgetSettingsProps) => {
           placeholder="Enter a number for minimum value"
           shouldUnregister={shouldUnregister}
         />
-      </Box>
+      </Fieldset>
     </Stack>
   );
 };

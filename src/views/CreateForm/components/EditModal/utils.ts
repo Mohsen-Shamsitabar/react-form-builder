@@ -40,8 +40,8 @@ export const createEffectNameGenerator =
 export const generateFnFieldValues = (
   fn: Fn,
   effectId: SchemaID,
-): Record<string, string> => {
-  const result: Record<string, string> = {};
+): Record<string, unknown> => {
+  const result: Record<string, unknown> = {};
 
   const mainOperator = fn[0];
 

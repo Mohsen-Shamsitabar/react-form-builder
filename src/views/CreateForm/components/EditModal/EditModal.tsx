@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 
 import {
@@ -21,7 +22,6 @@ import {
 import {
   type BooleanFieldWidgetProps,
   type ChoiceFieldWidgetProps,
-  type Effect,
   type LinkUIWidgetProps,
   type NumberFieldWidgetProps,
   type StringFieldWidgetProps,
@@ -67,12 +67,12 @@ const EditModal = (props: Props) => {
         };
       }
 
-      const { state: data } = formStateManager;
+      const { state } = formStateManager;
 
       let pageDefaultValues = { title: item.title };
 
       const effects = item.effects?.map(
-        effectId => data.effects.byId[effectId] as Effect,
+        effectId => state.effects.byId[effectId]!,
       );
 
       if (!effects) return pageDefaultValues;
@@ -182,7 +182,8 @@ const EditModal = (props: Props) => {
       default:
         return {};
     }
-  }, [item, formStateManager]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const form = useForm({
     mode: "all",
@@ -194,25 +195,32 @@ const EditModal = (props: Props) => {
     [item],
   );
 
+  const { formState } = form;
+  const errors = formState.errors;
+  const errorKeys = Object.keys(errors);
+
   if (!formStateManager) return null;
   const { editActions } = formStateManager;
   const { editWidget, editPage } = editActions;
 
-  const onSubmitClick = () => {
-    const errors = form.formState.errors;
-    const errorKeys = Object.keys(errors);
+  const onSubmitClick = async () => {
+    const isFormValid = await form.trigger();
 
-    if (!errorKeys.length) {
+    if (isFormValid && errorKeys.length === 0) {
       btnRef.current?.click();
       onClose();
     } else {
-      throw new Error("Your form has errors:\n" + `${errorKeys.join(", ")}`);
+      throw new Error("Your form has errors!");
     }
   };
 
   const submitForm: SubmitHandler<FieldValues> = (data, _e) => {
+    console.log(data);
+
     if (isPageNode(item)) {
       const { pageTitle, effects } = createEditPageProps(data, item);
+
+      console.log({ pageTitle, effects });
 
       editPage(item.id, pageTitle, effects);
 
@@ -220,6 +228,8 @@ const EditModal = (props: Props) => {
     }
 
     const newProps = createWidgetProps(data, item.properties.type);
+
+    console.log(newProps);
 
     editWidget(item.id, newProps);
   };
@@ -270,7 +280,7 @@ const EditModal = (props: Props) => {
               {renderChip(item)}
             </DialogTitle>
 
-            <DialogContent sx={{ paddingTop: 0 }} dividers>
+            <DialogContent sx={{ paddingTop: 0, overflowX: "hidden" }} dividers>
               {renderDialogContent()}
             </DialogContent>
 
@@ -281,7 +291,12 @@ const EditModal = (props: Props) => {
                 Decline
               </Button>
 
-              <Button type="submit" variant="contained" onClick={onSubmitClick}>
+              <Button
+                type="submit"
+                variant="contained"
+                disabled={errorKeys.length !== 0}
+                onClick={onSubmitClick}
+              >
                 Accept
               </Button>
             </DialogActions>

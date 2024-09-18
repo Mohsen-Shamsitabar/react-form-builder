@@ -26,7 +26,7 @@ export type StringFieldWidgetProps = CommonFieldWidgetsProperties & {
   multiline?: boolean;
   maxLength?: number;
   minLength?: number;
-  defaultValue: string;
+  defaultValue?: string;
 };
 
 export type StringFieldWidget = {
@@ -38,7 +38,7 @@ export type NumberFieldWidgetProps = CommonFieldWidgetsProperties & {
   placeholder?: string;
   max?: number;
   min?: number;
-  defaultValue: number;
+  defaultValue?: number;
 };
 
 export type NumberFieldWidget = {
@@ -65,7 +65,7 @@ export type ChoiceFieldWidgetProps = CommonFieldWidgetsProperties & {
   maxRequired?: number;
   shuffleOptions?: boolean;
   multiSelect: boolean;
-  defaultValue: string[] | string;
+  defaultValue?: string[] | string;
   options: ChoiceOption[];
 };
 
@@ -141,11 +141,22 @@ export type PropTypes = UiPropTypes | FieldPropTypes;
 
 // ======
 
-export type ComparisonFnParams = [SchemaID, string];
+/*
+  NOTE FOR VALUETYPE:
+  
+  string for stringFieldValue
+  number for numberFieldValue
+  boolean for booleanFieldValue
+  string[] for choiceFieldValue
+*/
+
+export type ValueType = unknown;
+
+export type ComparisonFnParams = [SchemaID, ValueType];
 
 export type ComparisonFn = [ComparisonTypes, ComparisonFnParams];
 
-export type LogicalFnParams = [Fn, Fn];
+export type LogicalFnParams = [ComparisonFn, ComparisonFn];
 
 export type LogicalFn = [LogicalTypes, LogicalFnParams];
 

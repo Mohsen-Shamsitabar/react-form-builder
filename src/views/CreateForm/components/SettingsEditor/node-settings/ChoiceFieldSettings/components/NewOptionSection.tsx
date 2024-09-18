@@ -3,13 +3,14 @@ import { FormHelperText, IconButton, Stack, TextField } from "@mui/material";
 import * as React from "react";
 import { useFormContext } from "react-hook-form";
 import type { ChoiceOption } from "services/schema/types";
-import * as names from "../../../../names";
+import { formatString } from "views/CreateForm/components/formatInput";
+import * as names from "views/CreateForm/names";
 
 type Props = {
   options: ChoiceOption[];
 };
 
-const CreateOptionSection = (props: Props) => {
+const NewOptionSection = (props: Props) => {
   const { options } = props;
 
   const { setValue } = useFormContext();
@@ -21,7 +22,7 @@ const CreateOptionSection = (props: Props) => {
   const handleLabelChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
-    const newLabel = event.target.value;
+    const newLabel = formatString(event.target.value);
 
     setInputLabel(newLabel);
   };
@@ -29,7 +30,7 @@ const CreateOptionSection = (props: Props) => {
   const handleValueChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
-    const newValue = event.target.value;
+    const newValue = formatString(event.target.value);
     setInputValue(newValue);
 
     const allValues = options.map(option => option.value);
@@ -62,7 +63,7 @@ const CreateOptionSection = (props: Props) => {
 
   return (
     <>
-      <Stack direction="row" alignItems="center" justifyContent="space-between">
+      <Stack direction="row" justifyContent="space-between">
         <TextField
           label="Label"
           type="text"
@@ -92,4 +93,4 @@ const CreateOptionSection = (props: Props) => {
   );
 };
 
-export default CreateOptionSection;
+export default NewOptionSection;

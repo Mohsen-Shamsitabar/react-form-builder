@@ -16,12 +16,13 @@ import * as sx from "./styles";
 
 type TriggerProps = {
   item: FormItem;
+  widgetCount?: number;
 };
 
 const Trigger = (props: TriggerProps) => {
-  const { item } = props;
+  const { item, widgetCount } = props;
 
-  const title = getItemTitle(item);
+  const title = getItemTitle(item, widgetCount);
 
   const modalManager = useModalManager();
   if (!modalManager) return null;
