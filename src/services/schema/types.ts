@@ -156,7 +156,7 @@ export type ComparisonFnParams = [SchemaID, ValueType];
 
 export type ComparisonFn = [ComparisonTypes, ComparisonFnParams];
 
-export type LogicalFnParams = [Fn, Fn];
+export type LogicalFnParams = [ComparisonFn, ComparisonFn];
 
 export type LogicalFn = [LogicalTypes, LogicalFnParams];
 
