@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { useFormContext } from "react-hook-form";
 import { ComparisonTypes } from "services/schema/constants";
 import {
@@ -31,14 +32,24 @@ export const useEffectActionOptions = (effectType: EffectTypes) => {
 
   const payloadOptions: ChoiceOption[] =
     effectType === "field"
-      ? currentPage.widgets.map(widgetId => ({
-          label: widgetId,
-          value: widgetId,
-        }))
-      : selectablePages.map(pageId => ({
-          label: pageId,
-          value: pageId,
-        }));
+      ? currentPage.widgets.map(widgetId => {
+          const widget = state.widgets.byId[widgetId]!;
+          const widgetProps = widget.properties;
+          const widgetTypeProps = widgetProps.properties;
+
+          return {
+            label: widgetTypeProps.label,
+            value: widgetId,
+          };
+        })
+      : selectablePages.map(pageId => {
+          const page = state.pages.byId[pageId]!;
+
+          return {
+            label: page.title,
+            value: pageId,
+          };
+        });
 
   const typeOptions: ChoiceOption[] =
     effectType === "field" ? fieldEffectActions : pageEffectActions;

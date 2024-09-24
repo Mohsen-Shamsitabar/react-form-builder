@@ -9,6 +9,7 @@ import {
   StringFieldSettings,
   TextUISettings,
 } from "./node-settings";
+import DividerUISettings from "./node-settings/DividerUISettings";
 
 type Props = {
   item: FormItem;
@@ -43,12 +44,14 @@ const SettingsEditor = (props: Props) => {
   }
 
   switch (item.properties.type) {
-    // divider has no settings or effects tab!
     case "text": {
       return <TextUISettings />;
     }
     case "link": {
       return <LinkUISettings />;
+    }
+    case "divider": {
+      return <DividerUISettings />;
     }
     default:
       return null;

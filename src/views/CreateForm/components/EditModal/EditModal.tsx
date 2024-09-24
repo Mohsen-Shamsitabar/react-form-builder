@@ -22,6 +22,7 @@ import {
 import {
   type BooleanFieldWidgetProps,
   type ChoiceFieldWidgetProps,
+  type DividerUIWidgetProps,
   type LinkUIWidgetProps,
   type NumberFieldWidgetProps,
   type StringFieldWidgetProps,
@@ -163,6 +164,7 @@ const EditModal = (props: Props) => {
         const widgetProps = item.properties.properties;
 
         const textUIDefaultValues: TextUIWidgetProps = {
+          label: widgetProps.label,
           text: widgetProps.text,
           varient: widgetProps.varient,
         };
@@ -173,8 +175,18 @@ const EditModal = (props: Props) => {
         const widgetProps = item.properties.properties;
 
         const linkUIDefaultValues: LinkUIWidgetProps = {
+          label: widgetProps.label,
           text: widgetProps.text,
           href: widgetProps.href,
+        };
+
+        return linkUIDefaultValues;
+      }
+      case "divider": {
+        const widgetProps = item.properties.properties;
+
+        const linkUIDefaultValues: DividerUIWidgetProps = {
+          label: widgetProps.label,
         };
 
         return linkUIDefaultValues;
@@ -215,12 +227,8 @@ const EditModal = (props: Props) => {
   };
 
   const submitForm: SubmitHandler<FieldValues> = (data, _e) => {
-    console.log(data);
-
     if (isPageNode(item)) {
       const { pageTitle, effects } = createEditPageProps(data, item);
-
-      console.log({ pageTitle, effects });
 
       editPage(item.id, pageTitle, effects);
 
@@ -228,8 +236,6 @@ const EditModal = (props: Props) => {
     }
 
     const newProps = createWidgetProps(data, item.properties.type);
-
-    console.log(newProps);
 
     editWidget(item.id, newProps);
   };

@@ -14,6 +14,18 @@ const LinkUISettings = (props: WidgetSettingsProps) => {
   return (
     <Stack direction="column" alignItems="center">
       <Fieldset title="Base Information">
+        {/* ===== LABEL ===== */}
+        <StringFormControl
+          name={names.LABEL}
+          label="Label"
+          description="The name of the field, which is visible to the user."
+          placeholder="Enter a label"
+          required
+          shouldUnregister={shouldUnregister}
+        />
+      </Fieldset>
+
+      <Fieldset title="Link Information">
         {/* ===== LINK_TEXT ===== */}
         <StringFormControl
           name={names.TEXT}

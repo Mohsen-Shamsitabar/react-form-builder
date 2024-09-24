@@ -51,8 +51,8 @@ export const generateFnFieldValues = (
 
     const fn1Id = `${FIRST_COMPARISON_FN_IDENTIFIER}`;
     const fn2Id = `${SECOND_COMPARISON_FN_IDENTIFIER}`;
-    const operator1 = fn1[0] as ComparisonTypes;
-    const operator2 = fn2[0] as ComparisonTypes;
+    const operator1 = fn1[0];
+    const operator2 = fn2[0];
     const [fieldId1, value1] = fn1[1] as ComparisonFnParams;
     const [fieldId2, value2] = fn2[1] as ComparisonFnParams;
 

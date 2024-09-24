@@ -15,6 +15,7 @@ import {
   NumberFieldSettings,
   StringFieldSettings,
 } from "../../SettingsEditor";
+import DividerUISettings from "../../SettingsEditor/node-settings/DividerUISettings";
 import TextUiSettings from "../../SettingsEditor/node-settings/TextUISettings";
 
 const NewWidgetSection = () => {
@@ -81,8 +82,7 @@ const NewWidgetSection = () => {
         return <LinkUISettings shouldUnregister />;
       }
       case "divider": {
-        // divider has no settings
-        return null;
+        return <DividerUISettings shouldUnregister />;
       }
       default:
         return null;

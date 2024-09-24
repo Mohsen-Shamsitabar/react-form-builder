@@ -6,23 +6,17 @@ import {
 import { IconButton, Stack, Typography } from "@mui/material";
 import { useModalManager } from "views/CreateForm/modal-manager";
 import type { FormItem, PageNode } from "views/CreateForm/types";
-import {
-  getItemTitle,
-  isFieldWidgetNode,
-  isPageNode,
-  renderChip,
-} from "views/CreateForm/utils";
+import { getItemTitle, isPageNode, renderChip } from "views/CreateForm/utils";
 import * as sx from "./styles";
 
 type TriggerProps = {
   item: FormItem;
-  widgetCount?: number;
 };
 
 const Trigger = (props: TriggerProps) => {
-  const { item, widgetCount } = props;
+  const { item } = props;
 
-  const title = getItemTitle(item, widgetCount);
+  const title = getItemTitle(item);
 
   const modalManager = useModalManager();
   if (!modalManager) return null;
@@ -54,27 +48,19 @@ const Trigger = (props: TriggerProps) => {
 
   // all GOOOOD ?!?!?
   const renderTriggerActions = () => {
-    const buttons: JSX.Element[] = [];
+    return (
+      <>
+        {isPageNode(item) && (
+          <IconButton
+            key={`${item.id}-add-button`}
+            aria-label="add"
+            size="small"
+            onClick={handleAddClick}
+          >
+            <AddIcon fontSize="small" />
+          </IconButton>
+        )}
 
-    if (isPageNode(item)) {
-      buttons.push(
-        <IconButton
-          key={`${item.id}-add-button`}
-          aria-label="add"
-          size="small"
-          onClick={handleAddClick}
-        >
-          <AddIcon fontSize="small" />
-        </IconButton>,
-      );
-    }
-
-    if (
-      isPageNode(item) ||
-      isFieldWidgetNode(item) ||
-      item.properties.type !== "divider"
-    ) {
-      buttons.push(
         <IconButton
           key={`${item.id}-settings-button`}
           aria-label="edit"
@@ -82,22 +68,18 @@ const Trigger = (props: TriggerProps) => {
           onClick={handleEditClick}
         >
           <SettingsSuggestIcon fontSize="small" />
-        </IconButton>,
-      );
-    }
+        </IconButton>
 
-    buttons.push(
-      <IconButton
-        key={`${item.id}-delete-button`}
-        aria-label="delete"
-        size="small"
-        onClick={handleDeleteClick}
-      >
-        <DeleteIcon fontSize="small" />
-      </IconButton>,
+        <IconButton
+          key={`${item.id}-delete-button`}
+          aria-label="delete"
+          size="small"
+          onClick={handleDeleteClick}
+        >
+          <DeleteIcon fontSize="small" />
+        </IconButton>
+      </>
     );
-
-    return buttons;
   };
 
   return (

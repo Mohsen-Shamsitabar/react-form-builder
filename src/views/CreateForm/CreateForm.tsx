@@ -65,7 +65,7 @@ export const data: CreateFormData = {
         type: "ui",
         properties: {
           type: "divider",
-          properties: null,
+          properties: { label: "my divider" },
         },
       },
       WIDGET_F2: {
@@ -117,6 +117,7 @@ export const data: CreateFormData = {
         properties: {
           type: "link",
           properties: {
+            label: "my link",
             href: "/",
             text: "go to home page",
           },
@@ -146,6 +147,7 @@ export const data: CreateFormData = {
         properties: {
           type: "text",
           properties: {
+            label: "my text",
             text: "Meow Meow nigga",
             varient: "paragraph",
           },

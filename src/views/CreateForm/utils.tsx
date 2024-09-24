@@ -13,12 +13,10 @@ export const isFieldWidgetNode = (
   widget: WidgetNode,
 ): widget is FieldWidgetNode => widget.type === "field";
 
-export const getItemTitle = (item: FormItem, count?: number) => {
+export const getItemTitle = (item: FormItem) => {
   if (isPageNode(item)) return item.title;
 
-  if (isFieldWidgetNode(item)) return item.properties.properties.label;
-
-  return `${item.properties.type}${count ?? ""}`;
+  return item.properties.properties.label;
 };
 
 export const renderChip = (item: FormItem) => {

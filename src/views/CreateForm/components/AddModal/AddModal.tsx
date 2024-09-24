@@ -62,12 +62,8 @@ const AddModal = (props: ModalProps) => {
   };
 
   const submitForm: SubmitHandler<FieldValues> = (data, _e) => {
-    console.log(data);
-
     if (item.type === "page") {
       const newPage = createNewPage(data);
-
-      console.log(newPage);
 
       addPage(newPage);
 
@@ -76,7 +72,6 @@ const AddModal = (props: ModalProps) => {
 
     const newWidget = createNewWidget(data, item.parent.id);
 
-    console.log(newWidget);
     addWidget(newWidget);
   };
 

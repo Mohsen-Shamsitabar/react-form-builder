@@ -20,6 +20,10 @@ type CommonFieldWidgetsProperties = {
   required?: boolean;
 };
 
+type CommonUiWidgetsProperties = {
+  label: string;
+};
+
 export type StringFieldWidgetProps = CommonFieldWidgetsProperties & {
   type: "email" | "text";
   placeholder?: string;
@@ -79,7 +83,7 @@ export type ChoiceFieldWidget = {
 export type TextUIWidgetProps = {
   text: string;
   varient: "paragraph" | "title" | "subtitle";
-};
+} & CommonUiWidgetsProperties;
 
 export type TextUIWidget = {
   type: "text";
@@ -89,16 +93,18 @@ export type TextUIWidget = {
 export type LinkUIWidgetProps = {
   href: string;
   text: string;
-};
+} & CommonUiWidgetsProperties;
 
 export type LinkUIWidget = {
   type: "link";
   properties: LinkUIWidgetProps;
 };
 
+export type DividerUIWidgetProps = CommonUiWidgetsProperties;
+
 export type DividerUIWidget = {
   type: "divider";
-  properties: null;
+  properties: DividerUIWidgetProps;
 };
 
 export type FieldWidgets =

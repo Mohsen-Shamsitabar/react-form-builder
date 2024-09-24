@@ -10,6 +10,7 @@ import {
   type ChoiceFieldWidgetProps,
   type ChoiceOption,
   type ComparisonFnParams,
+  type DividerUIWidgetProps,
   type Effect,
   type FieldEffect,
   type Fn,
@@ -204,7 +205,8 @@ export const createWidgetProps = (
     }
     case "text": {
       const textProps: TextUIWidgetProps = {
-        text: data[names.TEXT] as string,
+        label: data[names.LABEL] as TextUIWidgetProps["label"],
+        text: data[names.TEXT] as TextUIWidgetProps["text"],
         varient: data[names.VARIENT] as TextUIWidgetProps["varient"],
       };
 
@@ -212,14 +214,19 @@ export const createWidgetProps = (
     }
     case "link": {
       const linkProps: LinkUIWidgetProps = {
-        text: data[names.TEXT] as string,
-        href: data[names.HREF] as string,
+        label: data[names.LABEL] as LinkUIWidgetProps["label"],
+        text: data[names.TEXT] as LinkUIWidgetProps["text"],
+        href: data[names.HREF] as LinkUIWidgetProps["href"],
       };
 
       return linkProps;
     }
     case "divider": {
-      return null;
+      const dividerProps: DividerUIWidgetProps = {
+        label: data[names.LABEL] as DividerUIWidgetProps["label"],
+      };
+
+      return dividerProps;
     }
   }
 };

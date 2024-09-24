@@ -5,6 +5,7 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  FormHelperText,
 } from "@mui/material";
 import { useFormStateManager } from "views/CreateForm/form-state-manager";
 import type { FormItem } from "views/CreateForm/types";
@@ -34,7 +35,7 @@ const DeleteConfirmationModal = (props: ModalProps) => {
     : "Are you sure you want to delete this widget?";
 
   const note =
-    "*All effects that are connected to this item, will get deleted!";
+    "*All effects that are connected to this item, will get altered!";
 
   const handleAcceptClick = () => {
     onClose();
@@ -61,9 +62,7 @@ const DeleteConfirmationModal = (props: ModalProps) => {
       <DialogContent>
         <DialogContentText>{description}</DialogContentText>
 
-        <DialogContentText variant="body2" color="error">
-          {note}
-        </DialogContentText>
+        <FormHelperText error>{note}</FormHelperText>
       </DialogContent>
 
       <DialogActions sx={theme => ({ color: theme.palette.action.active })}>
