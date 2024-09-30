@@ -6,6 +6,7 @@ import type { Status } from "./type";
 
 const useMakeSchema = (
   state: CreateFormData,
+  submitText: string,
 ): { status: "pending" } | { status: "success"; schema: DocumentSchema } => {
   const [status, setStatus] = useState<Status>("pending");
   const [schema, setSchema] = useState<DocumentSchema | null>(null);
@@ -21,14 +22,14 @@ const useMakeSchema = (
           widgets,
           effects: state.effects.byId,
         },
-        submitButtonText: "Meow->",
+        submitButtonText: submitText,
         "order:pages": state.pages.allIds,
       };
 
       setSchema(schema);
       setStatus("success");
     })();
-  }, [state]);
+  }, [state, submitText]);
 
   if (status === "pending") return { status };
 

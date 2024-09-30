@@ -15,6 +15,7 @@ const FormPreview = () => {
           widgets: { allIds: [], byId: {} },
         }
       : stateManager.state,
+    "Submit",
   );
 
   const renderContent = () => {
