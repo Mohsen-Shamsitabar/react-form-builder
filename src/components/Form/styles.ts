@@ -17,10 +17,11 @@ export const footer: SystemSX = theme => ({
   bottom: 0,
 });
 
-export const wrapper: SystemSX = theme => ({
+export const wrapper: SystemSX = {
   overflowY: "auto",
-  height: `calc(100vh - ${theme.spacing(6)})`,
-});
+  // height: `calc(100vh - ${theme.spacing(6)})`,
+  height: "100%",
+};
 
 export const submitButton: SystemSX = {
   marginLeft: "auto",
