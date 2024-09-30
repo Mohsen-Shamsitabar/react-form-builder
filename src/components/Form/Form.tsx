@@ -1,18 +1,21 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Box, Stack } from "@mui/material";
-import React from "react";
+import Footer from "components/Footer";
+import * as React from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { useLoaderData } from "react-router-dom";
 import { SchemaProvider, SchemaStateManagerProvider } from "services";
 import { SchemaForm } from "services/schema/components";
-import { type SchemaID } from "services/schema/types";
-import { BackButton, Footer, Header, SubmitButton } from "./components";
-import { type LoaderData } from "./loader";
+import type { DocumentSchema, SchemaID } from "services/schema/types";
+import { getSchemaPages } from "views/FormView/utils";
+import { BackButton, SubmitButton } from "./components";
 import * as sx from "./styles";
-import { getSchemaPages } from "./utils";
 
-const Form = () => {
-  const schema = useLoaderData() as LoaderData;
+type Props = {
+  schema: DocumentSchema;
+};
+
+const Form = (props: Props) => {
+  const { schema } = props;
 
   const formDefaultValues = React.useMemo(() => {
     const { widgets } = schema.definitions;
@@ -69,45 +72,42 @@ const Form = () => {
   };
 
   return (
-    <>
-      <Header />
-      <Stack direction="column" sx={sx.wrapper}>
-        <SchemaProvider schema={schema}>
-          <FormProvider {...form}>
-            <SchemaStateManagerProvider>
-              <Box sx={sx.main} component="main">
-                <SchemaForm
-                  submitButton={
-                    <button
-                      ref={btnRef}
-                      type="submit"
-                      style={{ display: "none" }}
-                    />
-                  }
-                />
-              </Box>
-              <Footer
-                sx={sx.footer}
+    <Stack direction="column" sx={sx.wrapper}>
+      <SchemaProvider schema={schema}>
+        <FormProvider {...form}>
+          <SchemaStateManagerProvider>
+            <Box sx={sx.main} component="main">
+              <SchemaForm
                 submitButton={
-                  <SubmitButton
-                    sx={sx.submitButton}
-                    text={schema.submitButtonText}
-                    onClick={handleSubmitClick}
-                  />
-                }
-                backButton={
-                  <BackButton
-                    onClick={handleBackClick}
-                    sx={sx.backButton}
-                    schemaPages={pages}
+                  <button
+                    ref={btnRef}
+                    type="submit"
+                    style={{ display: "none" }}
                   />
                 }
               />
-            </SchemaStateManagerProvider>
-          </FormProvider>
-        </SchemaProvider>
-      </Stack>
-    </>
+            </Box>
+            <Footer
+              sx={sx.footer}
+              submitButton={
+                <SubmitButton
+                  sx={sx.submitButton}
+                  text={schema.submitButtonText}
+                  onClick={handleSubmitClick}
+                />
+              }
+              backButton={
+                <BackButton
+                  onClick={handleBackClick}
+                  sx={sx.backButton}
+                  schemaPages={pages}
+                />
+              }
+            />
+          </SchemaStateManagerProvider>
+        </FormProvider>
+      </SchemaProvider>
+    </Stack>
   );
 };
 
