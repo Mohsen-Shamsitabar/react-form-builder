@@ -1,19 +1,17 @@
 import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { Box, Tab, Tabs } from "@mui/material";
+import data from "mock";
 import * as React from "react";
-import { useLoaderData } from "react-router-dom";
 import { FormEditor, FormPreview, TabPanel } from "./components";
 import { FormStateManagerProvider } from "./form-state-manager";
 import { useDeleteModal, useEditModal } from "./hooks";
 import useAddModal from "./hooks/useAddModal";
 import { ModalManagerProvider } from "./modal-manager";
 import * as sx from "./styles";
-import type { CreateFormData, TabState } from "./types";
+import type { TabState } from "./types";
 
 const CreateForm = () => {
-  const data = useLoaderData() as CreateFormData;
-
   const [tab, setTab] = React.useState<TabState>("edit");
 
   const editModal = useEditModal();

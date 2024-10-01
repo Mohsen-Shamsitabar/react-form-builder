@@ -10,7 +10,6 @@ import {
   FormView,
   MyForms,
   NotFoundView,
-  createFormLoader,
   formViewLoader,
   myFormsLoader,
 } from "views";
@@ -38,7 +37,6 @@ const routes: RouteObject[] = [
       {
         element: <CreateForm />,
         path: paths.CREATE_FORM,
-        loader: createFormLoader,
       },
     ],
   },
