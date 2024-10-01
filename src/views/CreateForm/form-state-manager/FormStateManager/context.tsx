@@ -27,6 +27,7 @@ type EditActions = {
 
 export type ContextValue = {
   state: State;
+  renderPreview: boolean;
   addActions: AddActions;
   removeActions: RemoveActions;
   editActions: EditActions;
