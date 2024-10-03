@@ -1,9 +1,12 @@
+import { Stack } from "@mui/material";
+import { Header } from "components";
 import data from "mock";
 import { FormEditor } from "./components";
 import { FormStateManagerProvider } from "./form-state-manager";
 import { useDeleteModal, useEditModal } from "./hooks";
 import useAddModal from "./hooks/useAddModal";
 import { ModalManagerProvider } from "./modal-manager";
+import * as sx from "./styles";
 
 const CreateForm = () => {
   const editModal = useEditModal();
@@ -11,21 +14,25 @@ const CreateForm = () => {
   const addModal = useAddModal();
 
   return (
-    <FormStateManagerProvider formData={data}>
-      <ModalManagerProvider
-        editModal={editModal}
-        deleteModal={deleteModal}
-        addModal={addModal}
-      >
-        <FormEditor />
-      </ModalManagerProvider>
+    <Stack sx={sx.root} direction={"column"}>
+      <Header sx={sx.header} />
 
-      {addModal.render()}
+      <FormStateManagerProvider formData={data}>
+        <ModalManagerProvider
+          editModal={editModal}
+          deleteModal={deleteModal}
+          addModal={addModal}
+        >
+          <FormEditor sx={sx.editor} />
+        </ModalManagerProvider>
 
-      {editModal.render()}
+        {addModal.render()}
 
-      {deleteModal.render()}
-    </FormStateManagerProvider>
+        {editModal.render()}
+
+        {deleteModal.render()}
+      </FormStateManagerProvider>
+    </Stack>
   );
 };
 
