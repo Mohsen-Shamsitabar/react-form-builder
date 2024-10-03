@@ -6,7 +6,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { SchemaProvider, SchemaStateManagerProvider } from "services";
 import { SchemaForm } from "services/schema/components";
 import type { DocumentSchema, SchemaID } from "services/schema/types";
-import { getSchemaPages } from "views/FormView/utils";
+import { getSchemaPages } from "utils";
 import { BackButton, SubmitButton } from "./components";
 import * as sx from "./styles";
 

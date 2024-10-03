@@ -1,8 +1,7 @@
-import { Router } from "configs";
-import { RouterProvider } from "react-router-dom";
+import { CreateForm } from "views";
 
 const App = () => {
-  return <RouterProvider router={Router} />;
+  return <CreateForm />;
 };
 
 export default App;

@@ -57,7 +57,7 @@ const FormStateManager = (props: Props) => {
         },
       },
     }),
-    [state],
+    [renderPreview, state],
   );
 
   return <Provider context={formStateManagerContext}>{children}</Provider>;
