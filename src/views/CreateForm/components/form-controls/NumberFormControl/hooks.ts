@@ -15,7 +15,7 @@ const useErrorMessage = (
       max: `Please select a value that is no more than ${max ?? 0} bish.`,
       min: ` Please select a value that is no less than ${min ?? 0} bish.`,
       pattern: `Please enter a number u dumbFuck.`,
-      required: "Please fillout this field nigga",
+      required: "Please fillout this field!",
     };
   }, [max, min]);
 

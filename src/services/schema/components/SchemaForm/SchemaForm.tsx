@@ -50,6 +50,8 @@ const SchemaForm = (props: Props) => {
       }),
       {},
     );
+
+    console.log(formData);
   };
 
   const onNextPage: SubmitHandler<FieldDatas> = (formValues, _e) => {
