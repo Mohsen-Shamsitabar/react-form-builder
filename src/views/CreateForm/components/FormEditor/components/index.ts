@@ -1,2 +1,2 @@
 export { default as FormHierarchy } from "./FormHierarchy";
-export { default as FormSchematicView } from "./FormSchematicView";
+export { default as FormPreview } from "./FormPreview";

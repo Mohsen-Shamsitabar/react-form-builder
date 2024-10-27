@@ -75,30 +75,13 @@ const StringFieldWidget = (props: Props) => {
     handleFieldEffects(schema, schemaStateManager, fieldDatas);
   };
 
-  const renderDescription = () => {
-    if (!description) return null;
-
-    return (
-      <Typography
-        // sx={sx.fieldDescription}
-        data-slot="description"
-        id={`field-${widgetId}-description`}
-        variant="body2"
-      >
-        {description}
-      </Typography>
-    );
-  };
-
   return (
     <FormGroup sx={mergeSx(sxProp, sx.fieldWidget)}>
-      {/* {description && (
+      {description && (
         <Typography variant="body1" color="GrayText" data-slot="description">
           {description}
         </Typography>
-      )} */}
-
-      {renderDescription()}
+      )}
 
       <TextField
         {...field}

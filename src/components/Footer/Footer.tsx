@@ -5,17 +5,19 @@ import * as sx from "./styles";
 
 interface Props {
   sx?: SystemSX;
-  submitButton: JSX.Element;
-  backButton: JSX.Element;
+  submitButton?: JSX.Element;
+  backButton?: JSX.Element;
+  children?: React.ReactNode;
 }
 
 const Footer = (props: Props) => {
-  const { sx: sxProp, submitButton, backButton } = props;
+  const { sx: sxProp, submitButton, backButton, children } = props;
 
   return (
     <Box component="footer" sx={mergeSx(sx.root, sxProp)}>
       <Stack sx={sx.buttonWrapper} alignItems="center" direction="row">
         {backButton}
+        {children}
         {submitButton}
       </Stack>
     </Box>

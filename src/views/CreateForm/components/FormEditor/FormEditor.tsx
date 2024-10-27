@@ -2,7 +2,7 @@ import { Stack } from "@mui/material";
 import type { SystemSX } from "types";
 import { mergeSx } from "utils";
 import { useFormStateManager } from "views/CreateForm/form-state-manager";
-import { FormHierarchy, FormSchematicView } from "./components";
+import { FormHierarchy, FormPreview } from "./components";
 import * as sx from "./styles";
 
 type Props = {
@@ -26,8 +26,8 @@ const FormEditor = (props: Props) => {
       direction="row"
       justifyContent="space-between"
     >
-      <FormHierarchy />
-      <FormSchematicView key={key} />
+      <FormHierarchy sx={sx.formHierarchy} />
+      <FormPreview sx={sx.formPreview} key={key} />
     </Stack>
   );
 };

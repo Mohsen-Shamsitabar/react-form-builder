@@ -28,7 +28,7 @@ const RadioGroup = (props: FieldProps) => {
     sx: sxProp,
     options,
     widgetId,
-    defaultValue,
+    defaultValue = "",
   } = props;
 
   const schemaStateManager = useSchemaStateManager();
@@ -58,8 +58,6 @@ const RadioGroup = (props: FieldProps) => {
 
   if (!schemaStateManager) return;
   if (!schema) return;
-
-  // if (!schemaStateManager.state.visibleWidgets.includes(widgetId)) return null;
 
   const handleOnChange: React.ChangeEventHandler<HTMLInputElement> = e => {
     field.onChange(e);

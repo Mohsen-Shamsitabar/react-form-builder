@@ -27,10 +27,10 @@ const CheckboxGroup = (props: FieldProps) => {
     minRequired,
     required,
     sx: sxProp,
-    defaultValue,
     options,
     widgetId,
     multiSelect,
+    defaultValue = multiSelect ? [] : "",
   } = props;
 
   const schemaStateManager = useSchemaStateManager();
@@ -80,8 +80,6 @@ const CheckboxGroup = (props: FieldProps) => {
 
   if (!schemaStateManager) return;
   if (!schema) return;
-
-  // if (!schemaStateManager.state.visibleWidgets.includes(widgetId)) return null;
 
   return (
     <Box sx={mergeSx(sxProp, sx.fieldWidget)}>

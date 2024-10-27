@@ -31,7 +31,7 @@ const Select = (props: FieldProps) => {
     sx: sxProp,
     options,
     widgetId,
-    defaultValue,
+    defaultValue = multiSelect ? [] : "",
   } = props;
 
   const schemaStateManager = useSchemaStateManager();
@@ -82,14 +82,29 @@ const Select = (props: FieldProps) => {
   if (!schemaStateManager) return;
   if (!schema) return;
 
-  // if (!schemaStateManager.state.visibleWidgets.includes(widgetId)) return null;
-
   const handleOnChange = (e: SelectChangeEvent) => {
     field.onChange(e);
     const fieldDatas = getValues() as FieldDatas;
 
     handleFieldEffects(schema, schemaStateManager, fieldDatas);
   };
+
+  const renderEmptyOption = () => {
+    if (required || multiSelect) return null;
+
+    return (
+      <MenuItem value="">
+        <em>None</em>
+      </MenuItem>
+    );
+  };
+
+  const renderOptions = () =>
+    options.map(option => (
+      <MenuItem key={option.value} value={option.value}>
+        {option.label}
+      </MenuItem>
+    ));
 
   return (
     <Box sx={mergeSx(sxProp, sx.fieldWidget)}>
@@ -112,11 +127,9 @@ const Select = (props: FieldProps) => {
           input={<OutlinedInput label={label} />}
           onChange={handleOnChange}
         >
-          {options.map(option => (
-            <MenuItem key={option.label} value={option.value}>
-              {option.value}
-            </MenuItem>
-          ))}
+          {renderEmptyOption()}
+
+          {renderOptions()}
         </SelectMUI>
 
         {errorMessage && <FormHelperText>{errorMessage}</FormHelperText>}
