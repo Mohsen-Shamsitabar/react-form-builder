@@ -1,37 +1,34 @@
-import { Box, Skeleton } from "@mui/material";
-import { Form, formSx } from "components";
+import { Box } from "@mui/material";
+import { Form } from "components";
+import type { DocumentSchema } from "services/schema/types";
+import { pageNodeToPageSchema, widgetNodeToSchemaWidget } from "utils";
 import { useFormStateManager } from "views/CreateForm/form-state-manager";
 import * as sx from "./styles";
-import useMakeSchema from "./useMakeSchema";
 
 const FormPreview = () => {
   const stateManager = useFormStateManager();
 
-  const res = useMakeSchema(
-    !stateManager
-      ? {
-          effects: { allIds: [], byId: {} },
-          pages: { allIds: [], byId: {} },
-          widgets: { allIds: [], byId: {} },
-        }
-      : stateManager.state,
-    "Submit",
-  );
+  if (!stateManager) return null;
+  const { state } = stateManager;
 
-  const renderContent = () => {
-    if (res.status === "pending") {
-      return (
-        <Box sx={formSx.main} height={"100%"}>
-          <Skeleton variant="text" height={"15%"} />
-          <Skeleton variant="rounded" height={"80%"} />
-        </Box>
-      );
-    }
+  const pages = pageNodeToPageSchema(state.pages.byId);
+  const widgets = widgetNodeToSchemaWidget(state.widgets.byId);
 
-    return <Form schema={res.schema} />;
+  const schema: DocumentSchema = {
+    definitions: {
+      pages,
+      widgets,
+      effects: state.effects.byId,
+    },
+    submitButtonText: "Submit",
+    "order:pages": state.pages.allIds,
   };
 
-  return <Box sx={sx.root}>{renderContent()}</Box>;
+  return (
+    <Box sx={sx.root}>
+      <Form schema={schema} />
+    </Box>
+  );
 };
 
 export default FormPreview;

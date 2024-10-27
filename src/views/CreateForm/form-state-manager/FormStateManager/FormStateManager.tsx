@@ -20,23 +20,41 @@ const FormStateManager = (props: Props) => {
   const { children, formData } = props;
 
   const [state, dispatch] = React.useReducer(reducer, formData);
+  const [renderPreview, setRenderPreview] = React.useState(false);
 
   const formStateManagerContext: ContextValue = React.useMemo(
     () => ({
       state,
+      renderPreview,
       addActions: {
-        addPage: page => dispatch(createAddPageAction(page)),
-        addWidget: widget => dispatch(createAddWidgetAction(widget)),
+        addPage: page => {
+          setRenderPreview(c => !c);
+          dispatch(createAddPageAction(page));
+        },
+        addWidget: widget => {
+          setRenderPreview(c => !c);
+          dispatch(createAddWidgetAction(widget));
+        },
       },
       removeActions: {
-        removePage: pageId => dispatch(createRemovePageAction(pageId)),
-        removeWidget: widgetId => dispatch(createRemoveWidgetAction(widgetId)),
+        removePage: pageId => {
+          setRenderPreview(c => !c);
+          dispatch(createRemovePageAction(pageId));
+        },
+        removeWidget: widgetId => {
+          setRenderPreview(c => !c);
+          dispatch(createRemoveWidgetAction(widgetId));
+        },
       },
       editActions: {
-        editWidget: (widgetId, newWidgetProps) =>
-          dispatch(createEditWidgetAction(widgetId, newWidgetProps)),
-        editPage: (pageId, pageTitle, effects) =>
-          dispatch(createEditPageAction(pageId, pageTitle, effects)),
+        editWidget: (widgetId, newWidgetProps) => {
+          setRenderPreview(c => !c);
+          dispatch(createEditWidgetAction(widgetId, newWidgetProps));
+        },
+        editPage: (pageId, pageTitle, effects) => {
+          setRenderPreview(c => !c);
+          dispatch(createEditPageAction(pageId, pageTitle, effects));
+        },
       },
     }),
     [state],
