@@ -137,8 +137,7 @@ export type AllWidgetPropTypes =
   | BooleanFieldWidgetProps
   | ChoiceFieldWidgetProps
   | TextUIWidgetProps
-  | LinkUIWidgetProps
-  | null;
+  | LinkUIWidgetProps;
 
 export type WidgetTypes = "field" | "ui";
 export type FieldPropTypes = "string" | "boolean" | "choice" | "number";
