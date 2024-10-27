@@ -1,20 +1,19 @@
 import type { SystemSX } from "types";
 
-export const root: SystemSX = {};
+export const root: SystemSX = {
+  width: "100vw",
+  height: "100vh",
+  overflow: "hidden",
+};
 
-export const tabsContainer: SystemSX = theme => ({
-  borderBottom: `2px solid ${theme.palette.divider}`,
+export const header: SystemSX = theme => ({
   width: "100%",
-  height: theme.spacing(9),
-  position: "sticky",
-  backgroundColor: theme.palette.background.default,
-  top: 0,
-  zIndex: theme.zIndex.appBar,
+  height: theme.spacing(6),
 });
 
-export const tabsPanelContainer: SystemSX = theme => ({
-  height: `calc(100% - ${theme.spacing(9)})`,
-  overflowY: "auto",
+export const editor: SystemSX = theme => ({
+  width: "100%",
+  height: `calc(100% - ${theme.spacing(6)})`,
 });
 
 export const chip: SystemSX = theme => ({

@@ -7,13 +7,21 @@ import {
 import { Box, Button, Stack } from "@mui/material";
 import { TreeItem, TreeView } from "@mui/x-tree-view";
 import * as React from "react";
+import type { SystemSX } from "types";
+import { mergeSx } from "utils";
 import { useFormStateManager } from "views/CreateForm/form-state-manager";
 import { useModalManager } from "views/CreateForm/modal-manager";
 import type { CreateFormData, PageNode } from "views/CreateForm/types";
 import { Trigger } from "./components";
 import * as sx from "./styles";
 
-const FormHierarchy = () => {
+type Props = {
+  sx?: SystemSX;
+};
+
+const FormHierarchy = (props: Props) => {
+  const { sx: sxProps } = props;
+
   const renderTree = React.useCallback((data: CreateFormData) => {
     const { pages, widgets } = data;
 
@@ -64,7 +72,7 @@ const FormHierarchy = () => {
   const { state } = formStateManager;
 
   return (
-    <Box sx={sx.root}>
+    <Box sx={mergeSx(sx.root, sxProps)}>
       <Stack direction={"column"} justifyContent={"center"}>
         <Button onClick={handleAddNewPage}>
           <AddIcon fontSize="inherit" />

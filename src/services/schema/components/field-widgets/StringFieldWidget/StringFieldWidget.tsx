@@ -29,7 +29,7 @@ const StringFieldWidget = (props: Props) => {
     description,
     maxLength,
     minLength,
-    defaultValue,
+    defaultValue = "",
     required = false,
     multiline = false,
     widgetId,
@@ -66,8 +66,6 @@ const StringFieldWidget = (props: Props) => {
   if (!schemaStateManager) return;
   if (!schema) return;
 
-  // if (!schemaStateManager.state.visibleWidgets.includes(widgetId)) return null;
-
   const handleOnChange: React.ChangeEventHandler<
     HTMLInputElement | HTMLTextAreaElement
   > = e => {
@@ -84,6 +82,7 @@ const StringFieldWidget = (props: Props) => {
           {description}
         </Typography>
       )}
+
       <TextField
         {...field}
         fullWidth

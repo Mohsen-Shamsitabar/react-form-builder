@@ -94,10 +94,10 @@ export const isEffectTriggered = (fn: Fn, fieldDatas: FieldDatas): boolean => {
         return Number(widgetValue) <= Number(value);
       }
       case ComparisonTypes.IN: {
-        return (widgetValue as string[]).includes(value);
+        return (widgetValue as string[]).includes(String(value));
       }
       case ComparisonTypes.NIN: {
-        return !(widgetValue as string[]).includes(value);
+        return !(widgetValue as string[]).includes(String(value));
       }
       default:
         return false;

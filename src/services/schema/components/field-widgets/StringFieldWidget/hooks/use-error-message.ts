@@ -13,8 +13,8 @@ const useErrorMessage = (fieldState: ControllerFieldState, props: Props) => {
     return {
       maxLength: `Please use at most ${maxLength ?? 0} characters.`,
       minLength: `Please use at least ${minLength ?? 0} characters.`,
-      required: "Please fillout this field nigga",
-      pattern: "Please enter a valid Email address bruv",
+      required: "Please fillout this field!",
+      pattern: "Please enter a valid input!",
     };
   }, [maxLength, minLength]);
 

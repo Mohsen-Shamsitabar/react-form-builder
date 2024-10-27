@@ -1,6 +1,10 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import * as React from "react";
-import { useFormContext, type SubmitHandler } from "react-hook-form";
+import {
+  useFormContext,
+  type FieldValues,
+  type SubmitHandler,
+} from "react-hook-form";
 import { useSchema, useSchemaStateManager } from "services";
 import { PageAction } from "services/schema/constants";
 import type { FieldDatas, PageData, SchemaID } from "services/schema/types";
@@ -14,42 +18,45 @@ import SchemaToJSX from "../SchemaToJSX";
 
 type Props = {
   submitButton: JSX.Element;
+  setFormData: React.Dispatch<React.SetStateAction<FieldValues>>;
 };
 
 const SchemaForm = (props: Props) => {
-  const { submitButton } = props;
+  const { submitButton, setFormData } = props;
 
   const form = useFormContext();
 
   const schema = useSchema();
   const schemaStateManager = useSchemaStateManager();
 
-  const schemaPages = React.useMemo(
-    () => schema?.["order:pages"] ?? [],
-    [schema],
-  );
+  // const schemaPages = React.useMemo(
+  //   () => schema?.["order:pages"] ?? [],
+  //   [schema],
+  // );
 
   if (!schema) return;
   if (!schemaStateManager) return;
 
-  const { goToPage, setPageData, state } = schemaStateManager;
+  const { setPageData, state } = schemaStateManager;
   const { currentPage, visitedPages, pageData, visibleWidgets } = state;
 
-  const currentPageIdx = schemaPages.findIndex(
-    pageId => pageId === currentPage,
-  );
+  // const currentPageIdx = schemaPages.findIndex(
+  //   pageId => pageId === currentPage,
+  // );
 
   const submitForm = (
     visitedPage: SchemaID[],
     pageData: Record<SchemaID, FieldDatas>,
   ) => {
-    const formData = visitedPage.reduce(
+    const formData: FieldValues = visitedPage.reduce(
       (flattenData, visitedPageId) => ({
         ...flattenData,
         ...pageData[visitedPageId],
       }),
       {},
     );
+
+    setFormData(formData);
   };
 
   const onNextPage: SubmitHandler<FieldDatas> = (formValues, _e) => {
@@ -73,21 +80,31 @@ const SchemaForm = (props: Props) => {
 
     if (willPageChange) return;
 
-    const isLastPage = currentPageIdx === schemaPages.length - 1;
+    const newPageData: PageData = {
+      ...pageData,
+      [currentPage]: data,
+    };
+    const newVisitedPage = visitedPages.concat(currentPage);
 
-    if (isLastPage) {
-      const newPageData: PageData = {
-        ...pageData,
-        [currentPage]: data,
-      };
-      const newVisitedPage = visitedPages.concat(currentPage);
+    submitForm(newVisitedPage, newPageData);
 
-      submitForm(newVisitedPage, newPageData);
+    return;
 
-      return;
-    }
+    // const isLastPage = currentPageIdx === schemaPages.length - 1;
 
-    goToPage(schemaPages[currentPageIdx + 1]!);
+    // if (isLastPage) {
+    //   const newPageData: PageData = {
+    //     ...pageData,
+    //     [currentPage]: data,
+    //   };
+    //   const newVisitedPage = visitedPages.concat(currentPage);
+
+    //   submitForm(newVisitedPage, newPageData);
+
+    //   return;
+    // }
+
+    // goToPage(schemaPages[currentPageIdx + 1]!);
   };
 
   return (
