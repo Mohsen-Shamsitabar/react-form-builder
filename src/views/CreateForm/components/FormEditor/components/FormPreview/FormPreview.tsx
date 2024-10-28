@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, Stack } from "@mui/material";
 import { Form } from "components";
 import type { DocumentSchema } from "services/schema/types";
 import type { SystemSX } from "types";
@@ -17,6 +17,19 @@ const FormPreview = (props: Props) => {
 
   if (!stateManager) return null;
   const { state } = stateManager;
+
+  if (state.pages.allIds.length === 0) {
+    return (
+      <Stack
+        alignItems={"center"}
+        justifyContent={"center"}
+        sx={mergeSx(sx.root, sxProps, {})}
+      >
+        <h3>Oops, you have no pages!</h3>
+        <p>Create new pages in the editor to preview them.</p>
+      </Stack>
+    );
+  }
 
   const pages = pageNodeToPageSchema(state.pages.byId);
   const widgets = widgetNodeToSchemaWidget(state.widgets.byId);

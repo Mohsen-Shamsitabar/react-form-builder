@@ -1,4 +1,4 @@
-import { Button, Stack } from "@mui/material";
+import { Stack } from "@mui/material";
 import { Logo } from "components";
 import type { SystemSX } from "types";
 import { mergeSx } from "utils";
@@ -15,13 +15,9 @@ const Header = (props: Props) => {
     <Stack
       sx={mergeSx(sx.root, sxProp)}
       direction={"row"}
-      justifyContent={"space-between"}
       alignItems={"center"}
     >
       <Logo />
-      <Button size="medium" variant="outlined">
-        Logout
-      </Button>
     </Stack>
   );
 };
