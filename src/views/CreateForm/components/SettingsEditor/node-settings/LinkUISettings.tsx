@@ -18,7 +18,7 @@ const LinkUISettings = (props: WidgetSettingsProps) => {
         <StringFormControl
           name={names.LABEL}
           label="Label"
-          description="The name of the field, which is visible to the user."
+          description="The name of the widget, this will not be visible to the user and only has development purposes. Like connecting effects to this widget!"
           placeholder="Enter a label"
           required
           shouldUnregister={shouldUnregister}
