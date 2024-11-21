@@ -46,7 +46,6 @@ const Trigger = (props: TriggerProps) => {
     editModal.open();
   };
 
-  // all GOOOOD ?!?!?
   const renderTriggerActions = () => {
     return (
       <>

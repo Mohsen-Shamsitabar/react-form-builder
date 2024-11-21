@@ -270,7 +270,7 @@ const EditModal = (props: Props) => {
         onClose={onClose}
         open={open}
         aria-labelledby="edit-dialog-title"
-        onTransitionEnd={onCloseFinish}
+        onTransitionExited={onCloseFinish}
         maxWidth="md"
         scroll="paper"
       >

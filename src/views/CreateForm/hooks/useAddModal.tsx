@@ -23,7 +23,7 @@ const useAddModal = (): AddModalController => {
         onClose={close}
         open={isOpen}
         onCloseFinish={() => {
-          if (!isOpen) setItem(null);
+          setItem(null);
         }}
       />
     );

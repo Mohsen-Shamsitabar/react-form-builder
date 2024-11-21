@@ -54,7 +54,7 @@ const DeleteConfirmationModal = (props: ModalProps) => {
       open={open}
       onClose={onClose}
       aria-labelledby="delete-dialog-title"
-      onTransitionEnd={onCloseFinish}
+      onTransitionExited={onCloseFinish}
       maxWidth="xs"
     >
       <DialogTitle id="delete-dialog-title">{title}</DialogTitle>

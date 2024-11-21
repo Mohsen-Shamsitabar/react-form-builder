@@ -29,12 +29,6 @@ const FormTable = (props: Props) => {
 
     const renderValue = (value: unknown) => {
       switch (typeof value) {
-        case "string": {
-          return <TableCell align="right">{value}</TableCell>;
-        }
-        case "number": {
-          return <TableCell align="right">{value}</TableCell>;
-        }
         case "boolean": {
           return (
             <TableCell align="right">{value ? "true" : "false"}</TableCell>
@@ -47,8 +41,10 @@ const FormTable = (props: Props) => {
             </TableCell>
           );
         }
-        default:
-          return null;
+        default: {
+          // string and number
+          return <TableCell align="right">{value as string}</TableCell>;
+        }
       }
     };
 
