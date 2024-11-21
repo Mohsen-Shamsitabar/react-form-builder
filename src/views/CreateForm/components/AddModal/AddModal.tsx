@@ -92,7 +92,7 @@ const AddModal = (props: ModalProps) => {
         open={open}
         onClose={onClose}
         aria-labelledby="add-dialog-title"
-        onTransitionEnd={onCloseFinish}
+        onTransitionExited={onCloseFinish}
         maxWidth="sm"
       >
         <DialogTitle id="add-dialog-title">{title}</DialogTitle>
